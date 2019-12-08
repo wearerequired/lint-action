@@ -1,0 +1,58 @@
+{
+	"name": "action-code-style",
+	"version": "0.0.0",
+	"description": "GitHub Action for detecting code style violations",
+	"author": {
+		"name": "Samuel Meuli",
+		"email": "me@samuelmeuli.com",
+		"url": "https://samuelmeuli.com"
+	},
+	"repository": "github:samuelmeuli/action-code-style",
+	"license": "MIT",
+	"private": true,
+	"main": "./index.js",
+	"scripts": {
+		"format": "prettier --write",
+		"lint": "eslint --fix --max-warnings 0"
+	},
+	"dependencies": {},
+	"peerDependencies": {},
+	"devDependencies": {
+		"@samuelmeuli/eslint-config": "^5.0.2",
+		"@samuelmeuli/prettier-config": "^1.0.0",
+		"eslint": "6.7.2",
+		"eslint-config-airbnb-base": "14.0.0",
+		"eslint-config-prettier": "^6.5.0",
+		"eslint-plugin-import": "^2.18.2",
+		"eslint-plugin-simple-import-sort": "^5.0.0",
+		"husky": "^3.0.9",
+		"lint-staged": "^9.4.3",
+		"prettier": "^1.19.1"
+	},
+	"eslintConfig": {
+		"root": true,
+		"extends": [
+			"@samuelmeuli/eslint-config"
+		],
+		"env": {
+			"node": true
+		}
+	},
+	"prettier": "@samuelmeuli/prettier-config",
+	"lint-staged": {
+		"*.js": [
+			"yarn lint",
+			"yarn format",
+			"git add"
+		],
+		"*.{css,html,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}": [
+			"yarn format",
+			"git add"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	}
+}
