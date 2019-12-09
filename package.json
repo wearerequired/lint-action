@@ -10,7 +10,7 @@
 	"repository": "github:samuelmeuli/action-code-style",
 	"license": "MIT",
 	"private": true,
-	"main": "./index.js",
+	"main": "./src/index.js",
 	"scripts": {
 		"format": "prettier --write",
 		"lint": "eslint --fix --max-warnings 0"

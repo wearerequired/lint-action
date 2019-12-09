@@ -1,0 +1,25 @@
+name: Code Style Action
+author: Samuel Meuli
+description: GitHub Action for detecting code style violations
+
+inputs:
+  eslint:
+    description: Extensions of files on which to run ESLint
+    required: false
+    default: ""
+  prettier:
+    description: Extensions of files on which to run Prettier
+    required: false
+    default: ""
+  stylelint:
+    description: Extensions of files on which to run Stylelint
+    required: false
+    default: ""
+
+runs:
+  using: node12
+  main: ./src/index.js
+
+branding:
+  icon: check
+  color: green
