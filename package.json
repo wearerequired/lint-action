@@ -12,6 +12,7 @@
 	"private": true,
 	"main": "./src/index.js",
 	"scripts": {
+		"test": "jest",
 		"format": "prettier --write",
 		"lint": "eslint --fix --max-warnings 0"
 	},
@@ -26,6 +27,7 @@
 		"eslint-plugin-import": "^2.18.2",
 		"eslint-plugin-simple-import-sort": "^5.0.0",
 		"husky": "^3.0.9",
+		"jest": "^24.9.0",
 		"lint-staged": "^9.4.3",
 		"prettier": "^1.19.1"
 	},
@@ -35,24 +37,25 @@
 			"@samuelmeuli/eslint-config"
 		],
 		"env": {
-			"node": true
+			"node": true,
+			"jest": true
 		}
 	},
 	"prettier": "@samuelmeuli/prettier-config",
 	"lint-staged": {
-		"*.js": [
+		"!(test/projects/**/*).js": [
 			"yarn lint",
 			"yarn format",
 			"git add"
 		],
-		"*.{css,html,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}": [
+		"!(test/projects/**/*).{css,html,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}": [
 			"yarn format",
 			"git add"
 		]
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "lint-staged"
+			"pre-commit": "yarn test && lint-staged"
 		}
 	}
 }
