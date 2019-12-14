@@ -33,7 +33,7 @@ class ESLint {
 	 */
 	static lint(dir, extensions) {
 		const cmdOutput = run(
-			`eslint --ext ${extensions
+			`npx --no-install eslint --ext ${extensions
 				.map(ext => `.${ext}`)
 				.join(",")} --quiet --no-color --format json .`,
 			{
