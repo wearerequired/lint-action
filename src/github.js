@@ -2,6 +2,8 @@ const { name: actionName } = require("../package");
 const request = require("./request");
 const { exit, getEnv, getInput } = require("./utils");
 
+const ANNOTATION_LEVELS = ["notice", "warning", "failure"];
+
 /**
  * Returns information about the GitHub repository and action trigger event
  *
@@ -35,13 +37,19 @@ function getGithubInfo() {
  * @param results {object[]}: Results from the linter execution
  */
 async function createCheck(checkName, github, results) {
-	const annotations = results.map(result => ({
-		path: result.path,
-		start_line: result.firstLine,
-		end_line: result.lastLine,
-		annotation_level: "failure",
-		message: result.message,
-	}));
+	let annotations = [];
+	for (let level = 0; level < 3; level += 1) {
+		annotations = [
+			...annotations,
+			...results[level].map(result => ({
+				path: result.path,
+				start_line: result.firstLine,
+				end_line: result.lastLine,
+				annotation_level: ANNOTATION_LEVELS[level],
+				message: result.message,
+			})),
+		];
+	}
 
 	const body = {
 		name: checkName,

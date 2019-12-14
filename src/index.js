@@ -33,13 +33,9 @@ async function runAction() {
 				// Lint the matching files, parse code style violations
 				log(`Running ${linterId} checks in ${github.workspace}…`);
 				const results = linter.lint(github.workspace, fileExtList);
-				let resultsParsed = [];
-				if (results.hasErrors) {
-					resultsParsed = linter.parseResults(github.workspace, results.output);
-				}
+				const resultsParsed = linter.parseResults(github.workspace, results);
 				log(
-					`Found ${resultsParsed.length} code style issues with ${linterId}`,
-					resultsParsed.length > 0 ? "error" : "info",
+					`Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`,
 				);
 
 				// Annotate commit with code style violations on GitHub
@@ -48,7 +44,7 @@ async function runAction() {
 				}
 
 				// If there are linting errors, remember to exit with code 1 at the end of the action
-				if (resultsParsed.length > 0 && exitCode === 0) {
+				if (resultsParsed[2].length > 0 && exitCode === 0) {
 					exitCode = 1;
 				}
 			}

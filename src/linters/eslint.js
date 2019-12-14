@@ -29,22 +29,18 @@ class ESLint {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 * @param {string[]} extensions: Array of file extensions which should be linted
-	 * @returns {object}: Results of the linting process
+	 * @returns {string}: Results of the linting process
 	 */
 	static lint(dir, extensions) {
-		const cmdOutput = run(
+		return run(
 			`npx --no-install eslint --ext ${extensions
 				.map(ext => `.${ext}`)
-				.join(",")} --quiet --no-color --format json .`,
+				.join(",")} --no-color --format json .`,
 			{
 				dir,
 				ignoreErrors: true,
 			},
-		);
-		return {
-			hasErrors: cmdOutput.status !== 0,
-			output: cmdOutput.stdout,
-		};
+		).stdout;
 	}
 
 	/**
@@ -56,14 +52,16 @@ class ESLint {
 	 */
 	static parseResults(dir, results) {
 		const resultsJson = JSON.parse(results);
-		const resultsParsed = [];
+
+		// Parsed results: [notices, warnings, failures]
+		const resultsParsed = [[], [], []];
 
 		for (const result of resultsJson) {
 			const { filePath, messages } = result;
 			const path = filePath.substring(dir.length + 1);
 			for (const msg of messages) {
-				const { line, ruleId, message } = msg;
-				resultsParsed.push({
+				const { line, message, ruleId, severity } = msg;
+				resultsParsed[severity].push({
 					path,
 					firstLine: line,
 					lastLine: line,
