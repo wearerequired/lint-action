@@ -1,0 +1,13 @@
+{
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"rules": {
+		"no-console": 2,
+		"no-unused-vars": 2,
+		"prefer-const": 1
+	}
+}
