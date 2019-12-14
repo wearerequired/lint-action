@@ -51,6 +51,10 @@ async function createCheck(checkName, github, results) {
 		];
 	}
 
+	// Temporary: Only use the first 50 annotations (API limit)
+	// TODO: Create check in a separate step and send updates with batches of 50 annotations
+	annotations = annotations.slice(0, 50);
+
 	const body = {
 		name: checkName,
 		head_sha: github.sha,
