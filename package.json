@@ -39,6 +39,14 @@
 		"env": {
 			"node": true,
 			"jest": true
+		},
+		"rules": {
+			"no-unused-vars": [
+				"error",
+				{
+					"varsIgnorePattern": "^_"
+				}
+			]
 		}
 	},
 	"prettier": "@samuelmeuli/prettier-config",

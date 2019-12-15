@@ -1,28 +1,22 @@
 const { exit, run } = require("../utils");
 
-const SEVERITY_LEVELS = ["", "warning", "error"];
+const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
+const LEVELS = ["", "warning", "error"];
 
 /**
- * https://stylelint.io
+ * https://github.com/realm/SwiftLint
  */
-class Stylelint {
+class SwiftLint {
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing
 	 */
 	static verifySetup() {
-		// Verify that NPM is installed (required to execute stylelint)
+		// Verify that SwiftLint is installed
 		try {
-			run("command -v npm");
+			run("command -v swiftlint");
 		} catch (err) {
-			exit("NPM is not installed");
-		}
-
-		// Verify that stylelint is installed
-		try {
-			run("npx --no-install stylelint -v");
-		} catch (err) {
-			exit("stylelint is not installed");
+			exit("SwiftLint is not installed");
 		}
 	}
 
@@ -34,9 +28,11 @@ class Stylelint {
 	 * @returns {string}: Results of the linting process
 	 */
 	static lint(dir, extensions) {
-		const files =
-			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
-		return run(`npx --no-install stylelint --no-color --formatter json '${files}'`, {
+		if (extensions.length !== 1 || extensions[0] !== "swift") {
+			exit(`SwiftLint error: File extensions are not configurable`);
+		}
+
+		return run("swiftlint", {
 			dir,
 			ignoreErrors: true,
 		}).stdout;
@@ -50,28 +46,26 @@ class Stylelint {
 	 * @returns {object[]}: Parsed results
 	 */
 	static parseResults(dir, results) {
-		const resultsJson = JSON.parse(results);
+		const matches = results.matchAll(PARSE_REGEX);
 
 		// Parsed results: [notices, warnings, failures]
 		const resultsParsed = [[], [], []];
 
-		for (const result of resultsJson) {
-			const { source, warnings } = result;
-			const path = source.substring(dir.length + 1);
-			for (const warning of warnings) {
-				const { line, severity, text } = warning;
-				const severityIdx = SEVERITY_LEVELS.indexOf(severity);
-				resultsParsed[severityIdx].push({
-					path,
-					firstLine: line,
-					lastLine: line,
-					message: text,
-				});
-			}
+		for (const match of matches) {
+			const [_str, pathFull, line, _column, level, message] = match;
+			const path = pathFull.substring(dir.length + 1);
+			const lineNr = parseInt(line, 10);
+			const levelIdx = LEVELS.indexOf(level);
+			resultsParsed[levelIdx].push({
+				path,
+				firstLine: lineNr,
+				lastLine: lineNr,
+				message,
+			});
 		}
 
 		return resultsParsed;
 	}
 }
 
-module.exports = Stylelint;
+module.exports = SwiftLint;
