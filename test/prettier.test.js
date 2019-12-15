@@ -5,7 +5,7 @@ const Prettier = require("../src/linters/prettier");
 const prettierProject = join(__dirname, "projects", "prettier");
 
 // Expected linting results from test project
-const testResults = `styles.css\nindex.js\n`;
+const testResults = `styles.css\nindex.js`;
 const testResultsParsed = [
 	[],
 	[],

@@ -84,15 +84,15 @@ function run(cmd, options = null) {
 		const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
 		return {
 			status: 0,
-			stdout: output,
+			stdout: output.trim(),
 			stderr: "",
 		};
 	} catch (err) {
 		if (optionsWithDefaults.ignoreErrors) {
 			return {
 				status: err.status,
-				stdout: err.stdout,
-				stderr: err.stderr,
+				stdout: err.stdout.trim(),
+				stderr: err.stderr.trim(),
 			};
 		}
 		throw err;

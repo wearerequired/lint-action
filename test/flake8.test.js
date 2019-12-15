@@ -5,7 +5,7 @@ const Flake8 = require("../src/linters/flake8");
 const flake8Project = join(__dirname, "projects", "flake8");
 
 // Expected linting results from test project
-const testResults = `./main.py:5:9: E211 whitespace before '('\n./main.py:10:1: E305 expected 2 blank lines after class or function definition, found 1\n`;
+const testResults = `./main.py:5:9: E211 whitespace before '('\n./main.py:10:1: E305 expected 2 blank lines after class or function definition, found 1`;
 const testResultsParsed = [
 	[],
 	[],

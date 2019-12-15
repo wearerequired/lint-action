@@ -51,7 +51,7 @@ class Prettier {
 		// Parsed results: [notices, warnings, failures]
 		const resultsParsed = [[], [], []];
 
-		const paths = results.trim().split(/\r?\n/);
+		const paths = results.split(/\r?\n/);
 		resultsParsed[2] = paths.map(path => ({
 			path,
 			firstLine: 1,
