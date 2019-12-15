@@ -1,5 +1,5 @@
 {
-	"name": "test-eslint",
+	"name": "test-eslint-typescript",
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {

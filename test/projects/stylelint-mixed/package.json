@@ -1,5 +1,5 @@
 {
-	"name": "test-stylelint",
+	"name": "test-stylelint-mixed",
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {
