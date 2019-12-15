@@ -8,5 +8,5 @@ indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{yaml,yml}]
+[*.{py,yaml,yml}]
 indent_style = space

@@ -3,6 +3,16 @@ const { execSync } = require("child_process");
 const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false };
 
 /**
+ * Capitalizes the first letter of a string
+ *
+ * @param str {string}: String to process
+ * @returns {string}: Input string with first letter capitalized
+ */
+function capitalizeFirstLetter(str) {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
  * Logs to the console
  *
  * @param msg {string}: Text to log to the console
@@ -90,6 +100,7 @@ function run(cmd, options = null) {
 }
 
 module.exports = {
+	capitalizeFirstLetter,
 	log,
 	exit,
 	getEnv,
