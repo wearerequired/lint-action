@@ -1,5 +1,5 @@
-const parseDiff = require("../parse-diff");
-const { exit, run } = require("../utils");
+const { exit, run } = require("../utils/action");
+const { diffToParsedResults } = require("../utils/diff");
 
 /**
  * https://black.readthedocs.io/
@@ -47,25 +47,7 @@ class Black {
 	 * @returns {object[]}: Parsed results
 	 */
 	static parseResults(dir, results) {
-		// Parsed results: [notices, warnings, failures]
-		const resultsParsed = [[], [], []];
-
-		const files = parseDiff(results);
-		for (const file of files) {
-			const { chunks, from: path } = file;
-			for (const chunk of chunks) {
-				const { oldStart, oldLines, changes } = chunk;
-				const diff = changes.map(change => change.content).join("\n");
-				resultsParsed[2].push({
-					path,
-					firstLine: oldStart,
-					lastLine: oldStart + oldLines,
-					message: diff,
-				});
-			}
-		}
-
-		return resultsParsed;
+		return diffToParsedResults(results);
 	}
 }
 

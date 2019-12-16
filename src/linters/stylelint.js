@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils");
+const { exit, run } = require("../utils/action");
 
 const SEVERITY_LEVELS = ["", "warning", "error"];
 

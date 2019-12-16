@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils");
+const { exit, run } = require("../utils/action");
 
 /**
  * https://prettier.io

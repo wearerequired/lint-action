@@ -1,6 +1,6 @@
 const { createCheck, getGithubInfo } = require("./github");
 const linters = require("./linters");
-const { exit, getInput, log } = require("./utils");
+const { exit, getInput, log } = require("./utils/action");
 
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", err => {

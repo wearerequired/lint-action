@@ -1,4 +1,5 @@
-const { capitalizeFirstLetter, exit, run } = require("../utils");
+const { exit, run } = require("../utils/action");
+const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (\w*) (.*)$/gm;
 

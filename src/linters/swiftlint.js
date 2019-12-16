@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils");
+const { exit, run } = require("../utils/action");
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
 const LEVELS = ["", "warning", "error"];

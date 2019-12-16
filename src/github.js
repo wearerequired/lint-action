@@ -1,6 +1,6 @@
 const { name: actionName } = require("../package");
-const request = require("./request");
-const { exit, getEnv, getInput, log } = require("./utils");
+const { exit, getEnv, getInput, log } = require("./utils/action");
+const request = require("./utils/request");
 
 const ANNOTATION_LEVELS = ["notice", "warning", "failure"];
 
