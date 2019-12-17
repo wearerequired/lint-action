@@ -3,18 +3,78 @@ author: Samuel Meuli
 description: GitHub Action for detecting code style violations
 
 inputs:
-  eslint:
-    description: Extensions of files on which to run ESLint
-    required: false
-    default: ""
-  prettier:
-    description: Extensions of files on which to run Prettier
-    required: false
-    default: ""
+  # CSS
+
   stylelint:
-    description: Extensions of files on which to run Stylelint
+    description: Enable or disable stylelint checks
     required: false
-    default: ""
+    default: false
+  stylelint_extensions:
+    description: Extensions of files to check with stylelint
+    required: false
+    default: "css"
+
+  # Go
+
+  gofmt:
+    description: Enable or disable gofmt checks
+    required: false
+    default: false
+  gofmt_extensions:
+    description: Extensions of files to check with gofmt
+    required: false
+    default: "go"
+
+  # JavaScript
+
+  eslint:
+    description: Enable or disable ESLint checks
+    required: false
+    default: false
+  eslint_extensions:
+    description: Extensions of files to check with ESLint
+    required: false
+    default: "js"
+
+  prettier:
+    description: Enable or disable Prettier checks
+    required: false
+    default: false
+  prettier_extensions:
+    description: Extensions of files to check with Prettier
+    required: false
+    default: "js"
+
+  # Python
+
+  black:
+    description: Enable or disable Black checks
+    required: false
+    default: false
+  black_extensions:
+    description: Extensions of files to check with Black
+    required: false
+    default: "py"
+
+  flake8:
+    description: Enable or disable flake8 checks
+    required: false
+    default: false
+  flake8_extensions:
+    description: Extensions of files to check with flake8
+    required: false
+    default: "py"
+
+  # Swift
+
+  swiftlint:
+    description: Enable or disable SwiftLint checks
+    required: false
+    default: false
+  swiftlint_extensions:
+    description: Extensions of files to check with SwiftLint
+    required: false
+    default: "swift"
 
 runs:
   using: node12

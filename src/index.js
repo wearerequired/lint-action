@@ -19,8 +19,9 @@ async function runAction() {
 	await Promise.all(
 		Object.entries(linters).map(async ([linterId, linter]) => {
 			// Determine whether the linter should be executed on the commit
-			const fileExtensions = getInput(linterId);
-			if (fileExtensions) {
+			if (getInput(linterId) === "true") {
+				const fileExtensions = getInput(`${linterId}_extensions`, true);
+
 				// Check that the linter and its dependencies are installed
 				log(`Verifying setup for ${linterId}…`);
 				linter.verifySetup();
