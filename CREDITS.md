@@ -1,6 +1,4 @@
-# Code Style Action
-
-## Credits
+# Credits
 
 Parts of this action's code are inspired by the [ESLint Action](https://github.com/gimenete/eslint-action) by Alberto Gimeno.
 
