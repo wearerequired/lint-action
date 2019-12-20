@@ -5,7 +5,10 @@ const Prettier = require("../src/linters/prettier");
 const prettierProject = join(__dirname, "projects", "prettier");
 
 // Expected linting results from test project
-const testResults = `styles.css\nindex.js`;
+const testResultsCss = `styles.css`;
+const testResultsJs = `index.js`;
+const testResultsOrder1 = `${testResultsCss}\n${testResultsJs}`;
+const testResultsOrder2 = `${testResultsJs}\n${testResultsCss}`;
 const testResultsParsed = [
 	[],
 	[],
@@ -29,10 +32,10 @@ const testResultsParsed = [
 
 test("should return correct linting results", () => {
 	const results = Prettier.lint(prettierProject, ["css", "js"]);
-	expect(results).toEqual(testResults);
+	expect([testResultsOrder1, testResultsOrder2]).toContain(results);
 });
 
 test("should parse linting results correctly", () => {
-	const resultsParsed = Prettier.parseResults(prettierProject, testResults);
+	const resultsParsed = Prettier.parseResults(prettierProject, testResultsOrder1);
 	expect(resultsParsed).toEqual(testResultsParsed);
 });
