@@ -1,0 +1,40 @@
+name: JavaScript tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install dependencies
+        run: |
+          cd ./test/projects/eslint
+          yarn install
+          cd ../eslint-typescript
+          yarn install
+          cd ../prettier
+          yarn install
+          cd ../stylelint
+          yarn install
+          cd ../stylelint-mixed
+          yarn install
+          cd ../stylelint-scss
+          yarn install
+
+      - name: Run tests
+        run: |
+          yarn
+          yarn test eslint prettier stylelint
