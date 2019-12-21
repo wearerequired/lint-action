@@ -1,3 +1,4 @@
+const { join } = require("path");
 const { createCheck, getGithubInfo } = require("./github");
 const linters = require("./linters");
 const { exit, getInput, log } = require("./utils/action");
@@ -32,8 +33,10 @@ async function runAction() {
 				log(`Will use ${linterId} to check the files with extensions ${fileExtList}`);
 
 				// Lint the matching files, parse code style violations
-				log(`Running ${linterId} checks in ${github.workspace}…`);
-				const results = linter.lint(github.workspace, fileExtList);
+				const lintDirRel = getInput(`${linterId}_dir`) || ".";
+				const lintDirAbs = join(github.workspace, lintDirRel);
+				log(`Running ${linterId} checks in ${lintDirAbs}…`);
+				const results = linter.lint(lintDirAbs, fileExtList);
 				const resultsParsed = linter.parseResults(github.workspace, results);
 				log(
 					`Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`,

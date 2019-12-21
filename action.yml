@@ -13,6 +13,9 @@ inputs:
     description: Extensions of files to check with stylelint
     required: false
     default: "css"
+  stylelint_dir:
+    description: Directory where the stylelint command should be run
+    required: false
 
   # Go
 
@@ -24,6 +27,9 @@ inputs:
     description: Extensions of files to check with gofmt
     required: false
     default: "go"
+  gofmt_dir:
+    description: Directory where the gofmt command should be run
+    required: false
 
   # JavaScript
 
@@ -35,6 +41,9 @@ inputs:
     description: Extensions of files to check with ESLint
     required: false
     default: "js"
+  eslint_dir:
+    description: Directory where the ESLint command should be run
+    required: false
 
   prettier:
     description: Enable or disable Prettier checks
@@ -44,6 +53,9 @@ inputs:
     description: Extensions of files to check with Prettier
     required: false
     default: "js"
+  prettier_dir:
+    description: Directory where the Prettier command should be run
+    required: false
 
   # Python
 
@@ -55,6 +67,9 @@ inputs:
     description: Extensions of files to check with Black
     required: false
     default: "py"
+  black_dir:
+    description: Directory where the Black command should be run
+    required: false
 
   flake8:
     description: Enable or disable flake8 checks
@@ -64,6 +79,9 @@ inputs:
     description: Extensions of files to check with flake8
     required: false
     default: "py"
+  flake8_dir:
+    description: Directory where the flake8 command should be run
+    required: false
 
   # Swift
 
@@ -75,6 +93,9 @@ inputs:
     description: Extensions of files to check with SwiftLint
     required: false
     default: "swift"
+  swiftlint_dir:
+    description: Directory where the SwiftLint command should be run
+    required: false
 
 runs:
   using: node12
