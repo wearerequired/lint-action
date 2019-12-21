@@ -1,4 +1,4 @@
-name: Code Style Action
+name: Lint Action
 author: Samuel Meuli
 description: GitHub Action for detecting code style violations
 

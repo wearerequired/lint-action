@@ -1,5 +1,5 @@
 {
-	"name": "action-code-style",
+	"name": "lint-action",
 	"version": "0.0.0",
 	"description": "GitHub Action for detecting code style violations",
 	"author": {
@@ -7,7 +7,7 @@
 		"email": "me@samuelmeuli.com",
 		"url": "https://samuelmeuli.com"
 	},
-	"repository": "github:samuelmeuli/action-code-style",
+	"repository": "github:samuelmeuli/lint-action",
 	"license": "MIT",
 	"private": true,
 	"main": "./src/index.js",
