@@ -13,7 +13,6 @@ process.on("unhandledRejection", err => {
  * Parses the action configuration and runs all enabled linters on matching files
  */
 async function runAction() {
-	let exitCode = 0;
 	const github = getGithubInfo();
 
 	// Loop over all available linters
@@ -46,16 +45,9 @@ async function runAction() {
 				if (github.eventName === "push") {
 					await createCheck(linterId, github, resultsParsed);
 				}
-
-				// If there are linting errors, remember to exit with code 1 at the end of the action
-				if (resultsParsed[2].length > 0 && exitCode === 0) {
-					exitCode = 1;
-				}
 			}
 		}),
 	);
-
-	process.exit(exitCode);
 }
 
 runAction();
