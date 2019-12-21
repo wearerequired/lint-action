@@ -2,7 +2,7 @@ const { exit, run } = require("../utils/action");
 const { diffToParsedResults } = require("../utils/diff");
 
 /**
- * https://black.readthedocs.io/
+ * https://black.readthedocs.io
  */
 class Black {
 	/**
