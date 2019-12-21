@@ -9,18 +9,20 @@ class Stylelint {
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing
+	 *
+	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup() {
+	static verifySetup(dir) {
 		// Verify that NPM is installed (required to execute stylelint)
 		try {
-			run("command -v npm");
+			run("command -v npm", { dir });
 		} catch (err) {
 			exit("NPM is not installed");
 		}
 
 		// Verify that stylelint is installed
 		try {
-			run("npx --no-install stylelint -v");
+			run("npx --no-install stylelint -v", { dir });
 		} catch (err) {
 			exit("stylelint is not installed");
 		}

@@ -8,18 +8,20 @@ class Black {
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing
+	 *
+	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup() {
+	static verifySetup(dir) {
 		// Verify that Python is installed (required to execute Black)
 		try {
-			run("command -v python");
+			run("command -v python", { dir });
 		} catch (err) {
 			exit("Python is not installed");
 		}
 
 		// Verify that Black is installed
 		try {
-			run("command -v black");
+			run("command -v black", { dir });
 		} catch (err) {
 			exit("Black is not installed");
 		}

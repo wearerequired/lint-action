@@ -8,11 +8,13 @@ class Gofmt {
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing
+	 *
+	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup() {
+	static verifySetup(dir) {
 		// Verify that gofmt is installed
 		try {
-			run("command -v gofmt");
+			run("command -v gofmt", { dir });
 		} catch (err) {
 			exit("gofmt is not installed");
 		}

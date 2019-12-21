@@ -21,10 +21,12 @@ async function runAction() {
 			// Determine whether the linter should be executed on the commit
 			if (getInput(linterId) === "true") {
 				const fileExtensions = getInput(`${linterId}_extensions`, true);
+				const lintDirRel = getInput(`${linterId}_dir`) || ".";
+				const lintDirAbs = join(github.workspace, lintDirRel);
 
 				// Check that the linter and its dependencies are installed
 				log(`Verifying setup for ${linterId}…`);
-				linter.verifySetup();
+				linter.verifySetup(lintDirAbs);
 				log(`Verified ${linterId} setup`);
 
 				// Determine which files should be linted
@@ -32,8 +34,6 @@ async function runAction() {
 				log(`Will use ${linterId} to check the files with extensions ${fileExtList}`);
 
 				// Lint the matching files, parse code style violations
-				const lintDirRel = getInput(`${linterId}_dir`) || ".";
-				const lintDirAbs = join(github.workspace, lintDirRel);
 				log(`Running ${linterId} checks in ${lintDirAbs}…`);
 				const results = linter.lint(lintDirAbs, fileExtList);
 				const resultsParsed = linter.parseResults(github.workspace, results);

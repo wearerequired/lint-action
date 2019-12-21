@@ -10,11 +10,13 @@ class SwiftLint {
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing
+	 *
+	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup() {
+	static verifySetup(dir) {
 		// Verify that SwiftLint is installed
 		try {
-			run("command -v swiftlint");
+			run("command -v swiftlint", { dir });
 		} catch (err) {
 			exit("SwiftLint is not installed");
 		}

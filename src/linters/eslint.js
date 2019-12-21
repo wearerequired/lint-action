@@ -7,18 +7,20 @@ class ESLint {
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing
+	 *
+	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup() {
+	static verifySetup(dir) {
 		// Verify that NPM is installed (required to execute ESLint)
 		try {
-			run("command -v npm");
+			run("command -v npm", { dir });
 		} catch (err) {
 			exit("NPM is not installed");
 		}
 
 		// Verify that ESLint is installed
 		try {
-			run("npx --no-install eslint -v");
+			run("npx --no-install eslint -v", { dir });
 		} catch (err) {
 			exit("ESLint is not installed");
 		}
