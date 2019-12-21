@@ -1,13 +1,20 @@
 const { join } = require("path");
 const Stylelint = require("../src/linters/stylelint");
+const { joinDoubleBackslash } = require("./utils");
 
 // Path to stylelint test project
 const stylelintMixedProject = join(__dirname, "projects", "stylelint-mixed");
 
 // Expected linting results from test project
 // stylelint lints files in parallel, so the order may be different between two test runs
-const resultsCss = `{"source":"${stylelintMixedProject}/styles.css","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":5,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"},{"line":2,"column":9,"rule":"color-named","severity":"warning","text":"Unexpected named color \\"red\\" (color-named)"}]}`;
-const resultsScss = `{"source":"${stylelintMixedProject}/styles.scss","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":5,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"},{"line":2,"column":9,"rule":"color-named","severity":"warning","text":"Unexpected named color \\"red\\" (color-named)"}]}`;
+const resultsCss = `{"source":"${joinDoubleBackslash(
+	stylelintMixedProject,
+	"styles.css",
+)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":5,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"},{"line":2,"column":9,"rule":"color-named","severity":"warning","text":"Unexpected named color \\"red\\" (color-named)"}]}`;
+const resultsScss = `{"source":"${joinDoubleBackslash(
+	stylelintMixedProject,
+	"styles.scss",
+)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":5,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"},{"line":2,"column":9,"rule":"color-named","severity":"warning","text":"Unexpected named color \\"red\\" (color-named)"}]}`;
 const testResultsOrder1 = `[${resultsCss},${resultsScss}]`;
 const testResultsOrder2 = `[${resultsScss},${resultsCss}]`;
 const testResultsParsed = [

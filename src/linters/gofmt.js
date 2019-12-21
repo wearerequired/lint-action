@@ -32,7 +32,7 @@ class Gofmt {
 
 		// -d: Display diffs instead of rewriting files
 		// -e: Report all errors (not just the first 10 on different lines)
-		return run("gofmt -d -e .", {
+		return run(`gofmt -d -e "."`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;

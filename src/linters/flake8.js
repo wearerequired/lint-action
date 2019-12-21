@@ -1,3 +1,4 @@
+const { sep } = require("path");
 const { exit, run } = require("../utils/action");
 const { capitalizeFirstLetter } = require("../utils/string");
 
@@ -35,7 +36,7 @@ class Flake8 {
 	 * @returns {string}: Results of the linting process
 	 */
 	static lint(dir, extensions) {
-		return run(`flake8 --filename ${extensions.map(ext => `'**/*.${ext}'`).join(",")}`, {
+		return run(`flake8 --filename ${extensions.map(ext => `"**${sep}*.${ext}"`).join(",")}`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;
@@ -56,7 +57,7 @@ class Flake8 {
 
 		for (const match of matches) {
 			const [_str, pathFull, line, _column, rule, text] = match;
-			const path = pathFull.substring(2); // Remove "./" from start of path
+			const path = pathFull.substring(2); // Remove "./" or ".\" from start of path
 			const lineNr = parseInt(line, 10);
 			resultsParsed[2].push({
 				path,

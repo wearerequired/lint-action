@@ -1,11 +1,15 @@
 const { join } = require("path");
 const Stylelint = require("../src/linters/stylelint");
+const { joinDoubleBackslash } = require("./utils");
 
 // Path to stylelint test project
 const stylelintProject = join(__dirname, "projects", "stylelint");
 
 // Expected linting results from test project
-const testResults = `[{"source":"${stylelintProject}/styles.css","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":5,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"},{"line":2,"column":9,"rule":"color-named","severity":"warning","text":"Unexpected named color \\"red\\" (color-named)"}]}]`;
+const testResults = `[{"source":"${joinDoubleBackslash(
+	stylelintProject,
+	"styles.css",
+)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":5,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"},{"line":2,"column":9,"rule":"color-named","severity":"warning","text":"Unexpected named color \\"red\\" (color-named)"}]}]`;
 const testResultsParsed = [
 	[],
 	[

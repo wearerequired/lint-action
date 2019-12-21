@@ -36,7 +36,7 @@ class Stylelint {
 	static lint(dir, extensions) {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
-		return run(`npx --no-install stylelint --no-color --formatter json '${files}'`, {
+		return run(`npx --no-install stylelint --no-color --formatter json "${files}"`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;

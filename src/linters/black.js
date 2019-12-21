@@ -33,7 +33,7 @@ class Black {
 	 * @returns {string}: Results of the linting process
 	 */
 	static lint(dir, extensions) {
-		return run(`black --diff --include '^.*\\.(${extensions.join("|")})$' .`, {
+		return run(`black --diff --include "^.*\\.(${extensions.join("|")})$" "."`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;

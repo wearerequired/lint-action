@@ -35,7 +35,7 @@ class ESLint {
 		return run(
 			`npx --no-install eslint --ext ${extensions
 				.map(ext => `.${ext}`)
-				.join(",")} --no-color --format json .`,
+				.join(",")} --no-color --format json "."`,
 			{
 				dir,
 				ignoreErrors: true,

@@ -5,7 +5,13 @@ const SwiftLint = require("../src/linters/swiftlint");
 const swiftlintProject = join(__dirname, "projects", "swiftlint");
 
 // Expected linting results from test project
-const testResults = `${swiftlintProject}/main.swift:9:24: error: Trailing Semicolon Violation: Lines should not have trailing semicolons. (trailing_semicolon)\n${swiftlintProject}/main.swift:6:1: warning: Vertical Whitespace Violation: Limit vertical whitespace to a single empty line. Currently 2. (vertical_whitespace)`;
+const testResults = `${join(
+	swiftlintProject,
+	"main.swift",
+)}:9:24: error: Trailing Semicolon Violation: Lines should not have trailing semicolons. (trailing_semicolon)\n${join(
+	swiftlintProject,
+	"main.swift",
+)}:6:1: warning: Vertical Whitespace Violation: Limit vertical whitespace to a single empty line. Currently 2. (vertical_whitespace)`;
 const testResultsParsed = [
 	[],
 	[

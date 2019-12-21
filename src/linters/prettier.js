@@ -34,7 +34,7 @@ class Prettier {
 	static lint(dir, extensions) {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
-		return run(`npx --no-install prettier --list-different --no-color ${files}`, {
+		return run(`npx --no-install prettier --list-different --no-color "${files}"`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;
