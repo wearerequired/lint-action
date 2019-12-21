@@ -1,4 +1,4 @@
-const parseDiff = require("../vendor/parse-diff");
+const parseDiff = require("../../vendor/parse-diff");
 
 /**
  * Parses a unified diff and converts it to a results array
