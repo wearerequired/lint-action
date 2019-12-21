@@ -1,6 +1,6 @@
 name: Lint Action
 author: Samuel Meuli
-description: GitHub Action for detecting code style violations
+description: GitHub Action for detecting and fixing linting errors
 
 inputs:
   # CSS

@@ -1,7 +1,7 @@
 {
 	"name": "lint-action",
 	"version": "0.0.0",
-	"description": "GitHub Action for detecting code style violations",
+	"description": "GitHub Action for detecting and fixing linting errors",
 	"author": {
 		"name": "Samuel Meuli",
 		"email": "me@samuelmeuli.com",
