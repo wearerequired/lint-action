@@ -2,7 +2,7 @@ const { EOL } = require("os");
 const { join, sep } = require("path");
 const Flake8 = require("../src/linters/flake8");
 
-// Path to flake8 test project
+// Path to Flake8 test project
 const flake8Project = join(__dirname, "projects", "flake8");
 
 // Expected linting results from test project

@@ -72,15 +72,15 @@ inputs:
     required: false
 
   flake8:
-    description: Enable or disable flake8 checks
+    description: Enable or disable Flake8 checks
     required: false
     default: false
   flake8_extensions:
-    description: Extensions of files to check with flake8
+    description: Extensions of files to check with Flake8
     required: false
     default: "py"
   flake8_dir:
-    description: Directory where the flake8 command should be run
+    description: Directory where the Flake8 command should be run
     required: false
 
   # Swift

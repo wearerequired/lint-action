@@ -15,18 +15,18 @@ class Flake8 {
 	 * @param {string} dir: Directory to run the linting program in
 	 */
 	static verifySetup(dir) {
-		// Verify that Python is installed (required to execute flake8)
+		// Verify that Python is installed (required to execute Flake8)
 		try {
 			run("command -v python", { dir });
 		} catch (err) {
 			exit("Python is not installed");
 		}
 
-		// Verify that flake8 is installed
+		// Verify that Flake8 is installed
 		try {
 			run("command -v flake8", { dir });
 		} catch (err) {
-			exit("flake8 is not installed");
+			exit("Flake8 is not installed");
 		}
 	}
 
