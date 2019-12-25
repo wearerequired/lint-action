@@ -1,6 +1,6 @@
 const { join } = require("path");
-const Stylelint = require("../src/linters/stylelint");
-const { joinDoubleBackslash } = require("./utils");
+const Stylelint = require("../../src/linters/stylelint");
+const { joinDoubleBackslash } = require("../utils");
 
 // Path to stylelint test project
 const stylelintMixedProject = join(__dirname, "projects", "stylelint-mixed");

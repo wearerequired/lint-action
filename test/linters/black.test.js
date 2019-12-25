@@ -1,5 +1,5 @@
 const { join } = require("path");
-const Black = require("../src/linters/black");
+const Black = require("../../src/linters/black");
 
 // Path to Black test project
 const blackProject = join(__dirname, "projects", "black");

@@ -51,12 +51,12 @@
 	},
 	"prettier": "@samuelmeuli/prettier-config",
 	"lint-staged": {
-		"!(test/projects/**/*).js": [
+		"!(test/linters/projects/**/*).js": [
 			"yarn lint",
 			"yarn format",
 			"git add"
 		],
-		"!(test/projects/**/*).{css,html,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}": [
+		"!(test/linters/projects/**/*).{css,html,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}": [
 			"yarn format",
 			"git add"
 		]

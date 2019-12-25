@@ -7,7 +7,8 @@ const ANNOTATION_LEVELS = ["notice", "warning", "failure"];
 /**
  * Returns information about the GitHub repository and action trigger event
  *
- * @returns {object}: Object containing the information
+ * @returns {{workspace: string, eventName: string, repository: string, sha: string, token: string,
+ * username: string}}: Object containing the information
  */
 function getGithubInfo() {
 	// Information provided by environment
@@ -33,7 +34,8 @@ function getGithubInfo() {
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
  *
  * @param checkName {string}: Name which will be displayed in the check list
- * @param github {object}: {@see getGithubInfo}
+ * @param github {object}: {{workspace: string, eventName: string, repository: string, sha: string,
+ * token: string, username: string}}
  * @param results {object[]}: Results from the linter execution
  */
 async function createCheck(checkName, github, results) {

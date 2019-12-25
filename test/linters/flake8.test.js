@@ -1,6 +1,6 @@
 const { EOL } = require("os");
 const { join, sep } = require("path");
-const Flake8 = require("../src/linters/flake8");
+const Flake8 = require("../../src/linters/flake8");
 
 // Path to Flake8 test project
 const flake8Project = join(__dirname, "projects", "flake8");

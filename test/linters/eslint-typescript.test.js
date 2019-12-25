@@ -1,6 +1,6 @@
 const { join } = require("path");
-const ESLint = require("../src/linters/eslint");
-const { joinDoubleBackslash } = require("./utils");
+const ESLint = require("../../src/linters/eslint");
+const { joinDoubleBackslash } = require("../utils");
 
 // Path to ESLint test project
 const eslintTsProject = join(__dirname, "projects", "eslint-typescript");

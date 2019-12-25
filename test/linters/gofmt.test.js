@@ -1,5 +1,5 @@
 const { join } = require("path");
-const Gofmt = require("../src/linters/gofmt");
+const Gofmt = require("../../src/linters/gofmt");
 
 // Path to gofmt test project
 const gofmtProject = join(__dirname, "projects", "gofmt");

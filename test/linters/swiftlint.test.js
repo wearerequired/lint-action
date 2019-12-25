@@ -1,5 +1,5 @@
 const { join } = require("path");
-const SwiftLint = require("../src/linters/swiftlint");
+const SwiftLint = require("../../src/linters/swiftlint");
 
 // Path to SwiftLint test project
 const swiftlintProject = join(__dirname, "projects", "swiftlint");
