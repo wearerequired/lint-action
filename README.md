@@ -30,9 +30,7 @@ Create a new GitHub Actions workflow in your project, e.g. at `.github/workflows
 ```yml
 name: Lint
 
-on:
-  - push
-  - pull_request
+on: push
 
 jobs:
   lint:
@@ -60,9 +58,7 @@ _The GitHub token is required for creating checks on commits and pull requests. 
 ```yml
 name: Lint
 
-on:
-  - push
-  - pull_request
+on: push
 
 jobs:
   lint:
@@ -94,9 +90,7 @@ jobs:
 ```yml
 name: Lint
 
-on:
-  - push
-  - pull_request
+on: push
 
 jobs:
   lint:
