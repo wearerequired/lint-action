@@ -43,8 +43,9 @@ function getGithubInfo() {
  * string, sha: string, token: string, username: string}}: Object information about the GitHub
  * repository and action trigger event
  * @param results {object[]}: Results from the linter execution
+ * @param summary {string}: Summary for the GitHub check
  */
-async function createCheck(checkName, github, results) {
+async function createCheck(checkName, github, results, summary) {
 	let annotations = [];
 	for (let level = 0; level < 3; level += 1) {
 		annotations = [
@@ -70,12 +71,10 @@ async function createCheck(checkName, github, results) {
 	const body = {
 		name: checkName,
 		head_sha: github.sha,
-		conclusion: annotations.length === 0 ? "success" : "failure",
+		conclusion: results[2].length === 0 ? "success" : "failure",
 		output: {
 			title: checkName,
-			summary: `${checkName} found ${annotations.length === 0 ? "no" : annotations.length} issue${
-				annotations.length !== 1 ? "s" : ""
-			}`,
+			summary,
 			annotations,
 		},
 	};

@@ -53,21 +53,23 @@ function runAction() {
 				commitChanges(`Fix code style issues with ${linterId}`);
 			}
 			const resultsParsed = linter.parseResults(github.workspace, results);
+
+			// Build and log a summary of linting errors/warnings
+			let summary;
 			if (resultsParsed[1].length > 0 && resultsParsed[2].length > 0) {
-				log(
-					`Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`,
-				);
+				summary = `Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`;
 			} else if (resultsParsed[2].length > 0) {
-				log(`Found ${resultsParsed[2].length} errors with ${linterId}`);
+				summary = `Found ${resultsParsed[2].length} errors with ${linterId}`;
 			} else if (resultsParsed[1].length > 0) {
-				log(`Found ${resultsParsed[1].length} warnings with ${linterId}`);
+				summary = `Found ${resultsParsed[1].length} warnings with ${linterId}`;
 			} else {
-				log(`No code style issues found with ${linterId}`);
+				summary = `No code style issues found with ${linterId}`;
 			}
+			log(summary);
 
 			// Annotate commit with code style violations on GitHub
 			if (github.eventName === "push") {
-				createCheck(linterId, github, resultsParsed);
+				createCheck(linterId, github, resultsParsed, summary);
 			}
 		}
 	}
