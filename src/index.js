@@ -22,57 +22,55 @@ process.on("unhandledRejection", err => {
 /**
  * Parses the action configuration and runs all enabled linters on matching files
  */
-async function runAction() {
+function runAction() {
 	const github = getGithubInfo();
 	const autoFix = getInput("auto_fix") === "true";
 
 	setGitUserInfo(GIT_NAME, GIT_EMAIL);
 
 	// Loop over all available linters
-	await Promise.all(
-		Object.entries(linters).map(async ([linterId, linter]) => {
-			// Determine whether the linter should be executed on the commit
-			if (getInput(linterId) === "true") {
-				const fileExtensions = getInput(`${linterId}_extensions`, true);
-				const lintDirRel = getInput(`${linterId}_dir`) || ".";
-				const lintDirAbs = join(github.workspace, lintDirRel);
+	for (const [linterId, linter] of Object.entries(linters)) {
+		// Determine whether the linter should be executed on the commit
+		if (getInput(linterId) === "true") {
+			const fileExtensions = getInput(`${linterId}_extensions`, true);
+			const lintDirRel = getInput(`${linterId}_dir`) || ".";
+			const lintDirAbs = join(github.workspace, lintDirRel);
 
-				// Check that the linter and its dependencies are installed
-				log(`\nVerifying setup for ${linterId}…`);
-				linter.verifySetup(lintDirAbs);
-				log(`Verified ${linterId} setup`);
+			// Check that the linter and its dependencies are installed
+			log(`\nVerifying setup for ${linterId}…`);
+			linter.verifySetup(lintDirAbs);
+			log(`Verified ${linterId} setup`);
 
-				// Determine which files should be linted
-				const fileExtList = fileExtensions.split(",");
-				log(`Will use ${linterId} to check the files with extensions ${fileExtList}`);
+			// Determine which files should be linted
+			const fileExtList = fileExtensions.split(",");
+			log(`Will use ${linterId} to check the files with extensions ${fileExtList}`);
 
-				// Lint the matching files, parse code style violations
-				log(`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linterId}…`);
-				const results = linter.lint(lintDirAbs, fileExtList, autoFix);
-				if (autoFix) {
-					log("Committing and pushing changes…");
-					commitChanges(`Fix code style issues with ${linterId}`);
-				}
-				const resultsParsed = linter.parseResults(github.workspace, results);
-				if (resultsParsed[1].length > 0 && resultsParsed[2].length > 0) {
-					log(
-						`Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`,
-					);
-				} else if (resultsParsed[2].length > 0) {
-					log(`Found ${resultsParsed[2].length} errors with ${linterId}`);
-				} else if (resultsParsed[1].length > 0) {
-					log(`Found ${resultsParsed[1].length} warnings with ${linterId}`);
-				} else {
-					log(`No code style issues found with ${linterId}`);
-				}
-
-				// Annotate commit with code style violations on GitHub
-				if (github.eventName === "push") {
-					await createCheck(linterId, github, resultsParsed);
-				}
+			// Lint the matching files, parse code style violations
+			log(`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linterId}…`);
+			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
+			if (autoFix) {
+				log("Committing and pushing changes…");
+				commitChanges(`Fix code style issues with ${linterId}`);
 			}
-		}),
-	);
+			const resultsParsed = linter.parseResults(github.workspace, results);
+			if (resultsParsed[1].length > 0 && resultsParsed[2].length > 0) {
+				log(
+					`Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`,
+				);
+			} else if (resultsParsed[2].length > 0) {
+				log(`Found ${resultsParsed[2].length} errors with ${linterId}`);
+			} else if (resultsParsed[1].length > 0) {
+				log(`Found ${resultsParsed[1].length} warnings with ${linterId}`);
+			} else {
+				log(`No code style issues found with ${linterId}`);
+			}
+
+			// Annotate commit with code style violations on GitHub
+			if (github.eventName === "push") {
+				createCheck(linterId, github, resultsParsed);
+			}
+		}
+	}
 
 	if (autoFix) {
 		pushChanges(github);
