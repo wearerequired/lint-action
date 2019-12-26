@@ -1,5 +1,5 @@
 const { sep } = require("path");
-const { run } = require("../utils/action");
+const { log, run } = require("../utils/action");
 const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (\w*) (.*)$/gm;
@@ -35,9 +35,13 @@ class Flake8 {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
 	 * @returns {string}: Results of the linting process
 	 */
-	static lint(dir, extensions) {
+	static lint(dir, extensions, fix = false) {
+		if (fix) {
+			log("flake8 does not support auto-fixing code style issues", "warning");
+		}
 		return run(`flake8 --filename ${extensions.map(ext => `"**${sep}*.${ext}"`).join(",")}`, {
 			dir,
 			ignoreErrors: true,

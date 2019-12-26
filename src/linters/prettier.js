@@ -31,15 +31,20 @@ class Prettier {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
 	 * @returns {string}: Results of the linting process
 	 */
-	static lint(dir, extensions) {
+	static lint(dir, extensions, fix = false) {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
-		return run(`npx --no-install prettier --list-different --no-color "${files}"`, {
-			dir,
-			ignoreErrors: true,
-		}).stdout;
+		const results = run(
+			`npx --no-install prettier ${fix ? "--write" : "--list-different"} --no-color "${files}"`,
+			{
+				dir,
+				ignoreErrors: true,
+			},
+		).stdout;
+		return fix ? "" : results;
 	}
 
 	/**

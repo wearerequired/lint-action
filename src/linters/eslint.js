@@ -31,13 +31,14 @@ class ESLint {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
 	 * @returns {string}: Results of the linting process
 	 */
-	static lint(dir, extensions) {
+	static lint(dir, extensions, fix = false) {
 		return run(
-			`npx --no-install eslint --ext ${extensions
-				.map(ext => `.${ext}`)
-				.join(",")} --no-color --format json "."`,
+			`npx --no-install eslint --ext ${extensions.map(ext => `.${ext}`).join(",")} ${
+				fix ? "--fix" : ""
+			} --no-color --format json "."`,
 			{
 				dir,
 				ignoreErrors: true,

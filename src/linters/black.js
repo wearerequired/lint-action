@@ -32,10 +32,11 @@ class Black {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
 	 * @returns {string}: Results of the linting process
 	 */
-	static lint(dir, extensions) {
-		return run(`black --diff --include "^.*\\.(${extensions.join("|")})$" "."`, {
+	static lint(dir, extensions, fix = false) {
+		return run(`black ${fix ? "" : "--diff"} --include "^.*\\.(${extensions.join("|")})$" "."`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;

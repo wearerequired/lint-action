@@ -3,6 +3,11 @@ author: Samuel Meuli
 description: GitHub Action for detecting and fixing linting errors
 
 inputs:
+  auto_fix:
+    description: Whether linters should try to fix code style issues automatically
+    required: false
+    default: false
+
   # CSS
 
   stylelint:

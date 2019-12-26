@@ -27,14 +27,15 @@ class SwiftLint {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
 	 * @returns {string}: Results of the linting process
 	 */
-	static lint(dir, extensions) {
+	static lint(dir, extensions, fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
 			throw new Error(`SwiftLint error: File extensions are not configurable`);
 		}
 
-		return run("swiftlint", {
+		return run(`swiftlint ${fix ? "autocorrect" : ""}`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;

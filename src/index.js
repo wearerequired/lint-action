@@ -1,7 +1,17 @@
 const { join } = require("path");
-const { createCheck, getGithubInfo } = require("./github");
+const { name: actionName } = require("../package");
+const {
+	commitChanges,
+	createCheck,
+	getGithubInfo,
+	pushChanges,
+	setGitUserInfo,
+} = require("./github");
 const linters = require("./linters");
 const { getInput, log } = require("./utils/action");
+
+const GIT_NAME = actionName;
+const GIT_EMAIL = `${actionName}@example.com`; // TODO: change
 
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", err => {
@@ -14,6 +24,9 @@ process.on("unhandledRejection", err => {
  */
 async function runAction() {
 	const github = getGithubInfo();
+	const autoFix = getInput("auto_fix") === "true";
+
+	setGitUserInfo(GIT_NAME, GIT_EMAIL);
 
 	// Loop over all available linters
 	await Promise.all(
@@ -25,7 +38,7 @@ async function runAction() {
 				const lintDirAbs = join(github.workspace, lintDirRel);
 
 				// Check that the linter and its dependencies are installed
-				log(`Verifying setup for ${linterId}…`);
+				log(`\nVerifying setup for ${linterId}…`);
 				linter.verifySetup(lintDirAbs);
 				log(`Verified ${linterId} setup`);
 
@@ -34,12 +47,24 @@ async function runAction() {
 				log(`Will use ${linterId} to check the files with extensions ${fileExtList}`);
 
 				// Lint the matching files, parse code style violations
-				log(`Running ${linterId} checks in ${lintDirAbs}…`);
-				const results = linter.lint(lintDirAbs, fileExtList);
+				log(`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linterId}…`);
+				const results = linter.lint(lintDirAbs, fileExtList, autoFix);
+				if (autoFix) {
+					log("Committing and pushing changes…");
+					commitChanges(`Fix code style issues with ${linterId}`);
+				}
 				const resultsParsed = linter.parseResults(github.workspace, results);
-				log(
-					`Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`,
-				);
+				if (resultsParsed[1].length > 0 && resultsParsed[2].length > 0) {
+					log(
+						`Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`,
+					);
+				} else if (resultsParsed[2].length > 0) {
+					log(`Found ${resultsParsed[2].length} errors with ${linterId}`);
+				} else if (resultsParsed[1].length > 0) {
+					log(`Found ${resultsParsed[1].length} warnings with ${linterId}`);
+				} else {
+					log(`No code style issues found with ${linterId}`);
+				}
 
 				// Annotate commit with code style violations on GitHub
 				if (github.eventName === "push") {
@@ -48,6 +73,10 @@ async function runAction() {
 			}
 		}),
 	);
+
+	if (autoFix) {
+		pushChanges(github);
+	}
 }
 
 runAction();
