@@ -1,5 +1,5 @@
 const { name: actionName } = require("../package");
-const { exit, getEnv, getInput, log } = require("./utils/action");
+const { getEnv, getInput, log } = require("./utils/action");
 const request = require("./utils/request");
 
 const ANNOTATION_LEVELS = ["notice", "warning", "failure"];
@@ -91,7 +91,7 @@ async function createCheck(checkName, github, results) {
 		);
 	} catch (err) {
 		log(err, "error");
-		exit(`Error trying to create annotations: ${err.message}`);
+		throw new Error(`Error trying to create annotations using GitHub API: ${err.message}`);
 	}
 }
 

@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils/action");
+const { run } = require("../utils/action");
 
 const SEVERITY_LEVELS = ["", "warning", "error"];
 
@@ -17,14 +17,14 @@ class Stylelint {
 		try {
 			run("command -v npm", { dir });
 		} catch (err) {
-			exit("NPM is not installed");
+			throw new Error("NPM is not installed");
 		}
 
 		// Verify that stylelint is installed
 		try {
 			run("npx --no-install stylelint -v", { dir });
 		} catch (err) {
-			exit("stylelint is not installed");
+			throw new Error("stylelint is not installed");
 		}
 	}
 

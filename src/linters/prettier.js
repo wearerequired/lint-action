@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils/action");
+const { run } = require("../utils/action");
 
 /**
  * https://prettier.io
@@ -15,14 +15,14 @@ class Prettier {
 		try {
 			run("command -v npm", { dir });
 		} catch (err) {
-			exit("NPM is not installed");
+			throw new Error("NPM is not installed");
 		}
 
 		// Verify that Prettier is installed
 		try {
 			run("npx --no-install prettier -v", { dir });
 		} catch (err) {
-			exit("Prettier is not installed");
+			throw new Error("Prettier is not installed");
 		}
 	}
 

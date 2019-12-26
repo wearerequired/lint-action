@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils/action");
+const { run } = require("../utils/action");
 const { diffToParsedResults } = require("../utils/diff");
 
 /**
@@ -16,7 +16,7 @@ class Gofmt {
 		try {
 			run("command -v gofmt", { dir });
 		} catch (err) {
-			exit("gofmt is not installed");
+			throw new Error("gofmt is not installed");
 		}
 	}
 
@@ -29,7 +29,7 @@ class Gofmt {
 	 */
 	static lint(dir, extensions) {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
-			exit(`gofmt error: File extensions are not configurable`);
+			throw new Error(`gofmt error: File extensions are not configurable`);
 		}
 
 		// -d: Display diffs instead of rewriting files

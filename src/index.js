@@ -1,12 +1,12 @@
 const { join } = require("path");
 const { createCheck, getGithubInfo } = require("./github");
 const linters = require("./linters");
-const { exit, getInput, log } = require("./utils/action");
+const { getInput, log } = require("./utils/action");
 
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", err => {
 	log(err, "error");
-	exit(`Exiting because of unhandled promise rejection`);
+	throw new Error(`Exiting because of unhandled promise rejection`);
 });
 
 /**

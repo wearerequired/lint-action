@@ -1,5 +1,5 @@
 const { sep } = require("path");
-const { exit, run } = require("../utils/action");
+const { run } = require("../utils/action");
 const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (\w*) (.*)$/gm;
@@ -19,14 +19,14 @@ class Flake8 {
 		try {
 			run("command -v python", { dir });
 		} catch (err) {
-			exit("Python is not installed");
+			throw new Error("Python is not installed");
 		}
 
 		// Verify that Flake8 is installed
 		try {
 			run("command -v flake8", { dir });
 		} catch (err) {
-			exit("Flake8 is not installed");
+			throw new Error("Flake8 is not installed");
 		}
 	}
 

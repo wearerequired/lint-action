@@ -22,16 +22,6 @@ function log(msg, level = "info") {
 }
 
 /**
- * Exits the current process with an error code and message
- *
- * @param msg {string}: Text to log to the console
- */
-function exit(msg) {
-	console.error(msg);
-	process.exit(1);
-}
-
-/**
  * Returns the value for an environment variable (or `null` if it's not defined)
  *
  * @param name {string}: Name of the environment variable
@@ -52,7 +42,7 @@ function getEnv(name) {
 function getInput(name, required = false) {
 	const value = getEnv(`INPUT_${name}`);
 	if (required && !value) {
-		exit(`"${name}" input variable is not defined`);
+		throw new Error(`"${name}" input variable is not defined`);
 	}
 	return value;
 }
@@ -91,7 +81,6 @@ function run(cmd, options = null) {
 
 module.exports = {
 	log,
-	exit,
 	getEnv,
 	getInput,
 	run,

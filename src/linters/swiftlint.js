@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils/action");
+const { run } = require("../utils/action");
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
 const LEVELS = ["", "warning", "error"];
@@ -18,7 +18,7 @@ class SwiftLint {
 		try {
 			run("command -v swiftlint", { dir });
 		} catch (err) {
-			exit("SwiftLint is not installed");
+			throw new Error("SwiftLint is not installed");
 		}
 	}
 
@@ -31,7 +31,7 @@ class SwiftLint {
 	 */
 	static lint(dir, extensions) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
-			exit(`SwiftLint error: File extensions are not configurable`);
+			throw new Error(`SwiftLint error: File extensions are not configurable`);
 		}
 
 		return run("swiftlint", {

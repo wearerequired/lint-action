@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils/action");
+const { run } = require("../utils/action");
 const { diffToParsedResults } = require("../utils/diff");
 
 /**
@@ -16,14 +16,14 @@ class Black {
 		try {
 			run("command -v python", { dir });
 		} catch (err) {
-			exit("Python is not installed");
+			throw new Error("Python is not installed");
 		}
 
 		// Verify that Black is installed
 		try {
 			run("command -v black", { dir });
 		} catch (err) {
-			exit("Black is not installed");
+			throw new Error("Black is not installed");
 		}
 	}
 

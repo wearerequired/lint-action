@@ -1,4 +1,4 @@
-const { exit, run } = require("../utils/action");
+const { run } = require("../utils/action");
 
 /**
  * https://eslint.org
@@ -15,14 +15,14 @@ class ESLint {
 		try {
 			run("command -v npm", { dir });
 		} catch (err) {
-			exit("NPM is not installed");
+			throw new Error("NPM is not installed");
 		}
 
 		// Verify that ESLint is installed
 		try {
 			run("npx --no-install eslint -v", { dir });
 		} catch (err) {
-			exit("ESLint is not installed");
+			throw new Error("ESLint is not installed");
 		}
 	}
 
