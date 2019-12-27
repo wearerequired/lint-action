@@ -4,8 +4,8 @@
 
 This action…
 
-- Shows **linting errors on PRs** and commits
-- [WIP] Allows **auto-fixing** linting errors on PRs
+- **Shows linting errors** on GitHub PRs and commits
+- Allows **auto-fixing** code style issues
 - Supports many [linters and formatters](#supported-tools)
 
 ## Supported tools
@@ -48,7 +48,7 @@ jobs:
           # Enable your linters here
 ```
 
-_The GitHub token is required for creating checks on commits and pull requests. It's provided automatically by GitHub, i.e. there's no need to define the secret on GitHub._
+_The GitHub token is required for creating checks on commits and pull requests. It's provided automatically by GitHub, so there's no need to define the secret on GitHub._
 
 ## Examples
 
@@ -117,7 +117,7 @@ jobs:
 
 ## Configuration
 
-By default, all linters are disabled. To enable a linter, simply set the option with its name to `true`. For example:
+All linters are disabled by default. To enable a linter, simply set the option with its name to `true`. For example, if you'd like to enable ESLint:
 
 ```yml
 - name: Run linters
@@ -127,12 +127,15 @@ By default, all linters are disabled. To enable a linter, simply set the option 
     eslint: true # Enables ESLint checks
 ```
 
-In addition to the options for enabling linters (e.g. `eslint`, `gofmt`, etc.), each linter can be configured with the following options:
+`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `prettier`, `stylelint`, and `swiftlint`:
 
-- **`[linter]_extensions`:** Extensions of files to check with the linter. Example: `eslint_extensions: js,ts` to lint TypeScript files with ESLint
-- **`[linter]_dir`:** Directory where the linting command should be run. Example: `eslint_dir: server/` if ESLint is installed in the `server` subdirectory of your repository
+- **`[linter]`:** Enables the linter in your repository
+- **`[linter]_extensions`:** Extensions of files to check with the linter. Example: `eslint_extensions: js,ts` to lint both JavaScript and TypeScript files with ESLint
+- **`[linter]_dir`:** Directory where the linting command should be run. Example: `eslint_dir: server/` if ESLint is installed in the `server` subdirectory
 
-See [`action.yml`](./action.yml) for all available options.
+Besides the linter-specific options, there's a general `auto_fix` setting:
+
+- **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch
 
 ## Development
 
@@ -142,7 +145,7 @@ Suggestions and contributions are always welcome! Please discuss larger changes 
 
 ### Adding a new linter
 
-If you want to add support for an additional linter, please open an issue to discuss its addition. Afterwards, you can follow these steps to add support for your linter:
+If you want to add support for an additional linter, please open an issue to discuss its inclusion in the project. Afterwards, you can follow these steps to add support for your linter:
 
 - Clone the repository and install its dependencies with `yarn install`.
 - Create a new class for the linter, e.g. `src/linters/my-linter.js`. Have a look at the other files in that directory to see what functions the class needs to implement.
