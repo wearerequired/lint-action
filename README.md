@@ -36,7 +36,7 @@ name: Lint
 on: push
 
 jobs:
-  lint:
+  run-linters:
     runs-on: ubuntu-latest
 
     steps:
@@ -64,7 +64,7 @@ name: Lint
 on: push
 
 jobs:
-  lint:
+  run-linters:
     runs-on: ubuntu-latest
 
     steps:
@@ -96,7 +96,7 @@ name: Lint
 on: push
 
 jobs:
-  lint:
+  run-linters:
     runs-on: ubuntu-latest
 
     steps:
@@ -133,13 +133,13 @@ All linters are disabled by default. To enable a linter, simply set the option w
 
 `[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `prettier`, `stylelint`, and `swiftlint`:
 
-- **`[linter]`:** Enables the linter in your repository
-- **`[linter]_extensions`:** Extensions of files to check with the linter. Example: `eslint_extensions: js,ts` to lint both JavaScript and TypeScript files with ESLint
-- **`[linter]_dir`:** Directory where the linting command should be run. Example: `eslint_dir: server/` if ESLint is installed in the `server` subdirectory
+- **`[linter]`:** Enables the linter in your repository. Default: `false`
+- **`[linter]_extensions`:** Extensions of files to check with the linter. Example: `eslint_extensions: js,ts` to lint both JavaScript and TypeScript files with ESLint. Default: See [`action.yml`](./action.yml)
+- **`[linter]_dir`:** Directory where the linting command should be run. Example: `eslint_dir: server/` if ESLint is installed in the `server` subdirectory. Default: `.`
 
 Besides the linter-specific options, there's a general `auto_fix` setting:
 
-- **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch
+- **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch. Default: `false`
 
 <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="75%" />
 
