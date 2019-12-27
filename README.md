@@ -8,7 +8,9 @@ This action…
 - Allows **auto-fixing** code style issues
 - Supports many [linters and formatters](#supported-tools)
 
-![Screenshot of ESLint check](./.github/screenshots/check.png)
+<img src="./.github/screenshots/check-runs.png" alt="Screenshot of check runs" width="75%" />
+
+<img src="./.github/screenshots/check-annotations.png" alt="Screenshot of ESLint annotations" width="90%" />
 
 ## Supported tools
 
@@ -139,7 +141,7 @@ Besides the linter-specific options, there's a general `auto_fix` setting:
 
 - **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch
 
-![Screenshot of auto-fix commit](./.github/screenshots/auto-fix.png)
+<img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="75%" />
 
 ## Development
 
