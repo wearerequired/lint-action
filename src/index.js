@@ -12,7 +12,7 @@ const linters = require("./linters");
 const { getInput, log } = require("./utils/action");
 
 const GIT_NAME = actionName;
-const GIT_EMAIL = `${actionName}@example.com`; // TODO: change
+const GIT_EMAIL = `lint-action@samuelmeuli.com`;
 
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", err => {
