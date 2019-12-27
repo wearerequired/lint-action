@@ -1,4 +1,4 @@
-# Lint Action
+# ✨ Lint Action
 
 **GitHub Action for detecting and fixing linting errors**
 
@@ -7,6 +7,8 @@ This action…
 - **Shows linting errors** on GitHub PRs and commits
 - Allows **auto-fixing** code style issues
 - Supports many [linters and formatters](#supported-tools)
+
+![Screenshot of ESLint check](./.github/screenshots/check.png)
 
 ## Supported tools
 
@@ -136,6 +138,8 @@ All linters are disabled by default. To enable a linter, simply set the option w
 Besides the linter-specific options, there's a general `auto_fix` setting:
 
 - **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch
+
+![Screenshot of auto-fix commit](./.github/screenshots/auto-fix.png)
 
 ## Development
 
