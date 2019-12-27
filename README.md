@@ -6,7 +6,6 @@ This action…
 
 - Shows **linting errors on PRs** and commits
 - [WIP] Allows **auto-fixing** linting errors on PRs
-- [WIP] Only checks files which were modified
 - Supports many [linters and formatters](#supported-tools)
 
 ## Supported tools
