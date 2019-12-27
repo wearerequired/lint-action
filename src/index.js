@@ -40,20 +40,22 @@ async function runAction() {
 			const lintDirAbs = join(github.workspace, lintDirRel);
 
 			// Check that the linter and its dependencies are installed
-			log(`\nVerifying setup for ${linterId}…`);
+			log(`\nVerifying setup for ${linter.name}…`);
 			linter.verifySetup(lintDirAbs);
-			log(`Verified ${linterId} setup`);
+			log(`Verified ${linter.name} setup`);
 
 			// Determine which files should be linted
 			const fileExtList = fileExtensions.split(",");
-			log(`Will use ${linterId} to check the files with extensions ${fileExtList}`);
+			log(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
-			log(`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linterId}…`);
+			log(
+				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
+			);
 			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
 			if (autoFix) {
 				log("Committing and pushing changes…");
-				commitChanges(`Fix code style issues with ${linterId}`);
+				commitChanges(`Fix code style issues with ${linter.name}`);
 				pushChanges(github);
 			}
 			const resultsParsed = linter.parseResults(github.workspace, results);
@@ -61,17 +63,17 @@ async function runAction() {
 			// Build and log a summary of linting errors/warnings
 			let summary;
 			if (resultsParsed[1].length > 0 && resultsParsed[2].length > 0) {
-				summary = `Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linterId}`;
+				summary = `Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linter.name}`;
 			} else if (resultsParsed[2].length > 0) {
-				summary = `Found ${resultsParsed[2].length} errors with ${linterId}`;
+				summary = `Found ${resultsParsed[2].length} errors with ${linter.name}`;
 			} else if (resultsParsed[1].length > 0) {
-				summary = `Found ${resultsParsed[1].length} warnings with ${linterId}`;
+				summary = `Found ${resultsParsed[1].length} warnings with ${linter.name}`;
 			} else {
-				summary = `No code style issues found with ${linterId}`;
+				summary = `No code style issues found with ${linter.name}`;
 			}
 			log(summary);
 
-			checks.push({ linterId, resultsParsed, summary });
+			checks.push({ checkName: linter.name, resultsParsed, summary });
 		}
 	}
 
@@ -80,8 +82,8 @@ async function runAction() {
 	if (github.eventName === "push") {
 		const headSha = getHeadSha();
 		await Promise.all(
-			checks.map(({ linterId, resultsParsed, summary }) =>
-				createCheck(linterId, headSha, github, resultsParsed, summary),
+			checks.map(({ checkName, resultsParsed, summary }) =>
+				createCheck(checkName, headSha, github, resultsParsed, summary),
 			),
 		);
 	}

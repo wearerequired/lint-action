@@ -6,6 +6,10 @@ const SEVERITY_LEVELS = ["", "warning", "error"];
  * https://stylelint.io
  */
 class Stylelint {
+	static get name() {
+		return "Stylelint";
+	}
+
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing

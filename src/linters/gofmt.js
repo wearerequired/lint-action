@@ -5,6 +5,10 @@ const { diffToParsedResults } = require("../utils/diff");
  * https://golang.org/cmd/gofmt
  */
 class Gofmt {
+	static get name() {
+		return "gofmt";
+	}
+
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing

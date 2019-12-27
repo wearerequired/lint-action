@@ -4,6 +4,10 @@ const { run } = require("../utils/action");
  * https://eslint.org
  */
 class ESLint {
+	static get name() {
+		return "ESLint";
+	}
+
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing

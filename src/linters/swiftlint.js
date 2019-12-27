@@ -7,6 +7,10 @@ const LEVELS = ["", "warning", "error"];
  * https://github.com/realm/SwiftLint
  */
 class SwiftLint {
+	static get name() {
+		return "SwiftLint";
+	}
+
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing

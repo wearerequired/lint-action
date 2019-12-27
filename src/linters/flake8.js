@@ -8,6 +8,10 @@ const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (\w*) (.*)$/gm;
  * http://flake8.pycqa.org
  */
 class Flake8 {
+	static get name() {
+		return "Flake8";
+	}
+
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing

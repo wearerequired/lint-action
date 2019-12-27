@@ -5,6 +5,10 @@ const { diffToParsedResults } = require("../utils/diff");
  * https://black.readthedocs.io
  */
 class Black {
+	static get name() {
+		return "Black";
+	}
+
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing

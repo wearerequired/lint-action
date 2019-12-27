@@ -4,6 +4,10 @@ const { run } = require("../utils/action");
  * https://prettier.io
  */
 class Prettier {
+	static get name() {
+		return "Prettier";
+	}
+
 	/**
 	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
 	 * programs is missing
