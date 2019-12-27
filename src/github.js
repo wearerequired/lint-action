@@ -39,13 +39,14 @@ function getGithubInfo() {
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
  *
  * @param checkName {string}: Name which will be displayed in the check list
+ * @param sha {string}: SHA of the commit which should be annotated
  * @param github {{actor: string, ref: string, workspace: string, eventName: string, repository:
  * string, sha: string, token: string, username: string}}: Object information about the GitHub
  * repository and action trigger event
  * @param results {object[]}: Results from the linter execution
  * @param summary {string}: Summary for the GitHub check
  */
-async function createCheck(checkName, github, results, summary) {
+async function createCheck(checkName, sha, github, results, summary) {
 	let annotations = [];
 	for (let level = 0; level < 3; level += 1) {
 		annotations = [
@@ -70,7 +71,7 @@ async function createCheck(checkName, github, results, summary) {
 
 	const body = {
 		name: checkName,
-		head_sha: github.sha,
+		head_sha: sha,
 		conclusion: results[2].length === 0 ? "success" : "failure",
 		output: {
 			title: checkName,
@@ -113,6 +114,15 @@ function commitChanges(message) {
 }
 
 /**
+ * Returns the SHA of the head commit
+ *
+ * @return {string}: Head SHA
+ */
+function getHeadSha() {
+	return run("git rev-parse HEAD").stdout;
+}
+
+/**
  * Pushes all changes to the GitHub repository
  *
  * @param github {{actor: string, ref: string, workspace: string, eventName: string, repository:
@@ -139,6 +149,7 @@ module.exports = {
 	commitChanges,
 	createCheck,
 	getGithubInfo,
+	getHeadSha,
 	pushChanges,
 	setGitUserInfo,
 };

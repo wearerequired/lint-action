@@ -4,6 +4,7 @@ const {
 	commitChanges,
 	createCheck,
 	getGithubInfo,
+	getHeadSha,
 	pushChanges,
 	setGitUserInfo,
 } = require("./github");
@@ -22,11 +23,13 @@ process.on("unhandledRejection", err => {
 /**
  * Parses the action configuration and runs all enabled linters on matching files
  */
-function runAction() {
+async function runAction() {
 	const github = getGithubInfo();
 	const autoFix = getInput("auto_fix") === "true";
 
 	setGitUserInfo(GIT_NAME, GIT_EMAIL);
+
+	const checks = [];
 
 	// Loop over all available linters
 	for (const [linterId, linter] of Object.entries(linters)) {
@@ -45,12 +48,13 @@ function runAction() {
 			const fileExtList = fileExtensions.split(",");
 			log(`Will use ${linterId} to check the files with extensions ${fileExtList}`);
 
-			// Lint the matching files, parse code style violations
+			// Lint and optionally auto-fix the matching files, parse code style violations
 			log(`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linterId}…`);
 			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
 			if (autoFix) {
 				log("Committing and pushing changes…");
 				commitChanges(`Fix code style issues with ${linterId}`);
+				pushChanges(github);
 			}
 			const resultsParsed = linter.parseResults(github.workspace, results);
 
@@ -67,15 +71,19 @@ function runAction() {
 			}
 			log(summary);
 
-			// Annotate commit with code style violations on GitHub
-			if (github.eventName === "push") {
-				createCheck(linterId, github, resultsParsed, summary);
-			}
+			checks.push({ linterId, resultsParsed, summary });
 		}
 	}
 
-	if (autoFix) {
-		pushChanges(github);
+	// Add commit annotations in the end. They must be added to the last commit so GitHub displays
+	// them on the pull request
+	if (github.eventName === "push") {
+		const headSha = getHeadSha();
+		await Promise.all(
+			checks.map(({ linterId, resultsParsed, summary }) =>
+				createCheck(linterId, headSha, github, resultsParsed, summary),
+			),
+		);
 	}
 }
 
