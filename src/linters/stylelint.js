@@ -7,7 +7,7 @@ const SEVERITY_LEVELS = ["", "warning", "error"];
  */
 class Stylelint {
 	static get name() {
-		return "Stylelint";
+		return "stylelint";
 	}
 
 	/**
