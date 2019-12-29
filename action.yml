@@ -57,7 +57,7 @@ inputs:
   prettier_extensions:
     description: Extensions of files to check with Prettier
     required: false
-    default: "js"
+    default: "css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml"
   prettier_dir:
     description: Directory where the Prettier command should be run
     required: false
