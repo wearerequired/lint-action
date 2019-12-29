@@ -1,5 +1,5 @@
 /**
- * parse-diff
+ * parse-diff v0.6.0
  * Simple unified diff parser for nodejs
  * https://github.com/sergeyt/parse-diff
  *
