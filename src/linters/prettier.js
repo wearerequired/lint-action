@@ -72,7 +72,7 @@ class Prettier {
 			firstLine: 1,
 			lastLine: 1,
 			message:
-				"There are issues with this file's formatting. Please run Prettier on the file to fix the errors.",
+				"There are issues with this file's formatting, please run Prettier to fix the errors",
 		}));
 
 		return resultsParsed;

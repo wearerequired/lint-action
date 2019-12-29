@@ -1,6 +1,6 @@
 {
 	"rules": {
 		"block-no-empty": true,
-		"color-named": ["never", { "severity": "warning" }]
+		"no-extra-semicolons": [true, { "severity": "warning" }]
 	}
 }
