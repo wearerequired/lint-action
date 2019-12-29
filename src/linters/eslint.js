@@ -72,7 +72,8 @@ class ESLint {
 					path,
 					firstLine: line,
 					lastLine: line,
-					message: `${message} (${ruleId})`,
+					// Message: Remove trailing period, write rule ID parentheses
+					message: `${message.substring(0, message.length - 1)} (${ruleId})`,
 				});
 			}
 		}
