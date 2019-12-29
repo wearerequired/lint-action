@@ -18,7 +18,7 @@ const extensions = [
 	"yml",
 ];
 
-const getLintResults = () => {
+const getLintResults = dir => {
 	const resultsFile1 = `file1.js`;
 	const resultsFile2 = `file2.css`;
 	return [`${resultsFile1}\n${resultsFile2}`, `${resultsFile2}\n${resultsFile1}`];
@@ -45,7 +45,7 @@ const parsedLintResults = [
 	],
 ];
 
-const getFixResults = () => "";
+const getFixResults = dir => "";
 
 const parsedFixResults = [[], [], []];
 

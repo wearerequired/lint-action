@@ -5,7 +5,7 @@ const testName = "black";
 const linter = Black;
 const extensions = ["py"];
 
-const getLintResults = () => {
+const getLintResults = dir => {
 	const resultsFile1 = `--- file1.py	${TEST_DATE}\n+++ file1.py	${TEST_DATE}\n@@ -1,10 +1,10 @@\n var_1 = "hello"\n var_2 = "world"\n \n \n-def main ():  # Whitespace error\n+def main():  # Whitespace error\n     print("hello " + var_2)\n \n \n def add(num_1, num_2):\n     return num_1 + num_2\n@@ -19,9 +19,10 @@\n \n \n def divide(num_1, num_2):\n     return num_1 / num_2\n \n+\n # Blank lines error\n \n main()`;
 	const resultsFile2 = `--- file2.py	${TEST_DATE}\n+++ file2.py	${TEST_DATE}\n@@ -1,3 +1,3 @@\n def add(num_1, num_2):\n-  return num_1 + num_2  # Indentation error\n+    return num_1 + num_2  # Indentation error`;
 	return [`${resultsFile1}\n \n${resultsFile2}`, `${resultsFile2}\n \n${resultsFile1}`];
@@ -36,7 +36,7 @@ const parsedLintResults = [
 	],
 ];
 
-const getFixResults = () => "";
+const getFixResults = dir => "";
 
 const parsedFixResults = [[], [], []];
 
