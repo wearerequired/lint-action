@@ -41,7 +41,7 @@ class Flake8 {
 	 */
 	static lint(dir, extensions, fix = false) {
 		if (fix) {
-			log("flake8 does not support auto-fixing code style issues", "warning");
+			log(`${this.name} does not support auto-fixing code style issues`, "warning");
 		}
 		return run(`flake8 --filename ${extensions.map(ext => `"**${sep}*.${ext}"`).join(",")}`, {
 			dir,
