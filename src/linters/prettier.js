@@ -1,3 +1,4 @@
+const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 
 /**
@@ -14,11 +15,9 @@ class Prettier {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup(dir) {
+	static async verifySetup(dir) {
 		// Verify that NPM is installed (required to execute Prettier)
-		try {
-			run("command -v npm", { dir });
-		} catch (err) {
+		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
 
@@ -26,7 +25,7 @@ class Prettier {
 		try {
 			run("npx --no-install prettier -v", { dir });
 		} catch (err) {
-			throw new Error("Prettier is not installed");
+			throw new Error(`${this.name} is not installed`);
 		}
 	}
 

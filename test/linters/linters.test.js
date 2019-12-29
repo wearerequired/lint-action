@@ -43,10 +43,10 @@ describe.each(linterParams)(
 		const lintResults = getLintResults(tmpDir);
 		const fixResults = getFixResults(tmpDir);
 
-		beforeAll(() => {
+		beforeAll(async () => {
 			// Move test project into temporary directory (where files can be modified by the linters)
 			copySync(projectDir, tmpDir);
-			linter.verifySetup(tmpDir);
+			await linter.verifySetup(tmpDir);
 		});
 
 		afterAll(() => {

@@ -1,3 +1,4 @@
+const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 
 const SEVERITY_LEVELS = ["", "warning", "error"];
@@ -16,11 +17,9 @@ class Stylelint {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup(dir) {
+	static async verifySetup(dir) {
 		// Verify that NPM is installed (required to execute stylelint)
-		try {
-			run("command -v npm", { dir });
-		} catch (err) {
+		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
 
@@ -28,7 +27,7 @@ class Stylelint {
 		try {
 			run("npx --no-install stylelint -v", { dir });
 		} catch (err) {
-			throw new Error("stylelint is not installed");
+			throw new Error(`${this.name} is not installed`);
 		}
 	}
 

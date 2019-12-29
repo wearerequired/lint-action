@@ -41,7 +41,7 @@ async function runAction() {
 
 			// Check that the linter and its dependencies are installed
 			log(`\nVerifying setup for ${linter.name}…`);
-			linter.verifySetup(lintDirAbs);
+			await linter.verifySetup(lintDirAbs);
 			log(`Verified ${linter.name} setup`);
 
 			// Determine which files should be linted

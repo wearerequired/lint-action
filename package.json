@@ -42,6 +42,7 @@
 			"jest": true
 		},
 		"rules": {
+			"no-await-in-loop": "off",
 			"no-unused-vars": [
 				"error",
 				{

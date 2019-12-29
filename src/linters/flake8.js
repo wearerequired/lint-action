@@ -1,3 +1,4 @@
+const commandExists = require("../../vendor/command-exists");
 const { sep } = require("path");
 const { log, run } = require("../utils/action");
 const { capitalizeFirstLetter } = require("../utils/string");
@@ -18,19 +19,15 @@ class Flake8 {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup(dir) {
+	static async verifySetup(dir) {
 		// Verify that Python is installed (required to execute Flake8)
-		try {
-			run("command -v python", { dir });
-		} catch (err) {
+		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
 		}
 
 		// Verify that Flake8 is installed
-		try {
-			run("command -v flake8", { dir });
-		} catch (err) {
-			throw new Error("Flake8 is not installed");
+		if (!(await commandExists("flake8"))) {
+			throw new Error(`${this.name} is not installed`);
 		}
 	}
 

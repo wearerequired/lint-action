@@ -1,3 +1,4 @@
+const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
@@ -17,12 +18,10 @@ class SwiftLint {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup(dir) {
+	static async verifySetup(dir) {
 		// Verify that SwiftLint is installed
-		try {
-			run("command -v swiftlint", { dir });
-		} catch (err) {
-			throw new Error("SwiftLint is not installed");
+		if (!(await commandExists("swiftlint"))) {
+			throw new Error(`${this.name} is not installed`);
 		}
 	}
 

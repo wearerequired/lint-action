@@ -1,3 +1,4 @@
+const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { diffToParsedResults } = require("../utils/diff");
 
@@ -15,12 +16,10 @@ class Gofmt {
 	 *
 	 * @param {string} dir: Directory to run the linting program in
 	 */
-	static verifySetup(dir) {
+	static async verifySetup(dir) {
 		// Verify that gofmt is installed
-		try {
-			run("command -v gofmt", { dir });
-		} catch (err) {
-			throw new Error("gofmt is not installed");
+		if (!(await commandExists("gofmt"))) {
+			throw new Error(`${this.name} is not installed`);
 		}
 	}
 
