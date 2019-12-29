@@ -11,15 +11,19 @@ const stylelintParams = require("./params/stylelint");
 const swiftlintParams = require("./params/swiftlint");
 
 const linterParams = [
-	[...blackParams],
-	[...eslintParams],
-	[...eslintTypescriptParams],
-	[...flake8Params],
-	[...gofmtParams],
-	[...prettierParams],
-	[...stylelintParams],
-	[...swiftlintParams],
+	blackParams,
+	eslintParams,
+	eslintTypescriptParams,
+	flake8Params,
+	gofmtParams,
+	prettierParams,
+	stylelintParams,
 ];
+
+// Only run Swift tests on macOS
+if (process.platform === "darwin") {
+	linterParams.push(swiftlintParams);
+}
 
 describe.each(linterParams)(
 	"%s",

@@ -1,0 +1,68 @@
+name: Test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      # Go
+
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+
+      # Node.js
+
+      - name: Install Node.js and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install NPM dependencies
+        run: |
+          cd ./test/linters/projects/eslint
+          yarn install
+          cd ../eslint-typescript
+          yarn install
+          cd ../prettier
+          yarn install
+          cd ../stylelint
+          yarn install
+
+      # Python
+
+      - name: Install Python and pip
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: Install Black
+        run: pip install black
+
+      - name: Install Flake8
+        run: pip install flake8
+
+      # Swift (only on macOS)
+
+      - name: Install SwiftLint
+        if: startsWith(matrix.os, 'macos')
+        run: brew install swiftlint
+
+      # Tests
+
+      - name: Run tests
+        run: |
+          yarn
+          yarn test
