@@ -46,6 +46,7 @@ describe.each(linterParams)(
 		beforeAll(() => {
 			// Move test project into temporary directory (where files can be modified by the linters)
 			copySync(projectDir, tmpDir);
+			linter.verifySetup(tmpDir);
 		});
 
 		afterAll(() => {
