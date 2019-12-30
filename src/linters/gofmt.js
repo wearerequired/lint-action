@@ -33,7 +33,7 @@ class Gofmt {
 	 */
 	static lint(dir, extensions, fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
-			throw new Error(`gofmt error: File extensions are not configurable`);
+			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
 		// -d: Display diffs instead of rewriting files
