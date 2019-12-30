@@ -37,7 +37,7 @@ describe.each(linterParams)(
 		parsedFixResults,
 	) => {
 		const projectDir = join(__dirname, "projects", projectName);
-		const tmpDir = join(__dirname, "tmp", projectName);
+		const tmpDir = join(__dirname, "..", "tmp", projectName);
 
 		// Lint results may contain variable information, e.g. file paths -> use getter functions
 		const lintResults = getLintResults(tmpDir);
