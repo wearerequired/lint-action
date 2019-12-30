@@ -38,8 +38,9 @@ class Gofmt {
 
 		// -d: Display diffs instead of rewriting files
 		// -e: Report all errors (not just the first 10 on different lines)
+		// -s: Simplify code
 		// -w: Write result to (source) file instead of stdout
-		return run(`gofmt ${fix ? "-w" : "-d -e"} "."`, {
+		return run(`gofmt -s ${fix ? "-w" : "-d -e"} "."`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;
