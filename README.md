@@ -54,6 +54,8 @@ jobs:
 
 _The GitHub token is required for creating checks on commits and pull requests. It's provided automatically by GitHub, so there's no need to define the secret on GitHub._
 
+The action doesn't install the linters for you, you'll need to make sure they're installed in your CI environment. For example, if you'd like to use the Lint Action to check your code with ESLint, make sure it's declared as a dependency in your project's `package.json` file and run `npm install` before the action.
+
 ## Examples
 
 ### JavaScript example (ESLint and Prettier)
