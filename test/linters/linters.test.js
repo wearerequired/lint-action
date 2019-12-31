@@ -6,6 +6,7 @@ const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
 const flake8Params = require("./params/flake8");
 const gofmtParams = require("./params/gofmt");
+const golintParams = require("./params/golint");
 const prettierParams = require("./params/prettier");
 const stylelintParams = require("./params/stylelint");
 const swiftlintParams = require("./params/swiftlint");
@@ -16,6 +17,7 @@ const linterParams = [
 	eslintTypescriptParams,
 	flake8Params,
 	gofmtParams,
+	golintParams,
 	prettierParams,
 	stylelintParams,
 ];

@@ -36,6 +36,18 @@ inputs:
     description: Directory where the gofmt command should be run
     required: false
 
+  golint:
+    description: Enable or disable golint checks
+    required: false
+    default: false
+  golint_extensions:
+    description: Extensions of files to check with golint
+    required: false
+    default: "go"
+  golint_dir:
+    description: Directory where the golint command should be run
+    required: false
+
   # JavaScript
 
   eslint:

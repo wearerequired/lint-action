@@ -23,6 +23,18 @@ jobs:
         with:
           go-version: 1.13
 
+      # TODO: Remove step once actions/setup-go adds $GOPATH/bin to $PATH by default
+      # See https://github.com/actions/setup-go/issues/14
+      - name: Add Go to $PATH
+        run: |
+          echo "::set-env name=GOPATH::$(go env GOPATH)"
+          echo "::add-path::$(go env GOPATH)/bin"
+
+      - name: Install Go dependencies
+        run: |
+          cd ./test/linters/projects/golint
+          go get -u golang.org/x/lint/golint
+
       # Node.js
 
       - name: Install Node.js and Yarn

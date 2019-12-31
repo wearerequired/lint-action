@@ -1,16 +1,15 @@
 const commandExists = require("../../vendor/command-exists");
-const { sep } = require("path");
 const { log, run } = require("../utils/action");
 const { capitalizeFirstLetter } = require("../utils/string");
 
-const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (\w*) (.*)$/gm;
+const PARSE_REGEX = /^(.+):([0-9]+):([0-9]+): (.+)$/gm;
 
 /**
- * http://flake8.pycqa.org
+ * https://github.com/golang/lint
  */
-class Flake8 {
+class Golint {
 	static get name() {
-		return "Flake8";
+		return "golint";
 	}
 
 	/**
@@ -20,13 +19,8 @@ class Flake8 {
 	 * @param {string} dir: Directory to run the linting program in
 	 */
 	static async verifySetup(dir) {
-		// Verify that Python is installed (required to execute Flake8)
-		if (!(await commandExists("python"))) {
-			throw new Error("Python is not installed");
-		}
-
-		// Verify that Flake8 is installed
-		if (!(await commandExists("flake8"))) {
+		// Verify that golint is installed
+		if (!(await commandExists("golint"))) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
@@ -40,10 +34,14 @@ class Flake8 {
 	 * @returns {string}: Results of the linting process
 	 */
 	static lint(dir, extensions, fix = false) {
+		if (extensions.length !== 1 || extensions[0] !== "go") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
+
 		if (fix) {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
-		return run(`flake8 --filename ${extensions.map(ext => `"**${sep}*.${ext}"`).join(",")}`, {
+		return run(`golint "."`, {
 			dir,
 			ignoreErrors: true,
 		}).stdout;
@@ -63,14 +61,13 @@ class Flake8 {
 		const resultsParsed = [[], [], []];
 
 		for (const match of matches) {
-			const [_str, pathFull, line, _column, rule, text] = match;
-			const path = pathFull.substring(2); // Remove "./" or ".\" from start of path
+			const [_str, path, line, _column, text] = match;
 			const lineNr = parseInt(line, 10);
 			resultsParsed[2].push({
 				path,
 				firstLine: lineNr,
 				lastLine: lineNr,
-				message: `${capitalizeFirstLetter(text)} (${rule})`,
+				message: capitalizeFirstLetter(text),
 			});
 		}
 
@@ -78,4 +75,4 @@ class Flake8 {
 	}
 }
 
-module.exports = Flake8;
+module.exports = Golint;
