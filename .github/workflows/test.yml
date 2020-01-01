@@ -66,6 +66,16 @@ jobs:
       - name: Install Flake8
         run: pip install flake8
 
+      # Ruby
+
+      - name: Install Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+
+      - name: Install RuboCop
+        run: gem install rubocop
+
       # Swift (only on macOS)
 
       - name: Install SwiftLint
