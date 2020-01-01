@@ -1,4 +1,5 @@
 const Black = require("./black");
+const RuboCop = require("./rubo-cop");
 const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
@@ -12,6 +13,7 @@ const linters = {
 	flake8: Flake8,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
+	rubocop: RuboCop,
 
 	// Formatters (should be run after linters)
 	black: Black,
