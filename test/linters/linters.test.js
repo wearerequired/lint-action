@@ -10,6 +10,7 @@ const golintParams = require("./params/golint");
 const prettierParams = require("./params/prettier");
 const stylelintParams = require("./params/stylelint");
 const swiftlintParams = require("./params/swiftlint");
+const ruboCopParams = require("./params/rubo-cop");
 
 const linterParams = [
 	blackParams,
@@ -19,6 +20,7 @@ const linterParams = [
 	gofmtParams,
 	golintParams,
 	prettierParams,
+	ruboCopParams,
 	stylelintParams,
 ];
 
