@@ -38,6 +38,7 @@ on: push
 
 jobs:
   run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
 
     steps:
@@ -68,6 +69,7 @@ on: push
 
 jobs:
   run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
 
     steps:
@@ -100,6 +102,7 @@ on: push
 
 jobs:
   run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
 
     steps:
