@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 
-const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
+const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (warning|error): (.*)$/gm;
 const LEVELS = ["", "warning", "error"];
 
 /**
@@ -58,7 +58,7 @@ class SwiftLint {
 		const resultsParsed = [[], [], []];
 
 		for (const match of matches) {
-			const [_str, pathFull, line, _column, level, message] = match;
+			const [_, pathFull, line, level, message] = match;
 			const path = pathFull.substring(dir.length + 1);
 			const lineNr = parseInt(line, 10);
 			const levelIdx = LEVELS.indexOf(level);

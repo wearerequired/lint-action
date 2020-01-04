@@ -3,7 +3,7 @@ const { sep } = require("path");
 const { log, run } = require("../utils/action");
 const { capitalizeFirstLetter } = require("../utils/string");
 
-const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (\w*) (.*)$/gm;
+const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (\w*) (.*)$/gm;
 
 /**
  * http://flake8.pycqa.org
@@ -63,7 +63,7 @@ class Flake8 {
 		const resultsParsed = [[], [], []];
 
 		for (const match of matches) {
-			const [_str, pathFull, line, _column, rule, text] = match;
+			const [_, pathFull, line, rule, text] = match;
 			const path = pathFull.substring(2); // Remove "./" or ".\" from start of path
 			const lineNr = parseInt(line, 10);
 			resultsParsed[2].push({

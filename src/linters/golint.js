@@ -2,7 +2,7 @@ const commandExists = require("../../vendor/command-exists");
 const { log, run } = require("../utils/action");
 const { capitalizeFirstLetter } = require("../utils/string");
 
-const PARSE_REGEX = /^(.+):([0-9]+):([0-9]+): (.+)$/gm;
+const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
 
 /**
  * https://github.com/golang/lint
@@ -61,7 +61,7 @@ class Golint {
 		const resultsParsed = [[], [], []];
 
 		for (const match of matches) {
-			const [_str, path, line, _column, text] = match;
+			const [_, path, line, text] = match;
 			const lineNr = parseInt(line, 10);
 			resultsParsed[2].push({
 				path,
