@@ -64,6 +64,16 @@ jobs:
       - name: Install Python dependencies
         run: pip install black flake8
 
+      # Ruby
+
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+
+      - name: Install Ruby dependencies
+        run: gem install rubocop -v 0.71.0
+
       # Swift (only on macOS)
 
       - name: Install Swift dependencies

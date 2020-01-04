@@ -8,6 +8,7 @@ const flake8Params = require("./params/flake8");
 const gofmtParams = require("./params/gofmt");
 const golintParams = require("./params/golint");
 const prettierParams = require("./params/prettier");
+const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
 const swiftformatParams = require("./params/swiftformat");
 const swiftlintParams = require("./params/swiftlint");
@@ -20,6 +21,7 @@ const linterParams = [
 	gofmtParams,
 	golintParams,
 	prettierParams,
+	ruboCopParams,
 	stylelintParams,
 ];
 
