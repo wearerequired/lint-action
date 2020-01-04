@@ -170,6 +170,7 @@ If you want to add support for an additional linter, please open an issue to dis
 - Provide the expected linting output for your sample project in a `test/linters/params/my-linter.js` file. Import this file in [`test/linters/linters.test.js`](./test/linters/linters.test.js). You can run the tests with `yarn test`.
 - Update the [`action.yml`](./action.yml) file with the options provided by the new linter.
 - Mention your linter in the [`README.md`](./README.md) file.
+- Update the [test workflow file](./.github/workflows/test.yml).
 
 ## Related
 
