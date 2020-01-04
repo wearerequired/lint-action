@@ -6,6 +6,7 @@ on:
 
 jobs:
   test:
+    name: Run tests
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -14,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Go
 

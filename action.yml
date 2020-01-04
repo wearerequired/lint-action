@@ -17,7 +17,7 @@ inputs:
   stylelint_extensions:
     description: Extensions of files to check with stylelint
     required: false
-    default: "css"
+    default: "css,sass,scss"
   stylelint_dir:
     description: Directory where the stylelint command should be run
     required: false

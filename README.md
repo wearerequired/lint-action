@@ -38,16 +38,17 @@ on: push
 
 jobs:
   run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       # Install your dependencies here
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.2
+        uses: samuelmeuli/lint-action@v0.3
         with:
           github_token: ${{ secrets.github_token }}
           # Enable your linters here
@@ -68,22 +69,23 @@ on: push
 
 jobs:
   run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install Node.js and NPM
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12
 
       - name: Install dependencies
         run: npm install
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.2
+        uses: samuelmeuli/lint-action@v0.3
         with:
           github_token: ${{ secrets.github_token }}
           eslint: true
@@ -100,11 +102,12 @@ on: push
 
 jobs:
   run-linters:
+    name: Run linters
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install Python and pip
         uses: actions/setup-python@v1
@@ -115,7 +118,7 @@ jobs:
         run: pip install black flake8
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.2
+        uses: samuelmeuli/lint-action@v0.3
         with:
           github_token: ${{ secrets.github_token }}
           black: true
@@ -128,7 +131,7 @@ All linters are disabled by default. To enable a linter, simply set the option w
 
 ```yml
 - name: Run linters
-  uses: samuelmeuli/lint-action@v0.2
+  uses: samuelmeuli/lint-action@v0.3
   with:
     github_token: ${{ secrets.github_token }}
     eslint: true # Enables ESLint checks
