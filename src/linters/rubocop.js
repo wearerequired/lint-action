@@ -1,6 +1,14 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 
+const severityIndices = {
+	convention: 1,
+	refactor: 1,
+	warning: 1,
+	error: 2,
+	fatal: 2,
+};
+
 /**
  * https://rubocop.readthedocs.io
  */
@@ -50,14 +58,29 @@ class RuboCop {
 	 * @returns {object[]}: Parsed results
 	 */
 	static parseResults(dir, results) {
-		return JSON.parse(results).files.flatMap(f =>
-			f.offenses.map(o => ({
-				path: f.path,
-				firstLine: o.location.start_line,
-				lastLine: o.location.last_line,
-				message: o.message,
-			})),
-		);
+		const resultsJson = JSON.parse(results);
+
+		// Parsed results: [notices, warnings, failures]
+		const resultsParsed = [[], [], []];
+
+		for (const file of resultsJson.files) {
+			const { path, offenses } = file;
+			for (const offense of offenses) {
+				const { severity, message, cop_name: rule, corrected, location } = offense;
+				if (!corrected) {
+					const severityIdx = severityIndices[severity] || 2;
+					resultsParsed[severityIdx].push({
+						path,
+						firstLine: location.start_line,
+						lastLine: location.last_line,
+						// Message: Remove trailing period, write rule ID parentheses
+						message: `${message.substring(0, message.length - 1)} (${rule})`,
+					});
+				}
+			}
+		}
+
+		return resultsParsed;
 	}
 }
 
