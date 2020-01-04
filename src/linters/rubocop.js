@@ -44,6 +44,10 @@ class RuboCop {
 	 * @returns {string}: Results of the linting process
 	 */
 	static lint(dir, extensions, fix = false) {
+		if (extensions.length !== 1 || extensions[0] !== "rb") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
+
 		return run(`rubocop --format json ${fix ? "--auto-correct" : ""} ${dir}`, {
 			dir,
 			ignoreErrors: true,
