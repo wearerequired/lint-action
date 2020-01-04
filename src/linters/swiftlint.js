@@ -35,7 +35,7 @@ class SwiftLint {
 	 */
 	static lint(dir, extensions, fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
-			throw new Error(`SwiftLint error: File extensions are not configurable`);
+			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
 		return run(`swiftlint ${fix ? "autocorrect" : ""}`, {
