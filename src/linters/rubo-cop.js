@@ -36,23 +36,10 @@ class RuboCop {
 	 * @returns {string}: Results of the linting process
 	 */
 	static lint(dir, extensions, fix = false) {
-		const output = JSON.parse(
-			run(`rubocop --format json ${fix ? "--auto-correct" : ""} ${dir}`, {
-				dir,
-				ignoreErrors: true,
-			}).stdout,
-		);
-
-		return JSON.stringify(
-			output.files.flatMap(f =>
-				f.offenses.map(o => ({
-					path: f.path,
-					firstLine: o.location.start_line,
-					lastLine: o.location.last_line,
-					message: o.message,
-				})),
-			),
-		);
+		return run(`rubocop --format json ${fix ? "--auto-correct" : ""} ${dir}`, {
+			dir,
+			ignoreErrors: true,
+		}).stdout;
 	}
 
 	/**
@@ -63,7 +50,14 @@ class RuboCop {
 	 * @returns {object[]}: Parsed results
 	 */
 	static parseResults(dir, results) {
-		return JSON.parse(results);
+		return JSON.parse(results).files.flatMap(f =>
+			f.offenses.map(o => ({
+				path: f.path,
+				firstLine: o.location.start_line,
+				lastLine: o.location.last_line,
+				message: o.message,
+			})),
+		);
 	}
 }
 

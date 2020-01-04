@@ -8,9 +8,9 @@ const flake8Params = require("./params/flake8");
 const gofmtParams = require("./params/gofmt");
 const golintParams = require("./params/golint");
 const prettierParams = require("./params/prettier");
+const ruboCopParams = require("./params/rubo-cop");
 const stylelintParams = require("./params/stylelint");
 const swiftlintParams = require("./params/swiftlint");
-const ruboCopParams = require("./params/rubo-cop");
 
 const linterParams = [
 	blackParams,
@@ -39,6 +39,7 @@ describe.each(linterParams)(
 		getFixResults,
 		parsedLintResults,
 		parsedFixResults,
+		formatResults,
 	) => {
 		const projectDir = join(__dirname, "projects", projectName);
 		const tmpDir = join(__dirname, "..", "tmp", projectName);
@@ -63,6 +64,8 @@ describe.each(linterParams)(
 			actualLintResults = normalizeDates(actualLintResults);
 			if (Array.isArray(lintResults)) {
 				expect(lintResults).toContain(actualLintResults);
+			} else if (formatResults) {
+				expect(formatResults(actualLintResults)).toEqual(formatResults(lintResults));
 			} else {
 				expect(actualLintResults).toEqual(lintResults);
 			}
@@ -81,6 +84,8 @@ describe.each(linterParams)(
 			actualFixResults = normalizeDates(actualFixResults);
 			if (Array.isArray(fixResults)) {
 				expect(fixResults).toContain(actualFixResults);
+			} else if (formatResults) {
+				expect(formatResults(actualFixResults)).toEqual(formatResults(fixResults));
 			} else {
 				expect(actualFixResults).toEqual(fixResults);
 			}

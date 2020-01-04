@@ -4,79 +4,30 @@ const testName = "rubo-cop";
 const linter = RuboCop;
 const extensions = ["rb"];
 
-const perm = a =>
-	a.length
-		? a.reduce(
-				(r, v, i) => [...r, ...perm([...a.slice(0, i), ...a.slice(i + 1)]).map(x => [v, ...x])],
-				[],
-		  )
-		: [[]];
+const formatResults = results => JSON.parse(results).files;
 
-const lintResults = JSON.parse(
-	'[{"path":"file1.rb","firstLine":4,"lastLine":4,"message":"Use 2 (not 8) spaces for indentation."},{"path":"file1.rb","firstLine":5,"lastLine":7,"message":"Use snake_case for method names."},{"path":"file2.rb","firstLine":4,"lastLine":4,"message":"Redundant `return` detected."},{"path":"file2.rb","firstLine":4,"lastLine":5,"message":"`end` at 5, 4 is not aligned with `def` at 3, 0."}]',
-);
+const getLintResults = dir =>
+	'{"metadata":{"rubocop_version":"0.71.0","ruby_engine":"ruby","ruby_version":"2.5.3","ruby_patchlevel":"105","ruby_platform":"x86_64-darwin18"},"files":[{"path":"file1.rb","offenses":[{"severity":"convention","message":"Redundant `return` detected.","cop_name":"Style/RedundantReturn","corrected":false,"location":{"start_line":4,"start_column":3,"last_line":4,"last_column":8,"length":6,"line":4,"column":3}}]},{"path":"file2.rb","offenses":[{"severity":"warning","message":"Useless assignment to variable - `x`.","cop_name":"Lint/UselessAssignment","corrected":false,"location":{"start_line":3,"start_column":1,"last_line":3,"last_column":1,"length":1,"line":3,"column":1}}]}],"summary":{"offense_count":2,"target_file_count":2,"inspected_file_count":2}}';
 
-const getLintResults = dir => perm(lintResults).map(a => JSON.stringify(a));
+const getFixResults = dir =>
+	'{"metadata":{"rubocop_version":"0.71.0","ruby_engine":"ruby","ruby_version":"2.5.3","ruby_patchlevel":"105","ruby_platform":"x86_64-darwin18"},"files":[{"path":"file1.rb","offenses":[{"severity":"convention","message":"Redundant `return` detected.","cop_name":"Style/RedundantReturn","corrected":true,"location":{"start_line":4,"start_column":3,"last_line":4,"last_column":8,"length":6,"line":4,"column":3}}]},{"path":"file2.rb","offenses":[{"severity":"warning","message":"Useless assignment to variable - `x`.","cop_name":"Lint/UselessAssignment","corrected":false,"location":{"start_line":3,"start_column":1,"last_line":3,"last_column":1,"length":1,"line":3,"column":1}}]}],"summary":{"offense_count":2,"target_file_count":2,"inspected_file_count":2}}';
 
 const parsedLintResults = [
 	{
-		path: "file1.rb",
-		firstLine: 4,
-		lastLine: 4,
-		message: "Use 2 (not 8) spaces for indentation.",
-	},
-	{
-		path: "file1.rb",
-		firstLine: 5,
-		lastLine: 7,
-		message: "Use snake_case for method names.",
-	},
-	{
-		path: "file2.rb",
 		firstLine: 4,
 		lastLine: 4,
 		message: "Redundant `return` detected.",
+		path: "file1.rb",
 	},
 	{
+		firstLine: 3,
+		lastLine: 3,
+		message: "Useless assignment to variable - `x`.",
 		path: "file2.rb",
-		firstLine: 4,
-		lastLine: 5,
-		message: "`end` at 5, 4 is not aligned with `def` at 3, 0.",
 	},
 ];
 
-const fixResults = JSON.parse(
-	'[{"path":"file1.rb","firstLine":4,"lastLine":4,"message":"Use 2 (not 8) spaces for indentation."},{"path":"file1.rb","firstLine":7,"lastLine":7,"message":"Use snake_case for method names."},{"path":"file2.rb","firstLine":4,"lastLine":4,"message":"Redundant `return` detected."},{"path":"file2.rb","firstLine":5,"lastLine":5,"message":"`end` at 5, 4 is not aligned with `def` at 3, 0."}]',
-);
-
-const getFixResults = dir => perm(fixResults).map(a => JSON.stringify(a));
-
-const parsedFixResults = [
-	{
-		path: "file1.rb",
-		firstLine: 4,
-		lastLine: 4,
-		message: "Use 2 (not 8) spaces for indentation.",
-	},
-	{
-		path: "file1.rb",
-		firstLine: 7,
-		lastLine: 7,
-		message: "Use snake_case for method names.",
-	},
-	{
-		path: "file2.rb",
-		firstLine: 4,
-		lastLine: 4,
-		message: "Redundant `return` detected.",
-	},
-	{
-		path: "file2.rb",
-		firstLine: 5,
-		lastLine: 5,
-		message: "`end` at 5, 4 is not aligned with `def` at 3, 0.",
-	},
-];
+const parsedFixResults = parsedLintResults;
 
 module.exports = [
 	testName,
@@ -86,4 +37,5 @@ module.exports = [
 	getFixResults,
 	parsedLintResults,
 	parsedFixResults,
+	formatResults,
 ];
