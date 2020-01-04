@@ -5,7 +5,8 @@ const testName = "eslint";
 const linter = ESLint;
 const extensions = ["js"];
 
-const getLintResults = dir => {
+// Testing input/output for the Linter.lint function, with auto-fixing disabled
+function getLintParams(dir) {
 	const resultsFile1 = `{"filePath":"${joinDoubleBackslash(
 		dir,
 		"file1.js",
@@ -14,36 +15,42 @@ const getLintResults = dir => {
 		dir,
 		"file2.js",
 	)}","messages":[{"ruleId":"no-unused-vars","severity":2,"message":"'str' is assigned a value but never used.","line":1,"column":7,"nodeType":"Identifier","endLine":1,"endColumn":10}],"errorCount":1,"warningCount":0,"fixableErrorCount":0,"fixableWarningCount":0,"source":"const str = \\"Hello world\\"; // \\"no-unused-vars\\" error\\n"}`;
-	return [`[${resultsFile1},${resultsFile2}]`, `[${resultsFile2},${resultsFile1}]`];
-};
+	return {
+		// Strings that must be contained in the stdout of the lint command
+		stdoutParts: [resultsFile1, resultsFile2],
+		// Example output of the lint command, used to test the parsing function
+		parseInput: `[${resultsFile1},${resultsFile2}]`,
+		// Expected output of the parsing function
+		parseResult: [
+			[],
+			[
+				{
+					path: "file1.js",
+					firstLine: 1,
+					lastLine: 1,
+					message: "'str' is never reassigned. Use 'const' instead (prefer-const)",
+				},
+			],
+			[
+				{
+					path: "file1.js",
+					firstLine: 4,
+					lastLine: 4,
+					message: "Unexpected console statement (no-console)",
+				},
+				{
+					path: "file2.js",
+					firstLine: 1,
+					lastLine: 1,
+					message: "'str' is assigned a value but never used (no-unused-vars)",
+				},
+			],
+		],
+	};
+}
 
-const parsedLintResults = [
-	[],
-	[
-		{
-			path: "file1.js",
-			firstLine: 1,
-			lastLine: 1,
-			message: "'str' is never reassigned. Use 'const' instead (prefer-const)",
-		},
-	],
-	[
-		{
-			path: "file1.js",
-			firstLine: 4,
-			lastLine: 4,
-			message: "Unexpected console statement (no-console)",
-		},
-		{
-			path: "file2.js",
-			firstLine: 1,
-			lastLine: 1,
-			message: "'str' is assigned a value but never used (no-unused-vars)",
-		},
-	],
-];
-
-const getFixResults = dir => {
+// Testing input/output for the Linter.lint function, with auto-fixing enabled
+function getFixParams(dir) {
 	const resultsFile1 = `{"filePath":"${joinDoubleBackslash(
 		dir,
 		"file1.js",
@@ -52,34 +59,31 @@ const getFixResults = dir => {
 		dir,
 		"file2.js",
 	)}","messages":[{"ruleId":"no-unused-vars","severity":2,"message":"'str' is assigned a value but never used.","line":1,"column":7,"nodeType":"Identifier","endLine":1,"endColumn":10}],"errorCount":1,"warningCount":0,"fixableErrorCount":0,"fixableWarningCount":0,"source":"const str = \\"Hello world\\"; // \\"no-unused-vars\\" error\\n"}`;
-	return [`[${resultsFile1},${resultsFile2}]`, `[${resultsFile2},${resultsFile1}]`];
-};
+	return {
+		// Strings that must be contained in the stdout of the lint command
+		stdoutParts: [resultsFile1, resultsFile2],
+		// Example output of the lint command, used to test the parsing function
+		parseInput: `[${resultsFile1},${resultsFile2}]`,
+		// Expected output of the parsing function
+		parseResult: [
+			[],
+			[],
+			[
+				{
+					path: "file1.js",
+					firstLine: 4,
+					lastLine: 4,
+					message: "Unexpected console statement (no-console)",
+				},
+				{
+					path: "file2.js",
+					firstLine: 1,
+					lastLine: 1,
+					message: "'str' is assigned a value but never used (no-unused-vars)",
+				},
+			],
+		],
+	};
+}
 
-const parsedFixResults = [
-	[],
-	[],
-	[
-		{
-			path: "file1.js",
-			firstLine: 4,
-			lastLine: 4,
-			message: "Unexpected console statement (no-console)",
-		},
-		{
-			path: "file2.js",
-			firstLine: 1,
-			lastLine: 1,
-			message: "'str' is assigned a value but never used (no-unused-vars)",
-		},
-	],
-];
-
-module.exports = [
-	testName,
-	linter,
-	extensions,
-	getLintResults,
-	getFixResults,
-	parsedLintResults,
-	parsedFixResults,
-];
+module.exports = [testName, linter, extensions, getLintParams, getFixParams];

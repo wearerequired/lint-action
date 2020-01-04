@@ -10,6 +10,7 @@ const golintParams = require("./params/golint");
 const prettierParams = require("./params/prettier");
 const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
+const swiftformatParams = require("./params/swiftformat");
 const swiftlintParams = require("./params/swiftlint");
 
 const linterParams = [
@@ -26,27 +27,16 @@ const linterParams = [
 
 // Only run Swift tests on macOS
 if (process.platform === "darwin") {
-	linterParams.push(swiftlintParams);
+	linterParams.push(swiftformatParams, swiftlintParams);
 }
 
 describe.each(linterParams)(
 	"%s",
-	(
-		projectName,
-		linter,
-		extensions,
-		getLintResults,
-		getFixResults,
-		parsedLintResults,
-		parsedFixResults,
-		formatResults,
-	) => {
+	(projectName, linter, extensions, getLintParams, getFixParams) => {
 		const projectDir = join(__dirname, "projects", projectName);
 		const tmpDir = join(__dirname, "..", "tmp", projectName);
-
-		// Lint results may contain variable information, e.g. file paths -> use getter functions
-		const lintResults = getLintResults(tmpDir);
-		const fixResults = getFixResults(tmpDir);
+		const lintParams = getLintParams(tmpDir);
+		const fixParams = getFixParams(tmpDir);
 
 		beforeAll(async () => {
 			// Move test project into temporary directory (where files can be modified by the linters)
@@ -60,43 +50,41 @@ describe.each(linterParams)(
 		});
 
 		test(`${linter.name} returns correct lint results`, () => {
-			let actualLintResults = linter.lint(tmpDir, extensions);
-			actualLintResults = normalizeDates(actualLintResults);
-			if (Array.isArray(lintResults)) {
-				expect(lintResults).toContain(actualLintResults);
-			} else if (formatResults) {
-				expect(formatResults(actualLintResults)).toEqual(formatResults(lintResults));
+			let actualStdout = linter.lint(tmpDir, extensions);
+			actualStdout = normalizeDates(actualStdout);
+			if ("stdout" in lintParams) {
+				expect(actualStdout).toEqual(lintParams.stdout);
+			} else if ("stdoutParts" in lintParams) {
+				lintParams.stdoutParts.forEach(stdoutPart =>
+					expect(actualStdout).toEqual(expect.stringContaining(stdoutPart)),
+				);
 			} else {
-				expect(actualLintResults).toEqual(lintResults);
+				throw Error("`lintParams` must contain either `stdout` or `stdoutParts` key");
 			}
 		});
 
 		test(`${linter.name} parses lint results correctly`, () => {
-			const actualParsedLintResults = linter.parseResults(
-				tmpDir,
-				Array.isArray(lintResults) ? lintResults[0] : lintResults,
-			);
-			expect(actualParsedLintResults).toEqual(parsedLintResults);
+			const actualParsed = linter.parseResults(tmpDir, lintParams.parseInput);
+			expect(actualParsed).toEqual(lintParams.parseResult);
 		});
 
 		test(`${linter.name} returns correct auto-fix results`, () => {
-			let actualFixResults = linter.lint(tmpDir, extensions, true);
-			actualFixResults = normalizeDates(actualFixResults);
-			if (Array.isArray(fixResults)) {
-				expect(fixResults).toContain(actualFixResults);
-			} else if (formatResults) {
-				expect(formatResults(actualFixResults)).toEqual(formatResults(fixResults));
+			let actualStdout = linter.lint(tmpDir, extensions, true);
+			actualStdout = normalizeDates(actualStdout);
+			if ("stdout" in fixParams) {
+				expect(actualStdout).toEqual(fixParams.stdout);
+			} else if ("stdoutParts" in fixParams) {
+				fixParams.stdoutParts.forEach(stdoutPart =>
+					expect(actualStdout).toEqual(expect.stringContaining(stdoutPart)),
+				);
 			} else {
-				expect(actualFixResults).toEqual(fixResults);
+				throw Error("`fixParams` must contain either `stdout` or `stdoutParts` key");
 			}
 		});
 
 		test(`${linter.name} parses auto-fix results correctly`, () => {
-			const actualParsedFixResults = linter.parseResults(
-				tmpDir,
-				Array.isArray(fixResults) ? fixResults[0] : fixResults,
-			);
-			expect(actualParsedFixResults).toEqual(parsedFixResults);
+			const actualParsed = linter.parseResults(tmpDir, fixParams.parseInput);
+			expect(actualParsed).toEqual(fixParams.parseResult);
 		});
 	},
 );

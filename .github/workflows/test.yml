@@ -19,7 +19,7 @@ jobs:
 
       # Go
 
-      - name: Install Go
+      - name: Set up Go
         uses: actions/setup-go@v1
         with:
           go-version: 1.13
@@ -38,12 +38,12 @@ jobs:
 
       # Node.js
 
-      - name: Install Node.js and Yarn
+      - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 12
 
-      - name: Install NPM dependencies
+      - name: Install Node.js dependencies
         run: |
           cd ./test/linters/projects/eslint
           yarn install
@@ -56,16 +56,13 @@ jobs:
 
       # Python
 
-      - name: Install Python and pip
+      - name: Set up Python
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
 
-      - name: Install Black
-        run: pip install black
-
-      - name: Install Flake8
-        run: pip install flake8
+      - name: Install Python dependencies
+        run: pip install black flake8
 
       # Ruby
 
@@ -79,9 +76,11 @@ jobs:
 
       # Swift (only on macOS)
 
-      - name: Install SwiftLint
+      - name: Install Swift dependencies
         if: startsWith(matrix.os, 'macos')
-        run: brew install swiftlint
+        run: |
+          brew update
+          brew install swiftformat swiftlint
 
       # Tests
 

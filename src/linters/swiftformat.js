@@ -1,15 +1,14 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 
-const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
-const LEVELS = ["", "warning", "error"];
+const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: \w+: \((\w+)\) (.*)\.$/gm;
 
 /**
- * https://github.com/realm/SwiftLint
+ * https://github.com/nicklockwood/SwiftFormat
  */
-class SwiftLint {
+class SwiftFormat {
 	static get name() {
-		return "SwiftLint";
+		return "SwiftFormat";
 	}
 
 	/**
@@ -19,8 +18,8 @@ class SwiftLint {
 	 * @param {string} dir: Directory to run the linting program in
 	 */
 	static async verifySetup(dir) {
-		// Verify that SwiftLint is installed
-		if (!(await commandExists("swiftlint"))) {
+		// Verify that SwiftFormat is installed
+		if (!(await commandExists("swiftformat"))) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
@@ -38,10 +37,10 @@ class SwiftLint {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		return run(`swiftlint ${fix ? "autocorrect" : ""}`, {
+		return run(`swiftformat ${fix ? "" : "--lint"} "."`, {
 			dir,
 			ignoreErrors: true,
-		}).stdout;
+		}).stderr;
 	}
 
 	/**
@@ -58,15 +57,16 @@ class SwiftLint {
 		const resultsParsed = [[], [], []];
 
 		for (const match of matches) {
-			const [_str, pathFull, line, _column, level, message] = match;
+			const [_, pathFull, line, rule, message] = match;
 			const path = pathFull.substring(dir.length + 1);
 			const lineNr = parseInt(line, 10);
-			const levelIdx = LEVELS.indexOf(level);
-			resultsParsed[levelIdx].push({
+			// SwiftFormat only seems to use the "warning" level, which this action will therefore
+			// categorize as errors
+			resultsParsed[2].push({
 				path,
 				firstLine: lineNr,
 				lastLine: lineNr,
-				message,
+				message: `${message} (${rule})`,
 			});
 		}
 
@@ -74,4 +74,4 @@ class SwiftLint {
 	}
 }
 
-module.exports = SwiftLint;
+module.exports = SwiftFormat;
