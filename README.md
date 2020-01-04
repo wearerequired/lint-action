@@ -14,13 +14,14 @@ This action…
 
 ## Supported tools
 
+- **CSS:**
+  - [stylelint](https://stylelint.io)
 - **Go:**
   - [gofmt](https://golang.org/cmd/gofmt)
   - [golint](https://github.com/golang/lint)
 - **JavaScript:**
   - [ESLint](https://eslint.org)
   - [Prettier](https://prettier.io)
-  - [stylelint](https://stylelint.io)
 - **Python:**
   - [Black](https://black.readthedocs.io)
   - [Flake8](http://flake8.pycqa.org)
