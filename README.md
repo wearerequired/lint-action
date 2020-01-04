@@ -25,6 +25,7 @@ This action…
   - [Black](https://black.readthedocs.io)
   - [Flake8](http://flake8.pycqa.org)
 - **Swift:**
+  - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat)
   - [SwiftLint](https://github.com/realm/SwiftLint)
 
 ## Usage
@@ -137,7 +138,7 @@ All linters are disabled by default. To enable a linter, simply set the option w
     eslint: true # Enables ESLint checks
 ```
 
-`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `prettier`, `stylelint`, and `swiftlint`:
+`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `prettier`, `stylelint`, `swiftformat` and `swiftlint`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_extensions`:** Extensions of files to check with the linter. Example: `eslint_extensions: js,ts` to lint both JavaScript and TypeScript files with ESLint. Default: See [`action.yml`](./action.yml)

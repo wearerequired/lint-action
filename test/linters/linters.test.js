@@ -9,6 +9,7 @@ const gofmtParams = require("./params/gofmt");
 const golintParams = require("./params/golint");
 const prettierParams = require("./params/prettier");
 const stylelintParams = require("./params/stylelint");
+const swiftformatParams = require("./params/swiftformat");
 const swiftlintParams = require("./params/swiftlint");
 
 const linterParams = [
@@ -24,7 +25,7 @@ const linterParams = [
 
 // Only run Swift tests on macOS
 if (process.platform === "darwin") {
-	linterParams.push(swiftlintParams);
+	linterParams.push(swiftformatParams, swiftlintParams);
 }
 
 describe.each(linterParams)(

@@ -102,6 +102,18 @@ inputs:
 
   # Swift
 
+  swiftformat:
+    description: Enable or disable SwiftFormat checks
+    required: false
+    default: false
+  swiftformat_extensions:
+    description: Extensions of files to check with SwiftFormat
+    required: false
+    default: "swift"
+  swiftformat_dir:
+    description: Directory where the SwiftFormat command should be run
+    required: false
+
   swiftlint:
     description: Enable or disable SwiftLint checks
     required: false
