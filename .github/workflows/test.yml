@@ -66,12 +66,12 @@ jobs:
 
       # Ruby
 
-      - name: Install Ruby
+      - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: 2.5
+          ruby-version: 2.6
 
-      - name: Install RuboCop
+      - name: Install Ruby dependencies
         run: gem install rubocop -v 0.71.0
 
       # Swift (only on macOS)
