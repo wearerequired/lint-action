@@ -1,6 +1,6 @@
-const RuboCop = require("../../../src/linters/rubo-cop");
+const RuboCop = require("../../../src/linters/rubocop");
 
-const testName = "rubo-cop";
+const testName = "rubocop";
 const linter = RuboCop;
 const extensions = ["rb"];
 

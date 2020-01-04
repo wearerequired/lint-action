@@ -1,5 +1,5 @@
 const Black = require("./black");
-const RuboCop = require("./rubo-cop");
+const RuboCop = require("./rubocop");
 const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
