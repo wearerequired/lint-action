@@ -55,7 +55,7 @@ async function runAction() {
 			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
 			if (autoFix) {
 				log("Committing and pushing changes…");
-				commitChanges(`Fix code style issues with ${linter.name}`);
+				commitChanges(`chore: fix code style issues with ${linter.name}`);
 				pushChanges(github);
 			}
 			const resultsParsed = linter.parseResults(github.workspace, results);
