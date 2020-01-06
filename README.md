@@ -52,7 +52,7 @@ jobs:
       # Install your dependencies here
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.4
+        uses: samuelmeuli/lint-action@v0.5
         with:
           github_token: ${{ secrets.github_token }}
           # Enable your linters here
@@ -89,7 +89,7 @@ jobs:
         run: npm install
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.4
+        uses: samuelmeuli/lint-action@v0.5
         with:
           github_token: ${{ secrets.github_token }}
           eslint: true
@@ -122,7 +122,7 @@ jobs:
         run: pip install black flake8
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.4
+        uses: samuelmeuli/lint-action@v0.5
         with:
           github_token: ${{ secrets.github_token }}
           black: true
@@ -135,7 +135,7 @@ All linters are disabled by default. To enable a linter, simply set the option w
 
 ```yml
 - name: Run linters
-  uses: samuelmeuli/lint-action@v0.4
+  uses: samuelmeuli/lint-action@v0.5
   with:
     github_token: ${{ secrets.github_token }}
     eslint: true # Enables ESLint checks
