@@ -1,13 +1,7 @@
 const { join } = require("path");
 const { name: actionName } = require("../package");
-const {
-	commitChanges,
-	createCheck,
-	getGithubInfo,
-	getHeadSha,
-	pushChanges,
-	setGitUserInfo,
-} = require("./github");
+const git = require("./git");
+const github = require("./github");
 const linters = require("./linters");
 const { getInput, log } = require("./utils/action");
 
@@ -24,17 +18,17 @@ process.on("unhandledRejection", err => {
  * Parses the action configuration and runs all enabled linters on matching files
  */
 async function runAction() {
-	const github = getGithubInfo();
+	const context = github.getContext();
 	const autoFix = getInput("auto_fix") === "true";
 	const commitMsg = getInput("commit_message", true);
 
-	if (github.eventName !== "push") {
+	if (context.eventName !== "push") {
 		throw Error(
-			`${actionName} currently only supports "push" events, but was called on a "${github.eventName}" event`,
+			`${actionName} currently only supports "push" events, but was called on a "${context.eventName}" event`,
 		);
 	}
 
-	setGitUserInfo(GIT_NAME, GIT_EMAIL);
+	git.setUserInfo(GIT_NAME, GIT_EMAIL);
 
 	const checks = [];
 
@@ -44,7 +38,7 @@ async function runAction() {
 		if (getInput(linterId) === "true") {
 			const fileExtensions = getInput(`${linterId}_extensions`, true);
 			const lintDirRel = getInput(`${linterId}_dir`) || ".";
-			const lintDirAbs = join(github.workspace, lintDirRel);
+			const lintDirAbs = join(context.workspace, lintDirRel);
 
 			// Check that the linter and its dependencies are installed
 			log(`\nVerifying setup for ${linter.name}…`);
@@ -62,10 +56,10 @@ async function runAction() {
 			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
 			if (autoFix) {
 				log("Committing and pushing changes…");
-				commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
-				pushChanges(github);
+				git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
+				git.pushChanges(context);
 			}
-			const resultsParsed = linter.parseResults(github.workspace, results);
+			const resultsParsed = linter.parseResults(context.workspace, results);
 
 			// Build and log a summary of linting errors/warnings
 			let summary;
@@ -86,11 +80,11 @@ async function runAction() {
 
 	// Add commit annotations in the end. They must be added to the last commit so GitHub displays
 	// them on the pull request
-	if (github.eventName === "push") {
-		const headSha = getHeadSha();
+	if (context.eventName === "push") {
+		const headSha = git.getHeadSha();
 		await Promise.all(
 			checks.map(({ checkName, resultsParsed, summary }) =>
-				createCheck(checkName, headSha, github, resultsParsed, summary),
+				github.createCheck(checkName, headSha, context, resultsParsed, summary),
 			),
 		);
 	}

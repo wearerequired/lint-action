@@ -1,4 +1,4 @@
-const { createCheck, getGithubInfo } = require("../src/github");
+const { createCheck, getContext } = require("../src/github");
 
 const USERNAME = "testuser";
 const REPOSITORY = "test-repo";
@@ -21,7 +21,7 @@ const ENV = {
 	INPUT_GITHUB_TOKEN,
 };
 
-const github = {
+const context = {
 	actor: GITHUB_ACTOR,
 	eventName: GITHUB_EVENT_NAME,
 	ref: GITHUB_REF,
@@ -34,7 +34,7 @@ const github = {
 
 jest.mock("../src/utils/request");
 
-describe("getGithubInfo()", () => {
+describe("getContext()", () => {
 	// Add GitHub environment variables
 	beforeEach(() => {
 		process.env = {
@@ -48,9 +48,9 @@ describe("getGithubInfo()", () => {
 		Object.keys(ENV).forEach(varName => delete process.env[varName]);
 	});
 
-	test("should return correct data", () => {
-		const githubReceived = getGithubInfo();
-		expect(githubReceived).toMatchObject(github);
+	test("should return correct GitHub context", () => {
+		const githubReceived = getContext();
+		expect(githubReceived).toMatchObject(context);
 	});
 });
 
@@ -59,12 +59,12 @@ describe("createCheck()", () => {
 
 	test("mocked request should be successful", async () => {
 		await expect(
-			createCheck("check-name", github.sha, github, RESULTS, "summary"),
+			createCheck("check-name", context.sha, context, RESULTS, "summary"),
 		).resolves.toEqual(undefined);
 	});
 
 	test("mocked request should fail without results", async () => {
-		await expect(createCheck("check-name", github.sha, github, null, "summary")).rejects.toEqual(
+		await expect(createCheck("check-name", context.sha, context, null, "summary")).rejects.toEqual(
 			expect.any(Error),
 		);
 	});
