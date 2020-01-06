@@ -22,13 +22,17 @@ async function runAction() {
 	const autoFix = getInput("auto_fix") === "true";
 	const commitMsg = getInput("commit_message", true);
 
-	if (context.eventName !== "push") {
-		throw Error(
-			`${actionName} currently only supports "push" events, but was called on a "${context.eventName}" event`,
-		);
+	if (autoFix) {
+		// Set Git committer username and password
+		git.setUserInfo(GIT_NAME, GIT_EMAIL);
 	}
-
-	git.setUserInfo(GIT_NAME, GIT_EMAIL);
+	if (context.eventName === "pull_request") {
+		// Fetch and check out PR branch. This is required because for "pull_request" events, the
+		// Checkout Action (https://github.com/actions/checkout) checks out the PR's test merge commit
+		// in detached head state
+		git.fetchBranches();
+		git.checkOutBranch(context.branch);
+	}
 
 	const checks = [];
 
@@ -54,11 +58,6 @@ async function runAction() {
 				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
 			);
 			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
-			if (autoFix) {
-				log("Committing and pushing changes…");
-				git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
-				git.pushChanges(context);
-			}
 			const resultsParsed = linter.parseResults(context.workspace, results);
 
 			// Build and log a summary of linting errors/warnings
@@ -74,20 +73,26 @@ async function runAction() {
 			}
 			log(summary);
 
+			if (autoFix) {
+				// Commit and push changes from auto-fixing
+				git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
+				git.pushChanges(context);
+			}
+
 			checks.push({ checkName: linter.name, resultsParsed, summary });
 		}
 	}
 
-	// Add commit annotations in the end. They must be added to the last commit so GitHub displays
-	// them on the pull request
-	if (context.eventName === "push") {
-		const headSha = git.getHeadSha();
-		await Promise.all(
-			checks.map(({ checkName, resultsParsed, summary }) =>
-				github.createCheck(checkName, headSha, context, resultsParsed, summary),
-			),
-		);
-	}
+	// Add commit annotations after running all linters. To be displayed on pull requests, the
+	// annotations must be added to the last commit on the branch. This can either be a user commit or
+	// one of the auto-fix commits
+	log(""); // Create empty line in logs
+	const headSha = git.getHeadSha();
+	await Promise.all(
+		checks.map(({ checkName, resultsParsed, summary }) =>
+			github.createCheck(checkName, headSha, context, resultsParsed, summary),
+		),
+	);
 }
 
 runAction();

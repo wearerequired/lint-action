@@ -1,3 +1,4 @@
+const { readFileSync } = require("fs");
 const { name: actionName } = require("../package");
 const { getEnv, getInput, log } = require("./utils/action");
 const request = require("./utils/request");
@@ -7,28 +8,41 @@ const ANNOTATION_LEVELS = ["notice", "warning", "failure"];
 /**
  * Returns information about the GitHub repository and action trigger event
  *
- * @returns {{actor: string, ref: string, workspace: string, eventName: string, repository: string,
- * sha: string, token: string, username: string}}: Object information about the GitHub repository
- * and action trigger event
+ * @returns {{actor: string, branch: string, event: object, eventName: string, repository: string,
+ * token: string, username: string, workspace: string}}
  */
 function getContext() {
 	// Information provided by environment
-	const actor = getEnv("github_actor");
-	const eventName = getEnv("github_event_name");
-	const ref = getEnv("github_ref");
-	const sha = getEnv("github_sha");
-	const [username, repository] = getEnv("github_repository").split("/");
-	const workspace = getEnv("github_workspace");
+	const actor = getEnv("github_actor", true);
+	const eventName = getEnv("github_event_name", true);
+	const [username, repository] = getEnv("github_repository", true).split("/");
+	const workspace = getEnv("github_workspace", true);
 
 	// Information provided by action user
 	const token = getInput("github_token", true);
 
+	// Parse `event.json` file (file with the complete webhook event payload, automatically provided
+	// by GitHub)
+	const eventPath = getEnv("github_event_path", true);
+	const eventBuffer = readFileSync(eventPath);
+	const event = JSON.parse(eventBuffer);
+
+	// Read branch name/ref from parsed event file
+	let branch;
+	if (eventName === "push") {
+		branch = event.ref.substring(11); // Remove "refs/heads/" from start of string
+	} else if (eventName === "pull_request") {
+		branch = event.pull_request.head.ref;
+	} else {
+		throw Error(`${actionName} does not support "${eventName}" GitHub events`);
+	}
+
 	return {
 		actor,
+		branch,
+		event,
 		eventName,
-		ref,
 		repository,
-		sha,
 		token,
 		username,
 		workspace,
@@ -40,8 +54,8 @@ function getContext() {
  *
  * @param checkName {string}: Name which will be displayed in the check list
  * @param sha {string}: SHA of the commit which should be annotated
- * @param context {{actor: string, ref: string, workspace: string, eventName: string, repository:
- * string, sha: string, token: string, username: string}}: Object information about the GitHub
+ * @param context {{actor: string, branch: string, event: object, eventName: string, repository:
+ * string, token: string, username: string, workspace: string}}: Object information about the GitHub
  * repository and action trigger event
  * @param results {object[]}: Results from the linter execution
  * @param summary {string}: Summary for the GitHub check
@@ -79,8 +93,8 @@ async function createCheck(checkName, sha, context, results, summary) {
 			annotations,
 		},
 	};
-
 	try {
+		log(`Creating ${annotations.length} annotations for ${checkName}…`);
 		await request(
 			`https://api.github.com/repos/${context.username}/${context.repository}/check-runs`,
 			{
@@ -95,6 +109,7 @@ async function createCheck(checkName, sha, context, results, summary) {
 				body,
 			},
 		);
+		log(`${checkName} annotations created successfully`);
 	} catch (err) {
 		log(err, "error");
 		throw new Error(

@@ -22,29 +22,36 @@ function log(msg, level = "info") {
 }
 
 /**
- * Returns the value for an environment variable (or `null` if it's not defined)
+ * Returns the value for an environment variable. If the variable is required but doesn't have a
+ * value, an error is thrown
  *
  * @param name {string}: Name of the environment variable
- * @returns {string}: Value of the environment variable
+ * @param required {boolean}: Whether an error should be thrown if the variable doesn't have a value
+ * @returns {string | null}: Value of the environment variable
  */
-function getEnv(name) {
-	return process.env[name.toUpperCase()] || null;
+function getEnv(name, required = false) {
+	const nameUppercase = name.toUpperCase();
+	const value = process.env[nameUppercase];
+	if (value == null) {
+		// Value is either not set (`undefined`) or set to `null`
+		if (required) {
+			throw new Error(`Environment variable "${nameUppercase}" is not defined`);
+		}
+		return null;
+	}
+	return value;
 }
 
 /**
- * Returns the value for an input variable (or `null` if it's not defined). If the variable is
- * required and doesn't have a value, abort the action
+ * Returns the value for an input variable. If the variable is required but doesn't have a value,
+ * an error is thrown
  *
  * @param name {string}: Name of the input variable
- * @param required {boolean}: If set to true, the action will exit if the variable is not defined
- * @returns {string}: Value of the input variable
+ * @param required {boolean}: Whether an error should be thrown if the variable doesn't have a value
+ * @returns {string | null}: Value of the input variable
  */
 function getInput(name, required = false) {
-	const value = getEnv(`INPUT_${name}`);
-	if (required && !value) {
-		throw new Error(`"${name}" input variable is not defined`);
-	}
-	return value;
+	return getEnv(`INPUT_${name}`, required);
 }
 
 /**
