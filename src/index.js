@@ -28,6 +28,12 @@ async function runAction() {
 	const autoFix = getInput("auto_fix") === "true";
 	const commitMsg = getInput("commit_message", true);
 
+	if (github.eventName !== "push") {
+		throw Error(
+			`${actionName} currently only supports "push" events, but was called on a "${github.eventName}" event`,
+		);
+	}
+
 	setGitUserInfo(GIT_NAME, GIT_EMAIL);
 
 	const checks = [];
