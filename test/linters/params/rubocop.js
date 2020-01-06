@@ -6,8 +6,8 @@ const extensions = ["rb"];
 
 // Testing input/output for the Linter.lint function, with auto-fixing disabled
 function getLintParams(dir) {
-	const resultsFile1 = `{"path":"file1.rb","offenses":[{"severity":"convention","message":"Redundant \`return\` detected.","cop_name":"Style/RedundantReturn","corrected":false,"location":{"start_line":4,"start_column":3,"last_line":4,"last_column":8,"length":6,"line":4,"column":3}}]}`;
-	const resultsFile2 = `{"path":"file2.rb","offenses":[{"severity":"warning","message":"Useless assignment to variable - \`x\`.","cop_name":"Lint/UselessAssignment","corrected":false,"location":{"start_line":3,"start_column":1,"last_line":3,"last_column":1,"length":1,"line":3,"column":1}}]}`;
+	const resultsFile1 = `{"path":"file1.rb","offenses":[{"severity":"convention","message":"Redundant \`return\` detected.","cop_name":"Style/RedundantReturn","corrected":false,"location":{"start_line":5,"start_column":3,"last_line":5,"last_column":8,"length":6,"line":5,"column":3}}]}`;
+	const resultsFile2 = `{"path":"file2.rb","offenses":[{"severity":"warning","message":"Useless assignment to variable - \`x\`.","cop_name":"Lint/UselessAssignment","corrected":false,"location":{"start_line":4,"start_column":1,"last_line":4,"last_column":1,"length":1,"line":4,"column":1}}]}`;
 	return {
 		// Strings that must be contained in the stdout of the lint command
 		stdoutParts: [resultsFile1, resultsFile2],
@@ -19,14 +19,14 @@ function getLintParams(dir) {
 			[
 				{
 					path: "file1.rb",
-					firstLine: 4,
-					lastLine: 4,
+					firstLine: 5,
+					lastLine: 5,
 					message: "Redundant `return` detected (Style/RedundantReturn)",
 				},
 				{
 					path: "file2.rb",
-					firstLine: 3,
-					lastLine: 3,
+					firstLine: 4,
+					lastLine: 4,
 					message: "Useless assignment to variable - `x` (Lint/UselessAssignment)",
 				},
 			],
@@ -37,8 +37,8 @@ function getLintParams(dir) {
 
 // Testing input/output for the Linter.lint function, with auto-fixing enabled
 function getFixParams(dir) {
-	const resultsFile1 = `{"path":"file1.rb","offenses":[{"severity":"convention","message":"Redundant \`return\` detected.","cop_name":"Style/RedundantReturn","corrected":true,"location":{"start_line":4,"start_column":3,"last_line":4,"last_column":8,"length":6,"line":4,"column":3}}]}`;
-	const resultsFile2 = `{"path":"file2.rb","offenses":[{"severity":"warning","message":"Useless assignment to variable - \`x\`.","cop_name":"Lint/UselessAssignment","corrected":false,"location":{"start_line":3,"start_column":1,"last_line":3,"last_column":1,"length":1,"line":3,"column":1}}]}`;
+	const resultsFile1 = `{"path":"file1.rb","offenses":[{"severity":"convention","message":"Redundant \`return\` detected.","cop_name":"Style/RedundantReturn","corrected":true,"location":{"start_line":5,"start_column":3,"last_line":5,"last_column":8,"length":6,"line":5,"column":3}}]}`;
+	const resultsFile2 = `{"path":"file2.rb","offenses":[{"severity":"warning","message":"Useless assignment to variable - \`x\`.","cop_name":"Lint/UselessAssignment","corrected":false,"location":{"start_line":4,"start_column":1,"last_line":4,"last_column":1,"length":1,"line":4,"column":1}}]}`;
 	return {
 		// Strings that must be contained in the stdout of the lint command
 		stdoutParts: [resultsFile1, resultsFile2],
@@ -50,8 +50,8 @@ function getFixParams(dir) {
 			[
 				{
 					path: "file2.rb",
-					firstLine: 3,
-					lastLine: 3,
+					firstLine: 4,
+					lastLine: 4,
 					message: "Useless assignment to variable - `x` (Lint/UselessAssignment)",
 				},
 			],
