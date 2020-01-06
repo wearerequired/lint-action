@@ -26,6 +26,7 @@ process.on("unhandledRejection", err => {
 async function runAction() {
 	const github = getGithubInfo();
 	const autoFix = getInput("auto_fix") === "true";
+	const commitMsg = getInput("commit_message", true);
 
 	setGitUserInfo(GIT_NAME, GIT_EMAIL);
 
@@ -55,7 +56,7 @@ async function runAction() {
 			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
 			if (autoFix) {
 				log("Committing and pushing changes…");
-				commitChanges(`Fix code style issues with ${linter.name}`);
+				commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
 				pushChanges(github);
 			}
 			const resultsParsed = linter.parseResults(github.workspace, results);

@@ -147,11 +147,13 @@ All linters are disabled by default. To enable a linter, simply set the option w
 - **`[linter]_extensions`:** Extensions of files to check with the linter. Example: `eslint_extensions: js,ts` to lint both JavaScript and TypeScript files with ESLint. Default: See [`action.yml`](./action.yml)
 - **`[linter]_dir`:** Directory where the linting command should be run. Example: `eslint_dir: server/` if ESLint is installed in the `server` subdirectory. Default: `.`
 
-Besides the linter-specific options, there's a general `auto_fix` setting:
+Besides the linter-specific options, there are a few global settings:
 
 - **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch. Default: `false`
 
 <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="75%" />
+
+- **`commit_message`**: Template for auto-fix commit messages. The `${linter}` variable can be used to insert the name of the linter which has created the auto-fix. Default: `Fix code style issues with ${linter}`
 
 ## Development
 
