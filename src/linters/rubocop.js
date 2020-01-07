@@ -1,5 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const { removeTrailingPeriod } = require("../utils/string");
 
 const severityIndices = {
 	convention: 1,
@@ -77,8 +78,7 @@ class RuboCop {
 						path,
 						firstLine: location.start_line,
 						lastLine: location.last_line,
-						// Message: Remove trailing period, write rule ID parentheses
-						message: `${message.substring(0, message.length - 1)} (${rule})`,
+						message: `${removeTrailingPeriod(message)} (${rule})`,
 					});
 				}
 			}

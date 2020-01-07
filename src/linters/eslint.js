@@ -1,5 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const { removeTrailingPeriod } = require("../utils/string");
 
 /**
  * https://eslint.org
@@ -71,8 +72,7 @@ class ESLint {
 					path,
 					firstLine: line,
 					lastLine: line,
-					// Message: Remove trailing period, write rule ID parentheses
-					message: `${message.substring(0, message.length - 1)} (${ruleId})`,
+					message: `${removeTrailingPeriod(message)} (${ruleId})`,
 				});
 			}
 		}
