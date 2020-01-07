@@ -158,7 +158,8 @@ jobs:
 
   on:
     push:
-      branches: master
+      branches:
+        - master
     pull_request:
 
   jobs:

@@ -13,8 +13,8 @@
 	"main": "./src/index.js",
 	"scripts": {
 		"test": "jest",
-		"format": "prettier --write",
-		"lint": "eslint --fix --max-warnings 0"
+		"lint": "eslint --fix --max-warnings 0 '**/*.js'",
+		"format": "prettier --write '**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}'"
 	},
 	"dependencies": {},
 	"peerDependencies": {},
@@ -27,9 +27,7 @@
 		"eslint-plugin-import": "^2.18.2",
 		"eslint-plugin-simple-import-sort": "^5.0.0",
 		"fs-extra": "^8.1.0",
-		"husky": "^3.0.9",
 		"jest": "^24.9.0",
-		"lint-staged": "^9.4.3",
 		"prettier": "^1.19.1"
 	},
 	"eslintConfig": {
@@ -52,21 +50,8 @@
 			]
 		}
 	},
-	"prettier": "@samuelmeuli/prettier-config",
-	"lint-staged": {
-		"!(test/linters/projects/**/*).js": [
-			"yarn lint",
-			"yarn format",
-			"git add"
-		],
-		"!(test/linters/projects/**/*).{css,html,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}": [
-			"yarn format",
-			"git add"
-		]
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "yarn test && lint-staged"
-		}
-	}
+	"eslintIgnore": [
+		"test/linters/projects/**/*"
+	],
+	"prettier": "@samuelmeuli/prettier-config"
 }

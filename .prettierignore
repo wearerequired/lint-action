@@ -1,0 +1,4 @@
+# TODO: Move config into `package.json` once supported
+# https://github.com/prettier/prettier/issues/3460
+
+test/linters/projects/
