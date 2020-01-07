@@ -45,13 +45,13 @@ jobs:
 
       - name: Install Node.js dependencies
         run: |
-          cd ./test/linters/projects/eslint
+          cd ./test/linters/projects/eslint/
           yarn install
-          cd ../eslint-typescript
+          cd ../eslint-typescript/
           yarn install
-          cd ../prettier
+          cd ../prettier/
           yarn install
-          cd ../stylelint
+          cd ../stylelint/
           yarn install
 
       # Python
@@ -62,7 +62,11 @@ jobs:
           python-version: 3.8
 
       - name: Install Python dependencies
-        run: pip install black flake8
+        run: |
+          cd ./test/linters/projects/black/
+          pip install -r ./requirements.txt
+          cd ../flake8/
+          pip install -r ./requirements.txt
 
       # Ruby
 
@@ -72,7 +76,10 @@ jobs:
           ruby-version: 2.6
 
       - name: Install Ruby dependencies
-        run: gem install rubocop -v 0.71.0
+        run: |
+          gem install bundler
+          cd ./test/linters/projects/rubocop/
+          bundle install
 
       # Swift (only on macOS)
 
@@ -80,7 +87,11 @@ jobs:
         if: startsWith(matrix.os, 'macos')
         run: |
           brew update
-          brew install swiftformat swiftlint
+          brew install mint
+          cd ./test/linters/projects/swiftformat/
+          mint bootstrap --link
+          cd ../swiftlint/
+          mint bootstrap --link
 
       # Tests
 
