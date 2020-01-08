@@ -5,25 +5,27 @@ const testName = "eslint";
 const linter = ESLint;
 const extensions = ["js"];
 
-// Testing input/output for the Linter.lint function, with auto-fixing disabled
+// Linting without auto-fixing
 function getLintParams(dir) {
-	const resultsFile1 = `{"filePath":"${joinDoubleBackslash(
+	const stdoutFile1 = `{"filePath":"${joinDoubleBackslash(
 		dir,
 		"file1.js",
 	)}","messages":[{"ruleId":"prefer-const","severity":1,"message":"'str' is never reassigned. Use 'const' instead.","line":1,"column":5,"nodeType":"Identifier","messageId":"useConst","endLine":1,"endColumn":8,"fix":{"range":[0,3],"text":"const"}},{"ruleId":"no-console","severity":2,"message":"Unexpected console statement.","line":4,"column":2,"nodeType":"MemberExpression","messageId":"unexpected","endLine":4,"endColumn":13}],"errorCount":1,"warningCount":1,"fixableErrorCount":0,"fixableWarningCount":1,"source":"let str = \\"world\\"; // \\"prefer-const\\" warning\\n\\nfunction main() {\\n\\tconsole.log(\\"hello \\" + str); // \\"no-console\\" error\\n}\\n\\nmain();\\n"}`;
-	const resultsFile2 = `{"filePath":"${joinDoubleBackslash(
+	const stdoutFile2 = `{"filePath":"${joinDoubleBackslash(
 		dir,
 		"file2.js",
 	)}","messages":[{"ruleId":"no-unused-vars","severity":2,"message":"'str' is assigned a value but never used.","line":1,"column":7,"nodeType":"Identifier","endLine":1,"endColumn":10}],"errorCount":1,"warningCount":0,"fixableErrorCount":0,"fixableWarningCount":0,"source":"const str = \\"Hello world\\"; // \\"no-unused-vars\\" error\\n"}`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `[${resultsFile1},${resultsFile2}]`,
+		// Expected output of the linting function
+		cmdOutput: {
+			status: 1,
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `[${stdoutFile1},${stdoutFile2}]`,
+		},
 		// Expected output of the parsing function
-		parseResult: [
-			[],
-			[
+		lintResult: {
+			isSuccess: false,
+			warning: [
 				{
 					path: "file1.js",
 					firstLine: 1,
@@ -31,7 +33,7 @@ function getLintParams(dir) {
 					message: "'str' is never reassigned. Use 'const' instead (prefer-const)",
 				},
 			],
-			[
+			error: [
 				{
 					path: "file1.js",
 					firstLine: 4,
@@ -45,30 +47,32 @@ function getLintParams(dir) {
 					message: "'str' is assigned a value but never used (no-unused-vars)",
 				},
 			],
-		],
+		},
 	};
 }
 
-// Testing input/output for the Linter.lint function, with auto-fixing enabled
+// Linting with auto-fixing
 function getFixParams(dir) {
-	const resultsFile1 = `{"filePath":"${joinDoubleBackslash(
+	const stdoutFile1 = `{"filePath":"${joinDoubleBackslash(
 		dir,
 		"file1.js",
 	)}","messages":[{"ruleId":"no-console","severity":2,"message":"Unexpected console statement.","line":4,"column":2,"nodeType":"MemberExpression","messageId":"unexpected","endLine":4,"endColumn":13}],"errorCount":1,"warningCount":0,"fixableErrorCount":0,"fixableWarningCount":0,"output":"const str = \\"world\\"; // \\"prefer-const\\" warning\\n\\nfunction main() {\\n\\tconsole.log(\\"hello \\" + str); // \\"no-console\\" error\\n}\\n\\nmain();\\n"}`;
-	const resultsFile2 = `{"filePath":"${joinDoubleBackslash(
+	const stdoutFile2 = `{"filePath":"${joinDoubleBackslash(
 		dir,
 		"file2.js",
 	)}","messages":[{"ruleId":"no-unused-vars","severity":2,"message":"'str' is assigned a value but never used.","line":1,"column":7,"nodeType":"Identifier","endLine":1,"endColumn":10}],"errorCount":1,"warningCount":0,"fixableErrorCount":0,"fixableWarningCount":0,"source":"const str = \\"Hello world\\"; // \\"no-unused-vars\\" error\\n"}`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `[${resultsFile1},${resultsFile2}]`,
+		// Expected output of the linting function
+		cmdOutput: {
+			status: 1,
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `[${stdoutFile1},${stdoutFile2}]`,
+		},
 		// Expected output of the parsing function
-		parseResult: [
-			[],
-			[],
-			[
+		lintResult: {
+			isSuccess: false,
+			warning: [],
+			error: [
 				{
 					path: "file1.js",
 					firstLine: 4,
@@ -82,7 +86,7 @@ function getFixParams(dir) {
 					message: "'str' is assigned a value but never used (no-unused-vars)",
 				},
 			],
-		],
+		},
 	};
 }
 

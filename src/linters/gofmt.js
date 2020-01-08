@@ -1,6 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
-const { diffToParsedResults } = require("../utils/diff");
+const { parseErrorsFromDiff } = require("../utils/diff");
+const { initLintResult } = require("../utils/lint-result");
 
 /**
  * https://golang.org/cmd/gofmt
@@ -11,9 +12,7 @@ class Gofmt {
 	}
 
 	/**
-	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
-	 * programs is missing
-	 *
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir: Directory to run the linting program in
 	 */
 	static async verifySetup(dir) {
@@ -25,11 +24,10 @@ class Gofmt {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 *
-	 * @param {string} dir: Directory to run the linting program in
-	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {string} dir: Directory to run the linter in
+	 * @param {string[]} extensions: File extensions which should be linted
 	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
-	 * @returns {string}: Results of the linting process
+	 * @returns {{status: number, stdout: string, stderr: string}}: Output of the lint command
 	 */
 	static lint(dir, extensions, fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
@@ -43,17 +41,19 @@ class Gofmt {
 		return run(`gofmt -s ${fix ? "-w" : "-d -e"} "."`, {
 			dir,
 			ignoreErrors: true,
-		}).stdout;
+		});
 	}
 
 	/**
-	 * Parses the results of the linting process and returns it as a processable array
-	 *
-	 * @param {string} dir: Directory in which the linting program has been run
-	 * @param {string} results: Results of the linting process
-	 * @returns {object[]}: Parsed results
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir: Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output: Output of the lint command
+	 * @returns {{isSuccess: boolean, warning: [], error: []}}: Parsed lint result
 	 */
-	static parseResults(dir, results) {
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+
 		// The gofmt output lines starting with "diff" differ from the ones of tools like Git:
 		//
 		//   - gofmt: "diff -u file-old.txt file-new.txt"
@@ -63,11 +63,17 @@ class Gofmt {
 		// start. Without these strings, this would not be possible, because file names may include
 		// spaces, which are not escaped in unified diffs. As a workaround, these lines are filtered out
 		// from the gofmt diff so the diff parser can read the diff without errors
-		const resultsFiltered = results
+		const filteredOutput = output.stderr
 			.split(/\r?\n/)
 			.filter(line => !line.startsWith("diff -u"))
 			.join("\n");
-		return diffToParsedResults(resultsFiltered);
+		lintResult.error = parseErrorsFromDiff(filteredOutput);
+
+		// gofmt exits with 0 even if there are formatting issues. Therefore, this function determines
+		// the success of the linting process based on the number of parsed errors
+		lintResult.isSuccess = lintResult.error.length === 0;
+
+		return lintResult;
 	}
 }
 

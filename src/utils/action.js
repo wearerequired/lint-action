@@ -58,10 +58,10 @@ function getInput(name, required = false) {
  * Executes the provided shell command
  *
  * @param cmd {string}: Shell command to execute
- * @param options {object}: {@see RUN_OPTIONS_DEFAULTS}
- * @returns {object}: Output of the shell command
+ * @param [options] {{dir: string, ignoreErrors: boolean}}: {@see RUN_OPTIONS_DEFAULTS}
+ * @returns {{status: number, stdout: string, stderr: string}}: Output of the shell command
  */
-function run(cmd, options = null) {
+function run(cmd, options) {
 	const optionsWithDefaults = {
 		...RUN_OPTIONS_DEFAULTS,
 		...options,

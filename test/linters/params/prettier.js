@@ -18,20 +18,22 @@ const extensions = [
 	"yml",
 ];
 
-// Testing input/output for the Linter.lint function, with auto-fixing disabled
+// Linting without auto-fixing
 function getLintParams(dir) {
-	const resultsFile1 = `file1.js`;
-	const resultsFile2 = `file2.css`;
+	const stdoutFile1 = `file1.js`;
+	const stdoutFile2 = `file2.css`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `${resultsFile1}\n${resultsFile2}`,
+		// Expected output of the linting function
+		cmdOutput: {
+			status: 1,
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `${stdoutFile1}\n${stdoutFile2}`,
+		},
 		// Expected output of the parsing function
-		parseResult: [
-			[],
-			[],
-			[
+		lintResult: {
+			isSuccess: false,
+			warning: [],
+			error: [
 				{
 					path: "file1.js",
 					firstLine: 1,
@@ -47,19 +49,24 @@ function getLintParams(dir) {
 						"There are issues with this file's formatting, please run Prettier to fix the errors",
 				},
 			],
-		],
+		},
 	};
 }
 
-// Testing input/output for the Linter.lint function, with auto-fixing enabled
+// Linting with auto-fixing
 function getFixParams(dir) {
 	return {
-		// stdout of the lint command
-		stdout: "",
-		// Example output of the lint command, used to test the parsing function
-		parseInput: "",
+		// Expected output of the linting function
+		cmdOutput: {
+			status: 0,
+			stdout: "",
+		},
 		// Expected output of the parsing function
-		parseResult: [[], [], []],
+		lintResult: {
+			isSuccess: true,
+			warning: [],
+			error: [],
+		},
 	};
 }
 

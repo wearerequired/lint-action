@@ -1,13 +1,15 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const { initLintResult } = require("../utils/lint-result");
 const { removeTrailingPeriod } = require("../utils/string");
 
-const severityIndices = {
-	convention: 1,
-	refactor: 1,
-	warning: 1,
-	error: 2,
-	fatal: 2,
+// Mapping of RuboCop severities to severities used for GitHub commit annotations
+const severityMap = {
+	convention: "warning",
+	refactor: "warning",
+	warning: "warning",
+	error: "error",
+	fatal: "error",
 };
 
 /**
@@ -19,9 +21,7 @@ class RuboCop {
 	}
 
 	/**
-	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
-	 * programs is missing
-	 *
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir: Directory to run the linting program in
 	 */
 	static async verifySetup(dir) {
@@ -38,11 +38,10 @@ class RuboCop {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 *
-	 * @param {string} dir: Directory to run the linting program in
-	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {string} dir: Directory to run the linter in
+	 * @param {string[]} extensions: File extensions which should be linted
 	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
-	 * @returns {string}: Results of the linting process
+	 * @returns {{status: number, stdout: string, stderr: string}}: Output of the lint command
 	 */
 	static lint(dir, extensions, fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "rb") {
@@ -52,29 +51,28 @@ class RuboCop {
 		return run(`rubocop --format json ${fix ? "--auto-correct" : ""} ${dir}`, {
 			dir,
 			ignoreErrors: true,
-		}).stdout;
+		});
 	}
 
 	/**
-	 * Parses the results of the linting process and returns it as a processable array
-	 *
-	 * @param {string} dir: Directory in which the linting program has been run
-	 * @param {string} results: Results of the linting process
-	 * @returns {object[]}: Parsed results
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir: Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output: Output of the lint command
+	 * @returns {{isSuccess: boolean, warning: [], error: []}}: Parsed lint result
 	 */
-	static parseResults(dir, results) {
-		const resultsJson = JSON.parse(results);
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+		lintResult.isSuccess = output.status === 0;
 
-		// Parsed results: [notices, warnings, failures]
-		const resultsParsed = [[], [], []];
-
-		for (const file of resultsJson.files) {
+		const outputJson = JSON.parse(output.stdout);
+		for (const file of outputJson.files) {
 			const { path, offenses } = file;
 			for (const offense of offenses) {
 				const { severity, message, cop_name: rule, corrected, location } = offense;
 				if (!corrected) {
-					const severityIdx = severityIndices[severity] || 2;
-					resultsParsed[severityIdx].push({
+					const mappedSeverity = severityMap[severity] || "error";
+					lintResult[mappedSeverity].push({
 						path,
 						firstLine: location.start_line,
 						lastLine: location.last_line,
@@ -84,7 +82,7 @@ class RuboCop {
 			}
 		}
 
-		return resultsParsed;
+		return lintResult;
 	}
 }
 

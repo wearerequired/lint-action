@@ -5,25 +5,27 @@ const testName = "stylelint";
 const linter = Stylelint;
 const extensions = ["css", "sass", "scss"];
 
-// Testing input/output for the Linter.lint function, with auto-fixing disabled
+// Linting without auto-fixing
 function getLintParams(dir) {
-	const resultsFile1 = `{"source":"${joinDoubleBackslash(
+	const stdoutFile1 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file1.css",
 	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[{"line":2,"column":13,"rule":"no-extra-semicolons","severity":"warning","text":"Unexpected extra semicolon (no-extra-semicolons)"}]}`;
-	const resultsFile2 = `{"source":"${joinDoubleBackslash(
+	const stdoutFile2 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file2.scss",
 	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":1,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"}]}`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `[${resultsFile1},${resultsFile2}]`,
+		// Expected output of the linting function
+		cmdOutput: {
+			status: 2, // stylelint exits with the highest severity index found (warning = 1, error = 2)
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `[${stdoutFile1},${stdoutFile2}]`,
+		},
 		// Expected output of the parsing function
-		parseResult: [
-			[],
-			[
+		lintResult: {
+			isSuccess: false,
+			warning: [
 				{
 					path: "file1.css",
 					firstLine: 2,
@@ -31,7 +33,7 @@ function getLintParams(dir) {
 					message: "Unexpected extra semicolon (no-extra-semicolons)",
 				},
 			],
-			[
+			error: [
 				{
 					path: "file2.scss",
 					firstLine: 1,
@@ -39,30 +41,32 @@ function getLintParams(dir) {
 					message: "Unexpected empty block (block-no-empty)",
 				},
 			],
-		],
+		},
 	};
 }
 
-// Testing input/output for the Linter.lint function, with auto-fixing enabled
+// Linting with auto-fixing
 function getFixParams(dir) {
-	const resultsFile1 = `{"source":"${joinDoubleBackslash(
+	const stdoutFile1 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file1.css",
 	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[]}`;
-	const resultsFile2 = `{"source":"${joinDoubleBackslash(
+	const stdoutFile2 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file2.scss",
 	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":1,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"}]}`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `[${resultsFile1},${resultsFile2}]`,
+		// Expected output of the linting function
+		cmdOutput: {
+			status: 2, // stylelint exits with the highest severity index found (warning = 1, error = 2)
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `[${stdoutFile1},${stdoutFile2}]`,
+		},
 		// Expected output of the parsing function
-		parseResult: [
-			[],
-			[],
-			[
+		lintResult: {
+			isSuccess: false,
+			warning: [],
+			error: [
 				{
 					path: "file2.scss",
 					firstLine: 1,
@@ -70,7 +74,7 @@ function getFixParams(dir) {
 					message: "Unexpected empty block (block-no-empty)",
 				},
 			],
-		],
+		},
 	};
 }
 

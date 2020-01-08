@@ -1,22 +1,20 @@
 const parseDiff = require("../../vendor/parse-diff");
 
 /**
- * Parses a unified diff and converts it to a results array
- *
- * @param diff {string}: Unified diff (output of a linting/formatting command)
- * @returns {[][]}: Array of parsed results ([notices, warnings, failures])
+ * Parses linting errors from a unified diff
+ * @param {string} diff: Unified diff
+ * @returns {{path: string, firstLine: number, lastLine: number, message: string}[]}: Array of
+ * parsed errors
  */
-function diffToParsedResults(diff) {
-	// Parsed results: [notices, warnings, failures]
-	const resultsParsed = [[], [], []];
-
+function parseErrorsFromDiff(diff) {
+	const errors = [];
 	const files = parseDiff(diff);
 	for (const file of files) {
 		const { chunks, to: path } = file;
 		for (const chunk of chunks) {
 			const { oldStart, oldLines, changes } = chunk;
 			const chunkDiff = changes.map(change => change.content).join("\n");
-			resultsParsed[2].push({
+			errors.push({
 				path,
 				firstLine: oldStart,
 				lastLine: oldStart + oldLines,
@@ -24,10 +22,9 @@ function diffToParsedResults(diff) {
 			});
 		}
 	}
-
-	return resultsParsed;
+	return errors;
 }
 
 module.exports = {
-	diffToParsedResults,
+	parseErrorsFromDiff,
 };

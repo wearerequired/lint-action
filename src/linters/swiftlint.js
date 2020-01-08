@@ -1,8 +1,8 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const { initLintResult } = require("../utils/lint-result");
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (warning|error): (.*)$/gm;
-const LEVELS = ["", "warning", "error"];
 
 /**
  * https://github.com/realm/SwiftLint
@@ -13,9 +13,7 @@ class SwiftLint {
 	}
 
 	/**
-	 * Verifies that all required programs are installed. Exits the GitHub action if one of the
-	 * programs is missing
-	 *
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir: Directory to run the linting program in
 	 */
 	static async verifySetup(dir) {
@@ -27,11 +25,10 @@ class SwiftLint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 *
-	 * @param {string} dir: Directory to run the linting program in
-	 * @param {string[]} extensions: Array of file extensions which should be linted
+	 * @param {string} dir: Directory to run the linter in
+	 * @param {string[]} extensions: File extensions which should be linted
 	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
-	 * @returns {string}: Results of the linting process
+	 * @returns {{status: number, stdout: string, stderr: string}}: Output of the lint command
 	 */
 	static lint(dir, extensions, fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
@@ -41,28 +38,26 @@ class SwiftLint {
 		return run(`swiftlint ${fix ? "autocorrect" : ""}`, {
 			dir,
 			ignoreErrors: true,
-		}).stdout;
+		});
 	}
 
 	/**
-	 * Parses the results of the linting process and returns it as a processable array
-	 *
-	 * @param {string} dir: Directory in which the linting program has been run
-	 * @param {string} results: Results of the linting process
-	 * @returns {object[]}: Parsed results
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir: Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output: Output of the lint command
+	 * @returns {{isSuccess: boolean, warning: [], error: []}}: Parsed lint result
 	 */
-	static parseResults(dir, results) {
-		const matches = results.matchAll(PARSE_REGEX);
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+		lintResult.isSuccess = output.status === 0;
 
-		// Parsed results: [notices, warnings, failures]
-		const resultsParsed = [[], [], []];
-
+		const matches = output.stdout.matchAll(PARSE_REGEX);
 		for (const match of matches) {
 			const [_, pathFull, line, level, message] = match;
 			const path = pathFull.substring(dir.length + 1);
 			const lineNr = parseInt(line, 10);
-			const levelIdx = LEVELS.indexOf(level);
-			resultsParsed[levelIdx].push({
+			lintResult[level].push({
 				path,
 				firstLine: lineNr,
 				lastLine: lineNr,
@@ -70,7 +65,7 @@ class SwiftLint {
 			});
 		}
 
-		return resultsParsed;
+		return lintResult;
 	}
 }
 

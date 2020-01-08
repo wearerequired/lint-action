@@ -30,61 +30,63 @@ if (process.platform === "darwin") {
 	linterParams.push(swiftformatParams, swiftlintParams);
 }
 
-describe.each(linterParams)(
-	"%s",
-	(projectName, linter, extensions, getLintParams, getFixParams) => {
-		const projectDir = join(__dirname, "projects", projectName);
-		const tmpDir = join(__dirname, "..", "tmp", projectName);
-		const lintParams = getLintParams(tmpDir);
-		const fixParams = getFixParams(tmpDir);
+// Test lint and auto-fix modes
+describe.each([
+	["lint", false],
+	["auto-fix", true],
+])("%s", (lintMode, autoFix) => {
+	// Test all linters
+	describe.each(linterParams)(
+		"%s",
+		(projectName, linter, extensions, getLintParams, getFixParams) => {
+			const projectDir = join(__dirname, "projects", projectName);
+			const tmpDir = join(__dirname, "..", "tmp", projectName);
+			const expected = autoFix ? getFixParams(tmpDir) : getLintParams(tmpDir);
 
-		beforeAll(async () => {
-			// Move test project into temporary directory (where files can be modified by the linters)
-			copySync(projectDir, tmpDir);
-			await linter.verifySetup(tmpDir);
-		});
+			beforeAll(async () => {
+				// Move test project into temporary directory (where files can be modified by the linters)
+				copySync(projectDir, tmpDir);
+				await linter.verifySetup(tmpDir);
+			});
 
-		afterAll(() => {
-			// Remove temporary directory after test completion
-			removeSync(tmpDir);
-		});
+			afterAll(() => {
+				// Remove temporary directory after test completion
+				removeSync(tmpDir);
+			});
 
-		test(`${linter.name} returns correct lint results`, () => {
-			let actualStdout = linter.lint(tmpDir, extensions);
-			actualStdout = normalizeDates(actualStdout);
-			if ("stdout" in lintParams) {
-				expect(actualStdout).toEqual(lintParams.stdout);
-			} else if ("stdoutParts" in lintParams) {
-				lintParams.stdoutParts.forEach(stdoutPart =>
-					expect(actualStdout).toEqual(expect.stringContaining(stdoutPart)),
-				);
-			} else {
-				throw Error("`lintParams` must contain either `stdout` or `stdoutParts` key");
-			}
-		});
+			// Test `lint` function
+			test(`${linter.name} returns expected ${lintMode} output`, () => {
+				const cmdOutput = linter.lint(tmpDir, extensions, autoFix);
 
-		test(`${linter.name} parses lint results correctly`, () => {
-			const actualParsed = linter.parseResults(tmpDir, lintParams.parseInput);
-			expect(actualParsed).toEqual(lintParams.parseResult);
-		});
+				// Exit code
+				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);
 
-		test(`${linter.name} returns correct auto-fix results`, () => {
-			let actualStdout = linter.lint(tmpDir, extensions, true);
-			actualStdout = normalizeDates(actualStdout);
-			if ("stdout" in fixParams) {
-				expect(actualStdout).toEqual(fixParams.stdout);
-			} else if ("stdoutParts" in fixParams) {
-				fixParams.stdoutParts.forEach(stdoutPart =>
-					expect(actualStdout).toEqual(expect.stringContaining(stdoutPart)),
-				);
-			} else {
-				throw Error("`fixParams` must contain either `stdout` or `stdoutParts` key");
-			}
-		});
+				// stdout
+				const stdout = normalizeDates(cmdOutput.stdout);
+				if ("stdoutParts" in expected.lintResult) {
+					expected.lintResult.stdoutParts.forEach(stdoutPart =>
+						expect(stdout).toEqual(expect.stringContaining(stdoutPart)),
+					);
+				} else if ("stdout" in expected.lintResult) {
+					expect(stdout).toEqual(expected.stdout);
+				}
 
-		test(`${linter.name} parses auto-fix results correctly`, () => {
-			const actualParsed = linter.parseResults(tmpDir, fixParams.parseInput);
-			expect(actualParsed).toEqual(fixParams.parseResult);
-		});
-	},
-);
+				// stderr
+				const stderr = normalizeDates(cmdOutput.stderr);
+				if ("stderrParts" in expected.lintResult) {
+					expected.lintResult.stderrParts.forEach(stderrParts =>
+						expect(stderr).toEqual(expect.stringContaining(stderrParts)),
+					);
+				} else if ("stderr" in expected.lintResult) {
+					expect(stderr).toEqual(expected.stderr);
+				}
+			});
+
+			// Test `parseOutput` function
+			test(`${linter.name} parses ${lintMode} output correctly`, () => {
+				const lintResult = linter.parseOutput(tmpDir, expected.cmdOutput);
+				expect(lintResult).toEqual(expected.lintResult);
+			});
+		},
+	);
+});

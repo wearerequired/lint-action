@@ -57,17 +57,24 @@ async function runAction() {
 			log(
 				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
 			);
-			const results = linter.lint(lintDirAbs, fileExtList, autoFix);
-			const resultsParsed = linter.parseResults(context.workspace, results);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, autoFix);
+
+			// Parse output of linting command
+			const lintResult = linter.parseOutput(context.workspace, lintOutput);
+			log(
+				`Linting result of ${linter.name} is considered a ${
+					lintResult.isSuccess ? "success" : "failure"
+				}`,
+			);
 
 			// Build and log a summary of linting errors/warnings
 			let summary;
-			if (resultsParsed[1].length > 0 && resultsParsed[2].length > 0) {
-				summary = `Found ${resultsParsed[2].length} errors and ${resultsParsed[1].length} warnings with ${linter.name}`;
-			} else if (resultsParsed[2].length > 0) {
-				summary = `Found ${resultsParsed[2].length} errors with ${linter.name}`;
-			} else if (resultsParsed[1].length > 0) {
-				summary = `Found ${resultsParsed[1].length} warnings with ${linter.name}`;
+			if (lintResult.warning.length > 0 && lintResult.error.length > 0) {
+				summary = `Found ${lintResult.error.length} errors and ${lintResult.warning.length} warnings with ${linter.name}`;
+			} else if (lintResult.error.length > 0) {
+				summary = `Found ${lintResult.error.length} errors with ${linter.name}`;
+			} else if (lintResult.warning.length > 0) {
+				summary = `Found ${lintResult.warning.length} warnings with ${linter.name}`;
 			} else {
 				summary = `No code style issues found with ${linter.name}`;
 			}
@@ -79,7 +86,7 @@ async function runAction() {
 				git.pushChanges(context);
 			}
 
-			checks.push({ checkName: linter.name, resultsParsed, summary });
+			checks.push({ checkName: linter.name, lintResult, summary });
 		}
 	}
 
@@ -89,8 +96,8 @@ async function runAction() {
 	log(""); // Create empty line in logs
 	const headSha = git.getHeadSha();
 	await Promise.all(
-		checks.map(({ checkName, resultsParsed, summary }) =>
-			github.createCheck(checkName, headSha, context, resultsParsed, summary),
+		checks.map(({ checkName, lintResult, summary }) =>
+			github.createCheck(checkName, headSha, context, lintResult, summary),
 		),
 	);
 }

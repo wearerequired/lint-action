@@ -5,25 +5,32 @@ const testName = "swiftlint";
 const linter = Swiftlint;
 const extensions = ["swift"];
 
-// Testing input/output for the Linter.lint function, with auto-fixing disabled
+// Linting without auto-fixing
 function getLintParams(dir) {
-	const resultsFile1 = `${join(
+	const stdoutFile1 = `${join(
 		dir,
 		"file1.swift",
 	)}:5:1: warning: Vertical Whitespace Violation: Limit vertical whitespace to a single empty line. Currently 2. (vertical_whitespace)`;
-	const resultsFile2 = `${join(
+	const stdoutFile2 = `${join(
 		dir,
 		"file2.swift",
 	)}:2:22: error: Trailing Semicolon Violation: Lines should not have trailing semicolons. (trailing_semicolon)`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `${resultsFile1}\n${resultsFile2}`,
+		// Expected output of the linting function
+		cmdOutput: {
+			// SwiftLint exit codes:
+			// - 0: No errors
+			// - 1: Usage or system error
+			// - 2: Style violations of severity "Error"
+			// - 3: No style violations of severity "Error", but severity "Warning" with --strict
+			status: 2,
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `${stdoutFile1}\n${stdoutFile2}`,
+		},
 		// Expected output of the parsing function
-		parseResult: [
-			[],
-			[
+		lintResult: {
+			isSuccess: false,
+			warning: [
 				{
 					path: "file1.swift",
 					firstLine: 5,
@@ -32,7 +39,7 @@ function getLintParams(dir) {
 						"Vertical Whitespace Violation: Limit vertical whitespace to a single empty line. Currently 2. (vertical_whitespace)",
 				},
 			],
-			[
+			error: [
 				{
 					path: "file2.swift",
 					firstLine: 2,
@@ -41,21 +48,32 @@ function getLintParams(dir) {
 						"Trailing Semicolon Violation: Lines should not have trailing semicolons. (trailing_semicolon)",
 				},
 			],
-		],
+		},
 	};
 }
 
-// Testing input/output for the Linter.lint function, with auto-fixing enabled
+// Linting with auto-fixing
 function getFixParams(dir) {
-	const resultsFile1 = `${join(dir, "file1.swift")}:4:1 Corrected Vertical Whitespace`;
-	const resultsFile2 = `${join(dir, "file2.swift")}:2:22 Corrected Trailing Semicolon`;
+	const stdoutFile1 = `${join(dir, "file1.swift")}:4:1 Corrected Vertical Whitespace`;
+	const stdoutFile2 = `${join(dir, "file2.swift")}:2:22 Corrected Trailing Semicolon`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `${resultsFile1}\n${resultsFile2}`,
+		// Expected output of the linting function
+		cmdOutput: {
+			// SwiftLint exit codes:
+			// - 0: No errors
+			// - 1: Usage or system error
+			// - 2: Style violations of severity "Error"
+			// - 3: No style violations of severity "Error", but severity "Warning" with --strict
+			status: 0,
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `${stdoutFile1}\n${stdoutFile2}`,
+		},
 		// Expected output of the parsing function
-		parseResult: [[], [], []],
+		lintResult: {
+			isSuccess: true,
+			warning: [],
+			error: [],
+		},
 	};
 }
 

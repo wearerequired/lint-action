@@ -67,7 +67,11 @@ describe("getContext()", () => {
 });
 
 describe("createCheck()", () => {
-	const RESULTS = [[], [], []];
+	const LINT_RESULT = {
+		isSuccess: true,
+		warning: [],
+		error: [],
+	};
 	const context = {
 		...expectedContext,
 		event: {},
@@ -75,12 +79,12 @@ describe("createCheck()", () => {
 	};
 
 	test("mocked request should be successful", async () => {
-		await expect(createCheck("check-name", "sha", context, RESULTS, "summary")).resolves.toEqual(
-			undefined,
-		);
+		await expect(
+			createCheck("check-name", "sha", context, LINT_RESULT, "summary"),
+		).resolves.toEqual(undefined);
 	});
 
-	test("mocked request should fail without results", async () => {
+	test("mocked request should fail when no lint results are provided", async () => {
 		await expect(createCheck("check-name", "sha", context, null, "summary")).rejects.toEqual(
 			expect.any(Error),
 		);

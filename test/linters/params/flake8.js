@@ -6,20 +6,22 @@ const testName = "flake8";
 const linter = Flake8;
 const extensions = ["py"];
 
-// Testing input/output for the Linter.lint function, with auto-fixing disabled
+// Linting without auto-fixing
 function getLintParams(dir) {
-	const resultsFile1 = `.${sep}file1.py:5:9: E211 whitespace before '('${EOL}.${sep}file1.py:26:1: E305 expected 2 blank lines after class or function definition, found 1`;
-	const resultsFile2 = `.${sep}file2.py:2:3: E111 indentation is not a multiple of four`;
+	const stdoutFile1 = `.${sep}file1.py:5:9: E211 whitespace before '('${EOL}.${sep}file1.py:26:1: E305 expected 2 blank lines after class or function definition, found 1`;
+	const stdoutFile2 = `.${sep}file2.py:2:3: E111 indentation is not a multiple of four`;
 	return {
-		// Strings that must be contained in the stdout of the lint command
-		stdoutParts: [resultsFile1, resultsFile2],
-		// Example output of the lint command, used to test the parsing function
-		parseInput: `${resultsFile1}${EOL}${resultsFile2}`,
+		// Expected output of the linting function
+		cmdOutput: {
+			status: 1,
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `${stdoutFile1}${EOL}${stdoutFile2}`,
+		},
 		// Expected output of the parsing function
-		parseResult: [
-			[],
-			[],
-			[
+		lintResult: {
+			isSuccess: false,
+			warning: [],
+			error: [
 				{
 					path: "file1.py",
 					firstLine: 5,
@@ -39,11 +41,11 @@ function getLintParams(dir) {
 					message: "Indentation is not a multiple of four (E111)",
 				},
 			],
-		],
+		},
 	};
 }
 
-// Testing input/output for the Linter.lint function, with auto-fixing enabled
+// Linting with auto-fixing
 const getFixParams = getLintParams; // Does not support auto-fixing -> option has no effect
 
 module.exports = [testName, linter, extensions, getLintParams, getFixParams];

@@ -3,8 +3,6 @@ const { name: actionName } = require("../package");
 const { getEnv, getInput, log } = require("./utils/action");
 const request = require("./utils/request");
 
-const ANNOTATION_LEVELS = ["notice", "warning", "failure"];
-
 /**
  * Returns information about the GitHub repository and action trigger event
  *
@@ -51,25 +49,24 @@ function getContext() {
 
 /**
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
- *
  * @param checkName {string}: Name which will be displayed in the check list
  * @param sha {string}: SHA of the commit which should be annotated
  * @param context {{actor: string, branch: string, event: object, eventName: string, repository:
  * string, token: string, username: string, workspace: string}}: Object information about the GitHub
  * repository and action trigger event
- * @param results {object[]}: Results from the linter execution
+ * @param lintResult {{isSuccess: boolean, warning: [], error: []}}: Parsed lint result
  * @param summary {string}: Summary for the GitHub check
  */
-async function createCheck(checkName, sha, context, results, summary) {
+async function createCheck(checkName, sha, context, lintResult, summary) {
 	let annotations = [];
-	for (let level = 0; level < 3; level += 1) {
+	for (const level of ["warning", "error"]) {
 		annotations = [
 			...annotations,
-			...results[level].map(result => ({
+			...lintResult[level].map(result => ({
 				path: result.path,
 				start_line: result.firstLine,
 				end_line: result.lastLine,
-				annotation_level: ANNOTATION_LEVELS[level],
+				annotation_level: level === "warning" ? "warning" : "failure",
 				message: result.message,
 			})),
 		];
@@ -78,7 +75,7 @@ async function createCheck(checkName, sha, context, results, summary) {
 	// Only use the first 50 annotations (limit for a single API request)
 	if (annotations.length > 50) {
 		log(
-			`There are more than 50 errors/warnings from ${checkName}. Annotations are created for the first 50 results only.`,
+			`There are more than 50 errors/warnings from ${checkName}. Annotations are created for the first 50 violations only.`,
 		);
 		annotations = annotations.slice(0, 50);
 	}
@@ -86,7 +83,7 @@ async function createCheck(checkName, sha, context, results, summary) {
 	const body = {
 		name: checkName,
 		head_sha: sha,
-		conclusion: results[2].length === 0 ? "success" : "failure",
+		conclusion: lintResult.isSuccess ? "success" : "failure",
 		output: {
 			title: checkName,
 			summary,
