@@ -54,7 +54,7 @@ jobs:
       # Install your linters here
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.6
+        uses: samuelmeuli/lint-action@v0.7
         with:
           github_token: ${{ secrets.github_token }}
           # Enable your linters here
@@ -92,7 +92,7 @@ jobs:
         run: npm install
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.6
+        uses: samuelmeuli/lint-action@v0.7
         with:
           github_token: ${{ secrets.github_token }}
           # Enable linters
@@ -125,7 +125,7 @@ jobs:
         run: pip install black flake8
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v0.6
+        uses: samuelmeuli/lint-action@v0.7
         with:
           github_token: ${{ secrets.github_token }}
           # Enable linters
@@ -174,7 +174,7 @@ jobs:
         # ...
 
         - name: Run linters
-          uses: samuelmeuli/lint-action@v0.6
+          uses: samuelmeuli/lint-action@v0.7
           with:
             github_token: ${{ secrets.github_token }}
             auto_fix: ${{ github.event_name == 'pull_request' }}

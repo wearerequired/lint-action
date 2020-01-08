@@ -1,6 +1,6 @@
 {
 	"name": "lint-action",
-	"version": "0.6.0",
+	"version": "0.7.0",
 	"description": "GitHub Action for detecting and fixing linting errors",
 	"author": {
 		"name": "Samuel Meuli",
