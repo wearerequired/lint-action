@@ -26,10 +26,11 @@ class Gofmt {
 	 * Runs the linting program and returns the command output
 	 * @param {string} dir - Directory to run the linter in
 	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, fix = false) {
+	static lint(dir, extensions, args = "", fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -38,7 +39,8 @@ class Gofmt {
 		// -e: Report all errors (not just the first 10 on different lines)
 		// -s: Simplify code
 		// -w: Write result to (source) file instead of stdout
-		return run(`gofmt -s ${fix ? "-w" : "-d -e"} "."`, {
+		const fixArg = fix ? "-w" : "-d -e";
+		return run(`gofmt -s ${fixArg} ${args} "."`, {
 			dir,
 			ignoreErrors: true,
 		});

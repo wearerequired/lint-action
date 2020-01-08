@@ -56,7 +56,7 @@ describe.each([
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
-				const cmdOutput = linter.lint(tmpDir, extensions, autoFix);
+				const cmdOutput = linter.lint(tmpDir, extensions, "", autoFix);
 
 				// Exit code
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);

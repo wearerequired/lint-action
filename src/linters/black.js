@@ -31,17 +31,17 @@ class Black {
 	 * Runs the linting program and returns the command output
 	 * @param {string} dir - Directory to run the linter in
 	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, fix = false) {
-		return run(
-			`black ${fix ? "" : "--check --diff"} --include "^.*\\.(${extensions.join("|")})$" "."`,
-			{
-				dir,
-				ignoreErrors: true,
-			},
-		);
+	static lint(dir, extensions, args = "", fix = false) {
+		const files = `^.*\\.(${extensions.join("|")})$`;
+		const fixArg = fix ? "" : "--check --diff";
+		return run(`black ${fixArg} --include "${files}" ${args} "."`, {
+			dir,
+			ignoreErrors: true,
+		});
 	}
 
 	/**

@@ -27,15 +27,17 @@ class SwiftFormat {
 	 * Runs the linting program and returns the command output
 	 * @param {string} dir - Directory to run the linter in
 	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, fix = false) {
+	static lint(dir, extensions, args = "", fix = false) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		return run(`swiftformat ${fix ? "" : "--lint"} "."`, {
+		const fixArg = fix ? "" : "--lint";
+		return run(`swiftformat ${fixArg} ${args} "."`, {
 			dir,
 			ignoreErrors: true,
 		});

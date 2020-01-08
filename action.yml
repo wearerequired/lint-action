@@ -18,13 +18,17 @@ inputs:
     description: Enable or disable stylelint checks
     required: false
     default: false
+  stylelint_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  stylelint_dir:
+    description: Directory where the stylelint command should be run
+    required: false
   stylelint_extensions:
     description: Extensions of files to check with stylelint
     required: false
     default: "css,sass,scss"
-  stylelint_dir:
-    description: Directory where the stylelint command should be run
-    required: false
 
   # Go
 
@@ -32,25 +36,33 @@ inputs:
     description: Enable or disable gofmt checks
     required: false
     default: false
+  gofmt_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  gofmt_dir:
+    description: Directory where the gofmt command should be run
+    required: false
   gofmt_extensions:
     description: Extensions of files to check with gofmt
     required: false
     default: "go"
-  gofmt_dir:
-    description: Directory where the gofmt command should be run
-    required: false
 
   golint:
     description: Enable or disable golint checks
     required: false
     default: false
+  golint_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  golint_dir:
+    description: Directory where the golint command should be run
+    required: false
   golint_extensions:
     description: Extensions of files to check with golint
     required: false
     default: "go"
-  golint_dir:
-    description: Directory where the golint command should be run
-    required: false
 
   # JavaScript
 
@@ -58,25 +70,33 @@ inputs:
     description: Enable or disable ESLint checks
     required: false
     default: false
+  eslint_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  eslint_dir:
+    description: Directory where the ESLint command should be run
+    required: false
   eslint_extensions:
     description: Extensions of files to check with ESLint
     required: false
     default: "js"
-  eslint_dir:
-    description: Directory where the ESLint command should be run
-    required: false
 
   prettier:
     description: Enable or disable Prettier checks
     required: false
     default: false
+  prettier_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  prettier_dir:
+    description: Directory where the Prettier command should be run
+    required: false
   prettier_extensions:
     description: Extensions of files to check with Prettier
     required: false
     default: "css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml"
-  prettier_dir:
-    description: Directory where the Prettier command should be run
-    required: false
 
   # Python
 
@@ -84,25 +104,33 @@ inputs:
     description: Enable or disable Black checks
     required: false
     default: false
+  black_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  black_dir:
+    description: Directory where the Black command should be run
+    required: false
   black_extensions:
     description: Extensions of files to check with Black
     required: false
     default: "py"
-  black_dir:
-    description: Directory where the Black command should be run
-    required: false
 
   flake8:
     description: Enable or disable Flake8 checks
     required: false
     default: false
+  flake8_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  flake8_dir:
+    description: Directory where the Flake8 command should be run
+    required: false
   flake8_extensions:
     description: Extensions of files to check with Flake8
     required: false
     default: "py"
-  flake8_dir:
-    description: Directory where the Flake8 command should be run
-    required: false
 
   # Ruby
 
@@ -110,13 +138,17 @@ inputs:
     description: Enable or disable RuboCop checks
     required: false
     default: false
+  rubocop_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  rubocop_dir:
+    description: Directory where the RuboCop command should be run
+    required: false
   rubocop_extensions:
     description: Extensions of files to check with RuboCop
     required: false
     default: "rb"
-  rubocop_dir:
-    description: Directory where the RuboCop command should be run
-    required: false
 
   # Swift
 
@@ -124,25 +156,33 @@ inputs:
     description: Enable or disable SwiftFormat checks
     required: false
     default: false
+  swiftformat_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  swiftformat_dir:
+    description: Directory where the SwiftFormat command should be run
+    required: false
   swiftformat_extensions:
     description: Extensions of files to check with SwiftFormat
     required: false
     default: "swift"
-  swiftformat_dir:
-    description: Directory where the SwiftFormat command should be run
-    required: false
 
   swiftlint:
     description: Enable or disable SwiftLint checks
     required: false
     default: false
+  swiftlint_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  swiftlint_dir:
+    description: Directory where the SwiftLint command should be run
+    required: false
   swiftlint_extensions:
     description: Extensions of files to check with SwiftLint
     required: false
     default: "swift"
-  swiftlint_dir:
-    description: Directory where the SwiftLint command should be run
-    required: false
 
 runs:
   using: node12

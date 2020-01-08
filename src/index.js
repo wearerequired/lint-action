@@ -41,6 +41,7 @@ async function runAction() {
 		// Determine whether the linter should be executed on the commit
 		if (getInput(linterId) === "true") {
 			const fileExtensions = getInput(`${linterId}_extensions`, true);
+			const args = getInput(`${linterId}_args`) || "";
 			const lintDirRel = getInput(`${linterId}_dir`) || ".";
 			const lintDirAbs = join(context.workspace, lintDirRel);
 
@@ -57,7 +58,7 @@ async function runAction() {
 			log(
 				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, autoFix);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
