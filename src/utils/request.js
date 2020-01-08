@@ -2,10 +2,9 @@ const https = require("https");
 
 /**
  * Helper function for making HTTP requests
- *
- * @param url {string | URL}: Request URL
- * @param options {RequestOptions}: Request options
- * @returns {Promise<object>}: JSON response
+ * @param {string | URL} url - Request URL
+ * @param {object} options - Request options
+ * @returns {Promise<object>} - JSON response
  */
 function request(url, options) {
 	return new Promise((resolve, reject) => {

@@ -2,8 +2,7 @@ const { log, run } = require("./utils/action");
 
 /**
  * Switches the Git branch
- *
- * @param branchName {string}: Name of the branch which should be switched to
+ * @param {string} branchName - Name of the branch which should be switched to
  */
 function checkOutBranch(branchName) {
 	log(`Checking out the "${branchName}" branch`);
@@ -12,8 +11,7 @@ function checkOutBranch(branchName) {
 
 /**
  * Stages and commits all changes using Git
- *
- * @param message {string}: Git commit message
+ * @param {string} message - Git commit message
  */
 function commitChanges(message) {
 	log(`Committing changes`);
@@ -31,8 +29,7 @@ function fetchBranches() {
 
 /**
  * Returns the SHA of the head commit
- *
- * @return {string}: Head SHA
+ * @returns {string} - Head SHA
  */
 function getHeadSha() {
 	const sha = run("git rev-parse HEAD").stdout;
@@ -42,10 +39,9 @@ function getHeadSha() {
 
 /**
  * Pushes all changes to the GitHub repository
- *
- * @param context {{actor: string, branch: string, event: object, eventName: string, repository:
- * string, token: string, username: string, workspace: string}}: Object information about the GitHub
- * repository and action trigger event
+ * @param {{actor: string, branch: string, event: object, eventName: string, repository: string,
+ * token: string, username: string, workspace: string}} context - Object information about the
+ * GitHub repository and action trigger event
  */
 function pushChanges(context) {
 	const remote = `https://${context.actor}:${context.token}@github.com/${context.username}/${context.repository}.git`;
@@ -58,9 +54,8 @@ function pushChanges(context) {
 
 /**
  * Updates the global Git configuration with the provided information
- *
- * @param name {string}: Git user name
- * @param email {string}: Git email address
+ * @param {string} name - Git user name
+ * @param {string} email - Git email address
  */
 function setUserInfo(name, email) {
 	log(`Setting Git user information`);

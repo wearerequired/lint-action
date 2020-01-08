@@ -1,6 +1,6 @@
 /**
  * Returns an object for storing linting results
- * @returns {{isSuccess: boolean, warning: [], error: []}}: Default object
+ * @returns {{isSuccess: boolean, warning: [], error: []}} - Default object
  */
 function initLintResult() {
 	return {

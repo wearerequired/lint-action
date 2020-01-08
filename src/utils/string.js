@@ -1,8 +1,7 @@
 /**
  * Capitalizes the first letter of a string
- *
- * @param str {string}: String to process
- * @returns {string}: Input string with first letter capitalized
+ * @param {string} str - String to process
+ * @returns {string} - Input string with first letter capitalized
  */
 function capitalizeFirstLetter(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -10,9 +9,8 @@ function capitalizeFirstLetter(str) {
 
 /**
  * Removes the trailing period from the provided string (if it has one)
- *
- * @param str {string}: String to process
- * @returns {string}: String without trailing period
+ * @param {string} str - String to process
+ * @returns {string} - String without trailing period
  */
 function removeTrailingPeriod(str) {
 	return str[str.length - 1] === "." ? str.substring(0, str.length - 1) : str;

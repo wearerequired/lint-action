@@ -2,8 +2,8 @@ const parseDiff = require("../../vendor/parse-diff");
 
 /**
  * Parses linting errors from a unified diff
- * @param {string} diff: Unified diff
- * @returns {{path: string, firstLine: number, lastLine: number, message: string}[]}: Array of
+ * @param {string} diff - Unified diff
+ * @returns {{path: string, firstLine: number, lastLine: number, message: string}[]} - Array of
  * parsed errors
  */
 function parseErrorsFromDiff(diff) {

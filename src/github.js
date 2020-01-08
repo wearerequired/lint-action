@@ -5,9 +5,8 @@ const request = require("./utils/request");
 
 /**
  * Returns information about the GitHub repository and action trigger event
- *
  * @returns {{actor: string, branch: string, event: object, eventName: string, repository: string,
- * token: string, username: string, workspace: string}}
+ * token: string, username: string, workspace: string}} - Action context information
  */
 function getContext() {
 	// Information provided by environment
@@ -49,13 +48,13 @@ function getContext() {
 
 /**
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
- * @param checkName {string}: Name which will be displayed in the check list
- * @param sha {string}: SHA of the commit which should be annotated
- * @param context {{actor: string, branch: string, event: object, eventName: string, repository:
- * string, token: string, username: string, workspace: string}}: Object information about the GitHub
- * repository and action trigger event
- * @param lintResult {{isSuccess: boolean, warning: [], error: []}}: Parsed lint result
- * @param summary {string}: Summary for the GitHub check
+ * @param {string} checkName - Name which will be displayed in the check list
+ * @param {string} sha - SHA of the commit which should be annotated
+ * @param {{actor: string, branch: string, event: object, eventName: string, repository: string,
+ * token: string, username: string, workspace: string}} context - Object information about the
+ * GitHub repository and action trigger event
+ * @param {{isSuccess: boolean, warning: [], error: []}} lintResult - Parsed lint result
+ * @param {string} summary - Summary for the GitHub check
  */
 async function createCheck(checkName, sha, context, lintResult, summary) {
 	let annotations = [];

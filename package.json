@@ -25,6 +25,7 @@
 		"eslint-config-airbnb-base": "14.0.0",
 		"eslint-config-prettier": "^6.5.0",
 		"eslint-plugin-import": "^2.18.2",
+		"eslint-plugin-jsdoc": "^20.0.4",
 		"eslint-plugin-simple-import-sort": "^5.0.0",
 		"fs-extra": "^8.1.0",
 		"jest": "^24.9.0",
@@ -33,7 +34,8 @@
 	"eslintConfig": {
 		"root": true,
 		"extends": [
-			"@samuelmeuli/eslint-config"
+			"@samuelmeuli/eslint-config",
+			"plugin:jsdoc/recommended"
 		],
 		"env": {
 			"node": true,
@@ -47,7 +49,16 @@
 					"args": "none",
 					"varsIgnorePattern": "^_"
 				}
-			]
+			],
+			"jsdoc/check-indentation": "error",
+			"jsdoc/check-syntax": "error",
+			"jsdoc/newline-after-description": [
+				"error",
+				"never"
+			],
+			"jsdoc/require-description": "error",
+			"jsdoc/require-hyphen-before-param-description": "error",
+			"jsdoc/require-jsdoc": "off"
 		}
 	},
 	"eslintIgnore": [

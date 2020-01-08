@@ -4,9 +4,8 @@ const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false };
 
 /**
  * Logs to the console
- *
- * @param msg {string}: Text to log to the console
- * @param level {"info" | "warning" | "error"}: Log level
+ * @param {string} msg - Text to log to the console
+ * @param {"info" | "warning" | "error"} level - Log level
  */
 function log(msg, level = "info") {
 	switch (level) {
@@ -24,10 +23,10 @@ function log(msg, level = "info") {
 /**
  * Returns the value for an environment variable. If the variable is required but doesn't have a
  * value, an error is thrown
- *
- * @param name {string}: Name of the environment variable
- * @param required {boolean}: Whether an error should be thrown if the variable doesn't have a value
- * @returns {string | null}: Value of the environment variable
+ * @param {string} name - Name of the environment variable
+ * @param {boolean} required - Whether an error should be thrown if the variable doesn't have a
+ * value
+ * @returns {string | null} - Value of the environment variable
  */
 function getEnv(name, required = false) {
 	const nameUppercase = name.toUpperCase();
@@ -45,10 +44,10 @@ function getEnv(name, required = false) {
 /**
  * Returns the value for an input variable. If the variable is required but doesn't have a value,
  * an error is thrown
- *
- * @param name {string}: Name of the input variable
- * @param required {boolean}: Whether an error should be thrown if the variable doesn't have a value
- * @returns {string | null}: Value of the input variable
+ * @param {string} name - Name of the input variable
+ * @param {boolean} required - Whether an error should be thrown if the variable doesn't have a
+ * value
+ * @returns {string | null} - Value of the input variable
  */
 function getInput(name, required = false) {
 	return getEnv(`INPUT_${name}`, required);
@@ -56,10 +55,9 @@ function getInput(name, required = false) {
 
 /**
  * Executes the provided shell command
- *
- * @param cmd {string}: Shell command to execute
- * @param [options] {{dir: string, ignoreErrors: boolean}}: {@see RUN_OPTIONS_DEFAULTS}
- * @returns {{status: number, stdout: string, stderr: string}}: Output of the shell command
+ * @param {string} cmd - Shell command to execute
+ * @param {{dir: string, ignoreErrors: boolean}} [options] - {@see RUN_OPTIONS_DEFAULTS}
+ * @returns {{status: number, stdout: string, stderr: string}} - Output of the shell command
  */
 function run(cmd, options) {
 	const optionsWithDefaults = {

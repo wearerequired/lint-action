@@ -12,7 +12,7 @@ class Prettier {
 
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
-	 * @param {string} dir: Directory to run the linting program in
+	 * @param {string} dir - Directory to run the linting program in
 	 */
 	static async verifySetup(dir) {
 		// Verify that NPM is installed (required to execute Prettier)
@@ -30,10 +30,10 @@ class Prettier {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir: Directory to run the linter in
-	 * @param {string[]} extensions: File extensions which should be linted
-	 * @param {boolean} fix: Whether the linter should attempt to fix code style issues automatically
-	 * @returns {{status: number, stdout: string, stderr: string}}: Output of the lint command
+	 * @param {string} dir - Directory to run the linter in
+	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, fix = false) {
 		const files =
@@ -50,9 +50,9 @@ class Prettier {
 	/**
 	 * Parses the output of the lint command. Determines the success of the lint process and the
 	 * severity of the identified code style violations
-	 * @param {string} dir: Directory in which the linter has been run
-	 * @param {{status: number, stdout: string, stderr: string}} output: Output of the lint command
-	 * @returns {{isSuccess: boolean, warning: [], error: []}}: Parsed lint result
+	 * @param {string} dir - Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
+	 * @returns {{isSuccess: boolean, warning: [], error: []}} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();

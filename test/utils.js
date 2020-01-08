@@ -6,8 +6,8 @@ const TEST_DATE = "2019-01-01 00:00:00.000000 +0000";
 /**
  * Some tools require paths to contain single forward slashes on macOS/Linux and double backslashes
  * on Windows. This is an extended `path.join` function that corrects these path separators
- *
- * @param paths {...string}: Paths to join
+ * @param {...string} paths - Paths to join
+ * @returns {string} - File path
  */
 function joinDoubleBackslash(...paths) {
 	let filePath = join(...paths);
@@ -19,8 +19,8 @@ function joinDoubleBackslash(...paths) {
 
 /**
  * Find dates in the provided string and replace them with {@link TEST_DATE}
- *
- * @param str {string}: String in which dates should be replaced
+ * @param {string} str - String in which dates should be replaced
+ * @returns {string} - Normalized date
  */
 function normalizeDates(str) {
 	return str.replace(DATE_REGEX, TEST_DATE);
