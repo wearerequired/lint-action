@@ -4,6 +4,7 @@ const git = require("./git");
 const github = require("./github");
 const linters = require("./linters");
 const { getInput, log } = require("./utils/action");
+const { getSummary } = require("./utils/lint-result");
 
 const GIT_NAME = actionName;
 const GIT_EMAIL = `lint-action@samuelmeuli.com`;
@@ -62,27 +63,11 @@ async function runAction() {
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
-			log(
-				`Linting result of ${linter.name} is considered a ${
-					lintResult.isSuccess ? "success" : "failure"
-				}`,
-			);
-
-			// Build and log a summary of linting errors/warnings
-			let summary;
-			if (lintResult.warning.length > 0 && lintResult.error.length > 0) {
-				summary = `Found ${lintResult.error.length} errors and ${lintResult.warning.length} warnings with ${linter.name}`;
-			} else if (lintResult.error.length > 0) {
-				summary = `Found ${lintResult.error.length} errors with ${linter.name}`;
-			} else if (lintResult.warning.length > 0) {
-				summary = `Found ${lintResult.warning.length} warnings with ${linter.name}`;
-			} else {
-				summary = `No code style issues found with ${linter.name}`;
-			}
-			log(summary);
+			const summary = getSummary(lintResult);
+			log(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
 
 			if (autoFix) {
-				// Commit and push changes from auto-fixing
+				// Commit and push auto-fix changes
 				git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
 				git.pushChanges(context);
 			}

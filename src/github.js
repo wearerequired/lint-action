@@ -2,6 +2,7 @@ const { readFileSync } = require("fs");
 const { name: actionName } = require("../package");
 const { getEnv, getInput, log } = require("./utils/action");
 const request = require("./utils/request");
+const { capitalizeFirstLetter } = require("./utils/string");
 
 /**
  * Returns information about the GitHub repository and action trigger event
@@ -48,7 +49,7 @@ function getContext() {
 
 /**
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
- * @param {string} checkName - Name which will be displayed in the check list
+ * @param {string} linterName - Name of the linter for which a check should be created
  * @param {string} sha - SHA of the commit which should be annotated
  * @param {{actor: string, branch: string, event: object, eventName: string, repository: string,
  * token: string, username: string, workspace: string}} context - Object information about the
@@ -56,7 +57,7 @@ function getContext() {
  * @param {{isSuccess: boolean, warning: [], error: []}} lintResult - Parsed lint result
  * @param {string} summary - Summary for the GitHub check
  */
-async function createCheck(checkName, sha, context, lintResult, summary) {
+async function createCheck(linterName, sha, context, lintResult, summary) {
 	let annotations = [];
 	for (const level of ["warning", "error"]) {
 		annotations = [
@@ -74,23 +75,23 @@ async function createCheck(checkName, sha, context, lintResult, summary) {
 	// Only use the first 50 annotations (limit for a single API request)
 	if (annotations.length > 50) {
 		log(
-			`There are more than 50 errors/warnings from ${checkName}. Annotations are created for the first 50 violations only.`,
+			`There are more than 50 errors/warnings from ${linterName}. Annotations are created for the first 50 issues only.`,
 		);
 		annotations = annotations.slice(0, 50);
 	}
 
 	const body = {
-		name: checkName,
+		name: linterName,
 		head_sha: sha,
 		conclusion: lintResult.isSuccess ? "success" : "failure",
 		output: {
-			title: checkName,
-			summary,
+			title: capitalizeFirstLetter(summary),
+			summary: `${linterName} found ${summary}`,
 			annotations,
 		},
 	};
 	try {
-		log(`Creating ${annotations.length} annotations for ${checkName}…`);
+		log(`Creating GitHub check with ${annotations.length} annotations for ${linterName}…`);
 		await request(
 			`https://api.github.com/repos/${context.username}/${context.repository}/check-runs`,
 			{
@@ -105,12 +106,10 @@ async function createCheck(checkName, sha, context, lintResult, summary) {
 				body,
 			},
 		);
-		log(`${checkName} annotations created successfully`);
+		log(`${linterName} check created successfully`);
 	} catch (err) {
 		log(err, "error");
-		throw new Error(
-			`Error trying to create "${checkName}" annotations using GitHub API: ${err.message}`,
-		);
+		throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}`);
 	}
 }
 
