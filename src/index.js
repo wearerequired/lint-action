@@ -1,13 +1,12 @@
 const { join } = require("path");
-const { name: actionName } = require("../package");
 const git = require("./git");
 const github = require("./github");
 const linters = require("./linters");
 const { getInput, log } = require("./utils/action");
 const { getSummary } = require("./utils/lint-result");
 
-const GIT_NAME = actionName;
-const GIT_EMAIL = `lint-action@samuelmeuli.com`;
+const GIT_EMAIL = "lint-action@samuelmeuli.com";
+const GIT_NAME = "Lint Action";
 
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", err => {
