@@ -1,4 +1,6 @@
 # TODO: Move config into `package.json` once supported
 # https://github.com/prettier/prettier/issues/3460
 
+node_modules/
 test/linters/projects/
+test/tmp/

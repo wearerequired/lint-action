@@ -62,7 +62,9 @@
 		}
 	},
 	"eslintIgnore": [
-		"test/linters/projects/**/*"
+		"node_modules/",
+		"test/linters/projects/",
+		"test/tmp/"
 	],
 	"prettier": "@samuelmeuli/prettier-config"
 }
