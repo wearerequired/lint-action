@@ -1,5 +1,6 @@
 const { EOL } = require("os");
 const { sep } = require("path");
+
 const Flake8 = require("../../../src/linters/flake8");
 
 const testName = "flake8";

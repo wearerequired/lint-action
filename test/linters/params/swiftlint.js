@@ -1,4 +1,5 @@
 const { join } = require("path");
+
 const Swiftlint = require("../../../src/linters/swiftlint");
 
 const testName = "swiftlint";

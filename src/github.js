@@ -1,4 +1,5 @@
 const { readFileSync } = require("fs");
+
 const { name: actionName } = require("../package");
 const { getEnv, getInput, log } = require("./utils/action");
 const request = require("./utils/request");

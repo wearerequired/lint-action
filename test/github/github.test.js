@@ -1,4 +1,5 @@
 const { join } = require("path");
+
 const { createCheck, getContext } = require("../../src/github");
 const prOpenEvent = require("./events/pull-request-open.json");
 const prSyncEvent = require("./events/pull-request-sync.json");

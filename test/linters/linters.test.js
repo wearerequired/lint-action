@@ -1,5 +1,7 @@
-const { copySync, removeSync } = require("fs-extra");
 const { join } = require("path");
+
+const { copySync, removeSync } = require("fs-extra");
+
 const { normalizeDates } = require("../utils");
 const blackParams = require("./params/black");
 const eslintParams = require("./params/eslint");

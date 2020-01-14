@@ -1,4 +1,5 @@
 const { join } = require("path");
+
 const SwiftFormat = require("../../../src/linters/swiftformat");
 
 const testName = "swiftformat";
