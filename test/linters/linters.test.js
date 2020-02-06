@@ -75,12 +75,12 @@ describe.each([
 
 				// stderr
 				const stderr = normalizeDates(cmdOutput.stderr);
-				if ("stderrParts" in expected.lintResult) {
-					expected.lintResult.stderrParts.forEach(stderrParts =>
+				if ("stderrParts" in expected.cmdOutput) {
+					expected.cmdOutput.stderrParts.forEach(stderrParts =>
 						expect(stderr).toEqual(expect.stringContaining(stderrParts)),
 					);
-				} else if ("stderr" in expected.lintResult) {
-					expect(stderr).toEqual(expected.stderr);
+				} else if ("stderr" in expected.cmdOutput) {
+					expect(stderr).toEqual(expected.cmdOutput.stderr);
 				}
 			});
 
