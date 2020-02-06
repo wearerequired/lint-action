@@ -59,7 +59,7 @@ function getFixParams(dir) {
 		// Expected output of the linting function
 		cmdOutput: {
 			status: 0,
-			stdout: "",
+			// NOTE: no stdout because it includes timing output
 		},
 		// Expected output of the parsing function
 		lintResult: {
