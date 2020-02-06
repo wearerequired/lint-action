@@ -65,12 +65,12 @@ describe.each([
 
 				// stdout
 				const stdout = normalizeDates(cmdOutput.stdout);
-				if ("stdoutParts" in expected.lintResult) {
-					expected.lintResult.stdoutParts.forEach(stdoutPart =>
+				if ("stdoutParts" in expected.cmdOutput) {
+					expected.cmdOutput.stdoutParts.forEach(stdoutPart =>
 						expect(stdout).toEqual(expect.stringContaining(stdoutPart)),
 					);
-				} else if ("stdout" in expected.lintResult) {
-					expect(stdout).toEqual(expected.stdout);
+				} else if ("stdout" in expected.cmdOutput) {
+					expect(stdout).toEqual(expected.cmdOutput.stdout);
 				}
 
 				// stderr
