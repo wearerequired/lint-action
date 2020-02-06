@@ -27,6 +27,7 @@
 - **Python:**
   - [Black](https://black.readthedocs.io)
   - [Flake8](http://flake8.pycqa.org)
+  - [Mypy](https://mypy.readthedocs.io/)
 - **Ruby:**
   - [RuboCop](https://rubocop.readthedocs.io)
 - **Swift:**
@@ -137,7 +138,7 @@ jobs:
 
 ### Linter-specific options
 
-`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `prettier`, `rubocop`, `stylelint`, `swiftformat` and `swiftlint`:
+`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `prettier`, `rubocop`, `stylelint`, `swiftformat` and `swiftlint`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
