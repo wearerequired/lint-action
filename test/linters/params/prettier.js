@@ -55,11 +55,13 @@ function getLintParams(dir) {
 
 // Linting with auto-fixing
 function getFixParams(dir) {
+	const stdoutFile1 = `file1.js`;
+	const stdoutFile2 = `file2.css`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
 			status: 0,
-			// NOTE: no stdout because it includes timing output
+			stdoutParts: [stdoutFile1, stdoutFile2],
 		},
 		// Expected output of the parsing function
 		lintResult: {
