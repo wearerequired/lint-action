@@ -65,7 +65,7 @@ class Gofmt {
 		// start. Without these strings, this would not be possible, because file names may include
 		// spaces, which are not escaped in unified diffs. As a workaround, these lines are filtered out
 		// from the gofmt diff so the diff parser can read the diff without errors
-		const filteredOutput = output.stderr
+		const filteredOutput = output.stdout
 			.split(/\r?\n/)
 			.filter(line => !line.startsWith("diff -u"))
 			.join("\n");

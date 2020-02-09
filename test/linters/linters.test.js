@@ -65,22 +65,22 @@ describe.each([
 
 				// stdout
 				const stdout = normalizeDates(cmdOutput.stdout);
-				if ("stdoutParts" in expected.lintResult) {
-					expected.lintResult.stdoutParts.forEach(stdoutPart =>
+				if ("stdoutParts" in expected.cmdOutput) {
+					expected.cmdOutput.stdoutParts.forEach(stdoutPart =>
 						expect(stdout).toEqual(expect.stringContaining(stdoutPart)),
 					);
-				} else if ("stdout" in expected.lintResult) {
-					expect(stdout).toEqual(expected.stdout);
+				} else if ("stdout" in expected.cmdOutput) {
+					expect(stdout).toEqual(expected.cmdOutput.stdout);
 				}
 
 				// stderr
 				const stderr = normalizeDates(cmdOutput.stderr);
-				if ("stderrParts" in expected.lintResult) {
-					expected.lintResult.stderrParts.forEach(stderrParts =>
+				if ("stderrParts" in expected.cmdOutput) {
+					expected.cmdOutput.stderrParts.forEach(stderrParts =>
 						expect(stderr).toEqual(expect.stringContaining(stderrParts)),
 					);
-				} else if ("stderr" in expected.lintResult) {
-					expect(stderr).toEqual(expected.stderr);
+				} else if ("stderr" in expected.cmdOutput) {
+					expect(stderr).toEqual(expected.cmdOutput.stderr);
 				}
 			});
 

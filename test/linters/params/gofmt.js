@@ -7,14 +7,14 @@ const extensions = ["go"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
-	const stderrFile1 = `diff -u file1.go.orig file1.go\n--- file1.go.orig	${TEST_DATE}\n+++ file1.go	${TEST_DATE}\n@@ -4,7 +4,7 @@\n \n var str = "world"\n \n-func main () { // Whitespace error\n+func main() { // Whitespace error\n 	fmt.Println("hello " + str)\n }\n \n@@ -17,5 +17,5 @@\n }\n \n func multiply(num1 int, num2 int) int {\n-  return num1 * num2 // Indentation error\n+	return num1 * num2 // Indentation error\n }`;
-	const stderrFile2 = `diff -u file2.go.orig file2.go\n--- file2.go.orig	${TEST_DATE}\n+++ file2.go	${TEST_DATE}\n@@ -1,5 +1,5 @@\n package main\n \n func divide(num1 int, num2 int) int {\n-	return num1 /  num2 // Whitespace error\n+	return num1 / num2 // Whitespace error\n }`;
+	const stdoutFile1 = `diff -u file1.go.orig file1.go\n--- file1.go.orig	${TEST_DATE}\n+++ file1.go	${TEST_DATE}\n@@ -4,7 +4,7 @@\n \n var str = "world"\n \n-func main () { // Whitespace error\n+func main() { // Whitespace error\n 	fmt.Println("hello " + str)\n }\n \n@@ -17,5 +17,5 @@\n }\n \n func multiply(num1 int, num2 int) int {\n-  return num1 * num2 // Indentation error\n+	return num1 * num2 // Indentation error\n }`;
+	const stdoutFile2 = `diff -u file2.go.orig file2.go\n--- file2.go.orig	${TEST_DATE}\n+++ file2.go	${TEST_DATE}\n@@ -1,5 +1,5 @@\n package main\n \n func divide(num1 int, num2 int) int {\n-	return num1 /  num2 // Whitespace error\n+	return num1 / num2 // Whitespace error\n }`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
 			status: 0, // gofmt always uses exit code 0
-			stderrParts: [stderrFile1, stderrFile2],
-			stderr: `${stderrFile1}\n${stderrFile2}`,
+			stdoutParts: [stdoutFile1, stdoutFile2],
+			stdout: `${stdoutFile1}\n${stdoutFile2}`,
 		},
 		// Expected output of the parsing function
 		lintResult: {
@@ -50,7 +50,7 @@ function getFixParams(dir) {
 		// Expected output of the linting function
 		cmdOutput: {
 			status: 0, // gofmt always uses exit code 0
-			stderr: "",
+			stdout: "",
 		},
 		// Expected output of the parsing function
 		lintResult: {
