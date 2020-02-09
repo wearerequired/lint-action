@@ -15,8 +15,7 @@ function checkOutBranch(branchName) {
  */
 function commitChanges(message) {
 	log(`Committing changes`);
-	// Check diff and only create a commit if there are changes (command will fail otherwise)
-	run(`(git diff --quiet && git diff --staged --quiet) || git commit -am "${message}"`);
+	run(`git commit -am "${message}"`);
 }
 
 /**
@@ -35,6 +34,14 @@ function getHeadSha() {
 	const sha = run("git rev-parse HEAD").stdout;
 	log(`SHA of last commit is "${sha}"`);
 	return sha;
+}
+
+/**
+ * Checks whether there are differences from HEAD
+ * @returns {boolean} - Boolean indicating whether changes exist
+ */
+function hasChanges() {
+	return run("git diff-index --quiet --cached HEAD --").status === 1;
 }
 
 /**
@@ -68,6 +75,7 @@ module.exports = {
 	commitChanges,
 	fetchBranches,
 	getHeadSha,
+	hasChanges,
 	pushChanges,
 	setUserInfo,
 };
