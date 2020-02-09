@@ -68,8 +68,10 @@ async function runAction() {
 
 			if (autoFix) {
 				// Commit and push auto-fix changes
-				git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
-				git.pushChanges(context);
+				if (git.hasChanges()) {
+					git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
+					git.pushChanges(context);
+				}
 			}
 
 			checks.push({ checkName: linter.name, lintResult, summary });
