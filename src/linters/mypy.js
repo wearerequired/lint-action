@@ -20,7 +20,7 @@ class Mypy {
 	 * @param {string} dir - Directory to run the linting program in
 	 */
 	static async verifySetup(dir) {
-		// Verify that Python is installed (required to execute Flake8)
+		// Verify that Python is installed (required to execute Mypy)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
 		}
