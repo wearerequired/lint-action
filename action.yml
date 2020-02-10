@@ -133,7 +133,7 @@ inputs:
     default: "py"
 
   mypy:
-    description: Enable or disable mypy checks
+    description: Enable or disable Mypy checks
     required: false
     default: false
   mypy_args:
@@ -141,10 +141,10 @@ inputs:
     required: false
     default: ""
   mypy_dir:
-    description: Directory where the mypy command should be run
+    description: Directory where the Mypy command should be run
     required: false
   mypy_extensions:
-    description: Extensions of files to check with mypy
+    description: Extensions of files to check with Mypy
     required: false
     default: "py"
 

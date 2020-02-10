@@ -25,7 +25,7 @@ class Mypy {
 			throw new Error("Python is not installed");
 		}
 
-		// Verify that mypy is installed
+		// Verify that Mypy is installed
 		if (!(await commandExists("mypy"))) {
 			throw new Error(`${this.name} is not installed`);
 		}
