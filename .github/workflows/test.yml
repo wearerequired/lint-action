@@ -63,10 +63,8 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          cd ./test/linters/projects/black/
-          pip install -r ./requirements.txt
-          cd ../flake8/
-          pip install -r ./requirements.txt
+          cd ./test/linters/projects/
+          pip install -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt
 
       # Ruby
 

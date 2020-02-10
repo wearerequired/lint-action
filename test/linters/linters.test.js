@@ -9,6 +9,7 @@ const eslintTypescriptParams = require("./params/eslint-typescript");
 const flake8Params = require("./params/flake8");
 const gofmtParams = require("./params/gofmt");
 const golintParams = require("./params/golint");
+const mypyParams = require("./params/mypy");
 const prettierParams = require("./params/prettier");
 const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
@@ -22,6 +23,7 @@ const linterParams = [
 	flake8Params,
 	gofmtParams,
 	golintParams,
+	mypyParams,
 	prettierParams,
 	ruboCopParams,
 	stylelintParams,

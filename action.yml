@@ -132,6 +132,22 @@ inputs:
     required: false
     default: "py"
 
+  mypy:
+    description: Enable or disable Mypy checks
+    required: false
+    default: false
+  mypy_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  mypy_dir:
+    description: Directory where the Mypy command should be run
+    required: false
+  mypy_extensions:
+    description: Extensions of files to check with Mypy
+    required: false
+    default: "py"
+
   # Ruby
 
   rubocop:
