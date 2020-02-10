@@ -40,6 +40,9 @@ class Mypy {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false) {
+		if (extensions.length !== 1 || extensions[0] !== "py") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
 		if (fix) {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
