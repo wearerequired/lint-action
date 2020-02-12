@@ -1,8 +1,10 @@
 const { join } = require("path");
 
-const { copySync, removeSync } = require("fs-extra");
+const { copy } = require("fs-extra");
 
 const { normalizeDates } = require("../utils");
+const { tmpDir } = require("../utils");
+const { testProjectsDir } = require("../utils");
 const blackParams = require("./params/black");
 const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
@@ -34,6 +36,12 @@ if (process.platform === "darwin") {
 	linterParams.push(swiftformatParams, swiftlintParams);
 }
 
+// Copy linter test projects into temporary directory
+beforeAll(async () => {
+	jest.setTimeout(30000);
+	await copy(testProjectsDir, tmpDir);
+});
+
 // Test lint and auto-fix modes
 describe.each([
 	["lint", false],
@@ -43,24 +51,16 @@ describe.each([
 	describe.each(linterParams)(
 		"%s",
 		(projectName, linter, extensions, getLintParams, getFixParams) => {
-			const projectDir = join(__dirname, "projects", projectName);
-			const tmpDir = join(__dirname, "..", "tmp", projectName);
-			const expected = autoFix ? getFixParams(tmpDir) : getLintParams(tmpDir);
+			const projectTmpDir = join(tmpDir, projectName);
+			const expected = autoFix ? getFixParams(projectTmpDir) : getLintParams(projectTmpDir);
 
 			beforeAll(async () => {
-				// Move test project into temporary directory (where files can be modified by the linters)
-				copySync(projectDir, tmpDir);
-				await linter.verifySetup(tmpDir);
-			});
-
-			afterAll(() => {
-				// Remove temporary directory after test completion
-				removeSync(tmpDir);
+				await linter.verifySetup(projectTmpDir);
 			});
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
-				const cmdOutput = linter.lint(tmpDir, extensions, "", autoFix);
+				const cmdOutput = linter.lint(projectTmpDir, extensions, "", autoFix);
 
 				// Exit code
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);
@@ -88,7 +88,7 @@ describe.each([
 
 			// Test `parseOutput` function
 			test(`${linter.name} parses ${lintMode} output correctly`, () => {
-				const lintResult = linter.parseOutput(tmpDir, expected.cmdOutput);
+				const lintResult = linter.parseOutput(projectTmpDir, expected.cmdOutput);
 				expect(lintResult).toEqual(expected.lintResult);
 			});
 		},

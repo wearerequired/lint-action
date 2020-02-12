@@ -3,6 +3,9 @@ const { join } = require("path");
 const DATE_REGEX = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+ [+-]\d{4}/g;
 const TEST_DATE = "2019-01-01 00:00:00.000000 +0000";
 
+const testProjectsDir = join(__dirname, "linters", "projects");
+const tmpDir = join(__dirname, "tmp"); // Temporary directory that tests can write to
+
 /**
  * Some tools require paths to contain single forward slashes on macOS/Linux and double backslashes
  * on Windows. This is an extended `path.join` function that corrects these path separators
@@ -26,4 +29,4 @@ function normalizeDates(str) {
 	return str.replace(DATE_REGEX, TEST_DATE);
 }
 
-module.exports = { joinDoubleBackslash, normalizeDates, TEST_DATE };
+module.exports = { TEST_DATE, joinDoubleBackslash, normalizeDates, testProjectsDir, tmpDir };

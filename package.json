@@ -65,5 +65,9 @@
 		"test/linters/projects/",
 		"test/tmp/"
 	],
+	"jest": {
+		"globalSetup": "./test/setup.js",
+		"globalTeardown": "./test/teardown.js"
+	},
 	"prettier": "@samuelmeuli/prettier-config"
 }
