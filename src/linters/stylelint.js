@@ -1,6 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
-const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { runNpmBin } = require("../utils/npm");
 
 /**
  * https://stylelint.io
@@ -22,7 +22,7 @@ class Stylelint {
 
 		// Verify that stylelint is installed
 		try {
-			run("npx --no-install stylelint -v", { dir });
+			runNpmBin("stylelint -v", { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -40,13 +40,10 @@ class Stylelint {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--fix" : "";
-		return run(
-			`npx --no-install stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`,
-			{
-				dir,
-				ignoreErrors: true,
-			},
-		);
+		return runNpmBin(`stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`, {
+			dir,
+			ignoreErrors: true,
+		});
 	}
 
 	/**

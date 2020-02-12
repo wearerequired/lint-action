@@ -1,6 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
-const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { runNpmBin } = require("../utils/npm");
 
 /**
  * https://prettier.io
@@ -22,7 +22,7 @@ class Prettier {
 
 		// Verify that Prettier is installed
 		try {
-			run("npx --no-install prettier -v", { dir });
+			runNpmBin("prettier -v", { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -40,7 +40,7 @@ class Prettier {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--write" : "--list-different";
-		return run(`npx --no-install prettier ${fixArg} --no-color ${args} "${files}"`, {
+		return runNpmBin(`prettier ${fixArg} --no-color ${args} "${files}"`, {
 			dir,
 			ignoreErrors: true,
 		});
