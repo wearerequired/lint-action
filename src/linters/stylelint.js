@@ -1,6 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
 const { initLintResult } = require("../utils/lint-result");
-const { runNpmBin } = require("../utils/npm");
+const { runNpmBin } = require("../utils/npm/run-npm-bin");
 
 /**
  * https://stylelint.io
