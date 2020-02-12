@@ -57,7 +57,15 @@ class Stylelint {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = output.status === 0;
 
-		const outputJson = JSON.parse(output.stdout);
+		let outputJson;
+		try {
+			outputJson = JSON.parse(output.stdout);
+		} catch (err) {
+			throw Error(
+				`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`,
+			);
+		}
+
 		for (const violation of outputJson) {
 			const { source, warnings } = violation;
 			const path = source.substring(dir.length + 1);

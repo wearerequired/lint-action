@@ -67,7 +67,15 @@ class RuboCop {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = output.status === 0;
 
-		const outputJson = JSON.parse(output.stdout);
+		let outputJson;
+		try {
+			outputJson = JSON.parse(output.stdout);
+		} catch (err) {
+			throw Error(
+				`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`,
+			);
+		}
+
 		for (const file of outputJson.files) {
 			const { path, offenses } = file;
 			for (const offense of offenses) {
