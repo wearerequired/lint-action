@@ -41,7 +41,9 @@ function getHeadSha() {
  * @returns {boolean} - Boolean indicating whether changes exist
  */
 function hasChanges() {
-	return run("git diff-index --quiet --cached HEAD --").status === 1;
+	const res = run("git diff-index --quiet HEAD --", { ignoreErrors: true }).status === 1;
+	log(`${res ? "Changes" : "No changes"} found with Git`);
+	return res;
 }
 
 /**
