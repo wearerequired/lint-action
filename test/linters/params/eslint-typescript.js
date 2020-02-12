@@ -1,5 +1,5 @@
 const ESLint = require("../../../src/linters/eslint");
-const { joinDoubleBackslash } = require("../../utils");
+const { joinDoubleBackslash } = require("../../test-utils");
 
 const testName = "eslint-typescript";
 const linter = ESLint;

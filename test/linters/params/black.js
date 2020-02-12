@@ -1,5 +1,5 @@
 const Black = require("../../../src/linters/black");
-const { TEST_DATE } = require("../../utils");
+const { TEST_DATE } = require("../../test-utils");
 
 const testName = "black";
 const linter = Black;

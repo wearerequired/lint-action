@@ -1,5 +1,5 @@
 const Gofmt = require("../../../src/linters/gofmt");
-const { TEST_DATE } = require("../../utils");
+const { TEST_DATE } = require("../../test-utils");
 
 const testName = "gofmt";
 const linter = Gofmt;

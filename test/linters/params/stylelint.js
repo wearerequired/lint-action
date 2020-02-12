@@ -1,5 +1,5 @@
 const Stylelint = require("../../../src/linters/stylelint");
-const { joinDoubleBackslash } = require("../../utils");
+const { joinDoubleBackslash } = require("../../test-utils");
 
 const testName = "stylelint";
 const linter = Stylelint;

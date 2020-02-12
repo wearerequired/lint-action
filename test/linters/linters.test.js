@@ -2,9 +2,7 @@ const { join } = require("path");
 
 const { copy } = require("fs-extra");
 
-const { normalizeDates } = require("../utils");
-const { tmpDir } = require("../utils");
-const { testProjectsDir } = require("../utils");
+const { normalizeDates, testProjectsDir, tmpDir } = require("../test-utils");
 const blackParams = require("./params/black");
 const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
