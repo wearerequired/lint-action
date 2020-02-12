@@ -34,7 +34,10 @@ const prOpenEventPath = join(__dirname, "events", "pull-request-open.json");
 const prSyncEventPath = join(__dirname, "events", "pull-request-sync.json");
 const pushEventPath = join(__dirname, "events", "push.json");
 
-jest.mock("../../src/utils/request");
+jest.mock("../../src/utils/request", () =>
+	// eslint-disable-next-line global-require
+	jest.fn().mockReturnValue(require("./api-responses/check-runs.json")),
+);
 
 describe("getContext()", () => {
 	// Add GitHub environment variables
