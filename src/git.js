@@ -48,12 +48,11 @@ function hasChanges() {
 
 /**
  * Pushes all changes to the GitHub repository
- * @param {{actor: string, branch: string, event: object, eventName: string, repository: string,
- * token: string, username: string, workspace: string}} context - Object information about the
- * GitHub repository and action trigger event
+ * @param {import('./github/context').GithubContext} context - Information about the GitHub
+ * repository and action trigger event
  */
 function pushChanges(context) {
-	const remote = `https://${context.actor}:${context.token}@github.com/${context.username}/${context.repository}.git`;
+	const remote = `https://${context.actor}:${context.token}@github.com/${context.repository.repoName}.git`;
 	const localBranch = "HEAD";
 	const remoteBranch = context.branch;
 

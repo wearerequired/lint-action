@@ -1,7 +1,8 @@
 const { join } = require("path");
 
 const git = require("./git");
-const github = require("./github");
+const { createCheck } = require("./github/api");
+const { getContext } = require("./github/context");
 const linters = require("./linters");
 const { getInput, log } = require("./utils/action");
 const { getSummary } = require("./utils/lint-result");
@@ -19,7 +20,7 @@ process.on("unhandledRejection", err => {
  * Parses the action configuration and runs all enabled linters on matching files
  */
 async function runAction() {
-	const context = github.getContext();
+	const context = getContext();
 	const autoFix = getInput("auto_fix") === "true";
 	const commitMsg = getInput("commit_message", true);
 
@@ -85,7 +86,7 @@ async function runAction() {
 	const headSha = git.getHeadSha();
 	await Promise.all(
 		checks.map(({ checkName, lintResult, summary }) =>
-			github.createCheck(checkName, headSha, context, lintResult, summary),
+			createCheck(checkName, headSha, context, lintResult, summary),
 		),
 	);
 }
