@@ -12,6 +12,7 @@ const golintParams = require("./params/golint");
 const mypyParams = require("./params/mypy");
 const prettierParams = require("./params/prettier");
 const ruboCopParams = require("./params/rubocop");
+const ruboCopBundlerParams = require("./params/rubocopBundler");
 const stylelintParams = require("./params/stylelint");
 const swiftformatParams = require("./params/swiftformat");
 const swiftlintParams = require("./params/swiftlint");
@@ -26,6 +27,7 @@ const linterParams = [
 	mypyParams,
 	prettierParams,
 	ruboCopParams,
+	ruboCopBundlerParams,
 	stylelintParams,
 ];
 

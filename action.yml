@@ -166,6 +166,24 @@ inputs:
     required: false
     default: "rb"
 
+  # Ruby - with Bundler
+
+  rubocop_bundler:
+    description: Enable or disable RuboCop checks with bundler
+    required: false
+    default: false
+  rubocop_bundler_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  rubocop_bundler_dir:
+    description: Directory where the RuboCop command should be run
+    required: false
+  rubocop_bundler_extensions:
+    description: Extensions of files to check with RuboCop
+    required: false
+    default: "rb"
+
   # Swift
 
   swiftformat:
