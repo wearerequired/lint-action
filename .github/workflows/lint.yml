@@ -1,11 +1,6 @@
 name: Lint
 
-on:
-  push:
-    branches:
-      - master
-      - development
-  pull_request:
+on: push
 
 jobs:
   run-linters:
@@ -28,6 +23,5 @@ jobs:
         uses: ./
         with:
           github_token: ${{ secrets.github_token }}
-          auto_fix: ${{ github.event_name == 'pull_request' }}
           eslint: true
           prettier: true
