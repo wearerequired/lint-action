@@ -29,11 +29,16 @@ async function runAction() {
 		git.setUserInfo(GIT_NAME, GIT_EMAIL);
 	}
 	if (context.eventName === "pull_request") {
-		// Fetch and check out PR branch. This is required because for "pull_request" events, the
-		// Checkout Action (https://github.com/actions/checkout) checks out the PR's test merge commit
-		// in detached head state
-		git.fetchBranches();
-		git.checkOutBranch(context.branch);
+		// Fetch and check out PR branch:
+		// - "push" event: Already on correct branch
+		// - "pull_request" event on origin, for code on origin: The Checkout Action
+		//   (https://github.com/actions/checkout) checks out the PR's test merge commit instead of the
+		//   PR branch. Git is therefore in detached head state. To be able to push changes, the branch
+		//   needs to be fetched and checked out first
+		// - "pull_request" event on origin, for code on fork: Same as above, but the repo/branch where
+		//   changes need to be pushed is not yet available. The fork needs to be added as a Git remote
+		//   first
+		git.checkOutRemoteBranch(context);
 	}
 
 	const checks = [];
@@ -71,7 +76,7 @@ async function runAction() {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
 					git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
-					git.pushChanges(context);
+					git.pushChanges();
 				}
 			}
 
