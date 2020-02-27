@@ -53,6 +53,8 @@ jobs:
           yarn install
           cd ../stylelint/
           yarn install
+          cd ../xo/
+          yarn install
 
       # Python
 

@@ -15,6 +15,7 @@ const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
 const swiftformatParams = require("./params/swiftformat");
 const swiftlintParams = require("./params/swiftlint");
+const xoParams = require("./params/xo");
 
 const linterParams = [
 	blackParams,
@@ -27,6 +28,7 @@ const linterParams = [
 	prettierParams,
 	ruboCopParams,
 	stylelintParams,
+	xoParams,
 ];
 
 // Only run Swift tests on macOS

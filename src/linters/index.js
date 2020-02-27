@@ -9,6 +9,7 @@ const RuboCop = require("./rubocop");
 const Stylelint = require("./stylelint");
 const SwiftFormat = require("./swiftformat");
 const SwiftLint = require("./swiftlint");
+const XO = require("./xo");
 
 const linters = {
 	// Linters
@@ -19,6 +20,7 @@ const linters = {
 	rubocop: RuboCop,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
+	xo: XO,
 
 	// Formatters (should be run after linters)
 	black: Black,

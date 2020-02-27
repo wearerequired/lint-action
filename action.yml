@@ -98,6 +98,22 @@ inputs:
     required: false
     default: "css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml"
 
+  xo:
+    description: Enable or disable XO checks
+    required: false
+    default: false
+  xo_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  xo_dir:
+    description: Directory where the XO command should be run
+    required: false
+  xo_extensions:
+    description: Extensions of files to check with XO
+    required: false
+    default: "js"
+
   # Python
 
   black:
