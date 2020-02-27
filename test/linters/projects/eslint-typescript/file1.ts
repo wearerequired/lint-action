@@ -1,7 +1,8 @@
-let str = "world"; // "prefer-const" warning
+let str = 'world'; // "prefer-const" warning
 
 function main(): void {
-	console.log("hello " + str); // "no-console" error
+	// "no-warning-comments" error
+	console.log('hello ' + str); // TODO: Change something
 }
 
 main();

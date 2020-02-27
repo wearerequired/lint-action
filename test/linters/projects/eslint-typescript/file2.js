@@ -1,1 +1,1 @@
-const str = "Hello world"; // "no-unused-vars" error
+const str = 'Hello world'; // "no-unused-vars" error
