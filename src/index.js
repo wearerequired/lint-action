@@ -24,6 +24,20 @@ async function runAction() {
 	const autoFix = getInput("auto_fix") === "true";
 	const commitMsg = getInput("commit_message", true);
 
+	// If on a PR from fork: Display messages regarding action limitations
+	if (context.eventName === "pull_request" && context.repository.hasFork) {
+		log(
+			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/samuelmeuli/lint-action/issues/13 for details",
+			"error",
+		);
+		if (autoFix) {
+			log(
+				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/samuelmeuli/lint-action/issues/13 for details",
+				"error",
+			);
+		}
+	}
+
 	if (autoFix) {
 		// Set Git committer username and password
 		git.setUserInfo(GIT_NAME, GIT_EMAIL);
