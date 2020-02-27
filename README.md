@@ -1,8 +1,10 @@
 # ✨ Lint Action
 
-- **Shows linting errors** on GitHub PRs and commits
+- **Shows linting errors** on GitHub commits and PRs
 - Allows **auto-fixing** issues
 - Supports [many linters and formatters](#supported-tools)
+
+_**Note:** The behavior of actions like this one is currently limited in the context of forks. See [Limitations](#limitations)._
 
 ## Screenshots
 
@@ -153,37 +155,16 @@ jobs:
     <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="80%" />
   </p>
 
-  If you only want to create auto-fix commits on PRs (e.g. not on the `master` branch), you can configure your workflow as follows:
-
-  ```yml
-  name: Lint
-
-  on:
-    push:
-      branches:
-        - master
-    pull_request:
-
-  jobs:
-    run-linters:
-      name: Run linters
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Check out Git repository
-          uses: actions/checkout@v2
-
-        # ...
-
-        - name: Run linters
-          uses: samuelmeuli/lint-action@v1
-          with:
-            github_token: ${{ secrets.github_token }}
-            auto_fix: ${{ github.event_name == 'pull_request' }}
-            # ...
-  ```
-
 - **`commit_message`**: Template for auto-fix commit messages. The `${linter}` variable can be used to insert the name of the linter. Default: `"Fix code style issues with ${linter}"`
+
+## Limitations
+
+There are currently some limitations as to how this action (or any other action) can be used in the context of `pull_request` events from forks:
+
+- The action doesn't have permission to push auto-fix changes to the fork. This is because the `pull_request` event runs on the upstream repo, where the `github_token` is lacking permissions for the fork. [Source](https://github.community/t5/GitHub-Actions/Can-t-push-to-forked-repository-on-the-original-repository-s/m-p/35916/highlight/true#M2372)
+- The action doesn't have permission to create annotations for commits on forks and can therefore not display linting errors. [Source 1](https://github.community/t5/GitHub-Actions/Token-permissions-for-forks-once-again/m-p/33839), [source 2](https://github.com/actions/labeler/issues/12)
+
+For details and comments, please refer to [#13](https://github.com/samuelmeuli/lint-action/issues/13).
 
 ## Development
 
