@@ -82,8 +82,7 @@ class ESLint {
 				};
 				if (severity === 1) {
 					lintResult.warning.push(entry);
-				}
-				if (severity === 2) {
+				} else if (severity === 2) {
 					lintResult.error.push(entry);
 				}
 			}
