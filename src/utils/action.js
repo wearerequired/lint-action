@@ -1,6 +1,6 @@
 const { execSync } = require("child_process");
 
-const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false };
+const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
 /**
  * Logs to the console
@@ -56,17 +56,18 @@ function getInput(name, required = false) {
 /**
  * Executes the provided shell command
  * @param {string} cmd - Shell command to execute
- * @param {{dir: string, ignoreErrors: boolean}} [options] - {@see RUN_OPTIONS_DEFAULTS}
+ * @param {{dir: string, ignoreErrors: boolean, prefix: string}} [options] - {@see RUN_OPTIONS_DEFAULTS}
  * @returns {{status: number, stdout: string, stderr: string}} - Output of the shell command
  */
 function run(cmd, options) {
+	const command = `${options.prefix}${cmd}`;
 	const optionsWithDefaults = {
 		...RUN_OPTIONS_DEFAULTS,
 		...options,
 	};
 
 	try {
-		const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
+		const output = execSync(command, { encoding: "utf8", cwd: optionsWithDefaults.dir });
 		return {
 			status: 0,
 			stdout: output.trim(),

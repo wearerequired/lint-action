@@ -4,6 +4,7 @@ const { sep } = require("path");
 const commandExists = require("../../vendor/command-exists");
 const { log, run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require("../utils/prefix");
 
 const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
 
@@ -62,6 +63,7 @@ class Mypy {
 		return run(`mypy ${args}${extraArgs}`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('mypy')
 		});
 	}
 

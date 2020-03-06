@@ -2,6 +2,7 @@ const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require('../utils/prefix');
 
 /**
  * https://black.readthedocs.io
@@ -41,6 +42,7 @@ class Black {
 		return run(`black ${fixArg} --include "${files}" ${args} "."`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('black')
 		});
 	}
 

@@ -1,6 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require("../utils/prefix");
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (warning|error): (.*)$/gm;
 
@@ -43,6 +44,7 @@ class SwiftLint {
 		return run(`swiftlint ${fixArg}`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('swiftlint')
 		});
 	}
 

@@ -1,6 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { log, run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require("../utils/prefix");
 const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
@@ -43,6 +44,7 @@ class Golint {
 		return run(`golint -set_exit_status ${args} "."`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('golint')
 		});
 	}
 

@@ -1,6 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
+const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { runNpmBin } = require("../utils/npm/run-npm-bin");
+const { npmPrefix } = require("../utils/npm/npm-prefix");
 const { removeTrailingPeriod } = require("../utils/string");
 
 /**
@@ -23,7 +24,7 @@ class ESLint {
 
 		// Verify that ESLint is installed
 		try {
-			runNpmBin("eslint -v", { dir });
+			run("eslint -v", { dir, prefix: npmPrefix('eslint', { dir }) });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -40,11 +41,12 @@ class ESLint {
 	static lint(dir, extensions, args = "", fix = false) {
 		const extensionsArg = extensions.map(ext => `.${ext}`).join(",");
 		const fixArg = fix ? "--fix" : "";
-		return runNpmBin(
+		return run(
 			`eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
 			{
 				dir,
 				ignoreErrors: true,
+				prefix: npmPrefix('eslint', { dir })
 			},
 		);
 	}

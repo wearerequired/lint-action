@@ -1,6 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require("../utils/prefix");
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: \w+: \((\w+)\) (.*)\.$/gm;
 
@@ -40,6 +41,7 @@ class SwiftFormat {
 		return run(`swiftformat ${fixArg} ${args} "."`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('swiftformat')
 		});
 	}
 

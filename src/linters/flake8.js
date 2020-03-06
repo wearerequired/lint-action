@@ -3,6 +3,7 @@ const { sep } = require("path");
 const commandExists = require("../../vendor/command-exists");
 const { log, run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require("../utils/prefix");
 const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (\w*) (.*)$/gm;
@@ -48,6 +49,7 @@ class Flake8 {
 		return run(`flake8 --filename ${files} ${args}`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('flake8')
 		});
 	}
 

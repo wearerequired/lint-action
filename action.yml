@@ -29,6 +29,10 @@ inputs:
     description: Extensions of files to check with stylelint
     required: false
     default: "css,sass,scss"
+  stylelint_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   # Go
 
@@ -47,6 +51,10 @@ inputs:
     description: Extensions of files to check with gofmt
     required: false
     default: "go"
+  gofmt_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   golint:
     description: Enable or disable golint checks
@@ -63,6 +71,10 @@ inputs:
     description: Extensions of files to check with golint
     required: false
     default: "go"
+  golint_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   # JavaScript
 
@@ -81,6 +93,10 @@ inputs:
     description: Extensions of files to check with ESLint
     required: false
     default: "js"
+  eslint_command_prefix:
+    description: Shell command to prepend to the linter command. Will default to yarn run --silent or npx --no-install depending on lockfile presence.
+    required: false
+    default: ""
 
   prettier:
     description: Enable or disable Prettier checks
@@ -97,6 +113,10 @@ inputs:
     description: Extensions of files to check with Prettier
     required: false
     default: "css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml"
+  prettier_command_prefix:
+    description: Shell command to prepend to the linter command. Will default to yarn run --silent or npx --no-install depending on lockfile presence.
+    required: false
+    default: ""
 
   xo:
     description: Enable or disable XO checks
@@ -113,6 +133,10 @@ inputs:
     description: Extensions of files to check with XO
     required: false
     default: "js"
+  xo_command_prefix:
+    description: Shell command to prepend to the linter command. Will default to yarn run --silent or npx --no-install depending on lockfile presence.
+    required: false
+    default: ""
 
   # Python
 
@@ -131,6 +155,10 @@ inputs:
     description: Extensions of files to check with Black
     required: false
     default: "py"
+  black_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   flake8:
     description: Enable or disable Flake8 checks
@@ -147,6 +175,10 @@ inputs:
     description: Extensions of files to check with Flake8
     required: false
     default: "py"
+  flake8_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   mypy:
     description: Enable or disable Mypy checks
@@ -163,6 +195,10 @@ inputs:
     description: Extensions of files to check with Mypy
     required: false
     default: "py"
+  mypy_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   # Ruby
 
@@ -181,6 +217,10 @@ inputs:
     description: Extensions of files to check with RuboCop
     required: false
     default: "rb"
+  rubocop_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   # Swift
 
@@ -199,6 +239,10 @@ inputs:
     description: Extensions of files to check with SwiftFormat
     required: false
     default: "swift"
+  swiftformat_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
   swiftlint:
     description: Enable or disable SwiftLint checks
@@ -215,6 +259,10 @@ inputs:
     description: Extensions of files to check with SwiftLint
     required: false
     default: "swift"
+  swiftlint_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
 runs:
   using: node12

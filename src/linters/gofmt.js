@@ -2,6 +2,7 @@ const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require("../utils/prefix");
 
 /**
  * https://golang.org/cmd/gofmt
@@ -43,6 +44,7 @@ class Gofmt {
 		return run(`gofmt -s ${fixArg} ${args} "."`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('gofmt')
 		});
 	}
 

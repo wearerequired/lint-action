@@ -1,6 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
+const { prefix } = require("../utils/prefix");
 const { removeTrailingPeriod } = require("../utils/string");
 
 // Mapping of RuboCop severities to severities used for GitHub commit annotations
@@ -53,6 +54,7 @@ class RuboCop {
 		return run(`rubocop --format json ${fixArg} ${args}`, {
 			dir,
 			ignoreErrors: true,
+			prefix: prefix('rubocop')
 		});
 	}
 
