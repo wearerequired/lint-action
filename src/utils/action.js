@@ -60,7 +60,8 @@ function getInput(name, required = false) {
  * @returns {{status: number, stdout: string, stderr: string}} - Output of the shell command
  */
 function run(cmd, options) {
-	const command = `${options.prefix}${cmd}`;
+	const prefix = options ? options.prefix : "";
+	const command = `${prefix}${cmd}`;
 	const optionsWithDefaults = {
 		...RUN_OPTIONS_DEFAULTS,
 		...options,
