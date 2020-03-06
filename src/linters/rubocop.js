@@ -31,9 +31,14 @@ class RuboCop {
 			throw new Error("Ruby is not installed");
 		}
 
-		// Verify that RuboCop is installed
-		if (!(await commandExists("rubocop"))) {
-			throw new Error(`${this.name} is not installed`);
+		const commandPrefix = prefix("rubocop");
+
+		// if using bundler, commandExists will always fail
+		if (!commandPrefix || !commandPrefix.includes("bundle")) {
+			// Verify that RuboCop is installed
+			if (!(await commandExists("rubocop"))) {
+				throw new Error(`${this.name} is not installed`);
+			}
 		}
 	}
 
