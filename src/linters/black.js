@@ -40,7 +40,7 @@ class Black {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const files = `^.*\\.(${extensions.join("|")})$`;
 		const fixArg = fix ? "" : "--check --diff";
-		return run(`${prefix}black ${fixArg} --include "${files}" ${args} "."`, {
+		return run(`${prefix} black ${fixArg} --include "${files}" ${args} "."`, {
 			dir,
 			ignoreErrors: true
 		});

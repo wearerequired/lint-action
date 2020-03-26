@@ -26,7 +26,7 @@ class ESLint {
 
 		// Verify that ESLint is installed
 		try {
-			run(`${commandPrefix}eslint -v`, { dir });
+			run(`${commandPrefix} eslint -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -46,7 +46,7 @@ class ESLint {
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || npmPrefix("eslint", dir);
 		return run(
-			`${commandPrefix}eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
+			`${commandPrefix} eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
 			{
 				dir,
 				ignoreErrors: true

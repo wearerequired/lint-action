@@ -26,7 +26,7 @@ class XO extends ESLint {
 
 		// Verify that XO is installed
 		try {
-			run(`${commandPrefix}xo --version`, { dir });
+			run(`${commandPrefix} xo --version`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -45,7 +45,7 @@ class XO extends ESLint {
 		const extensionArgs = extensions.map(ext => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || npmPrefix("xo", dir);
-		return run(`${commandPrefix}xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {
+		return run(`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {
 			dir,
 			ignoreErrors: true
 		});

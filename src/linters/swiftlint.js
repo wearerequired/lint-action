@@ -42,7 +42,7 @@ class SwiftLint {
 		}
 
 		const fixArg = fix ? "autocorrect" : "";
-		return run(`${prefix}swiftlint ${fixArg}`, {
+		return run(`${prefix} swiftlint ${fixArg}`, {
 			dir,
 			ignoreErrors: true
 		});

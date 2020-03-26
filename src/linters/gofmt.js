@@ -42,7 +42,7 @@ class Gofmt {
 		// -s: Simplify code
 		// -w: Write result to (source) file instead of stdout
 		const fixArg = fix ? "-w" : "-d -e";
-		return run(`${prefix}gofmt -s ${fixArg} ${args} "."`, {
+		return run(`${prefix} gofmt -s ${fixArg} ${args} "."`, {
 			dir,
 			ignoreErrors: true
 		});

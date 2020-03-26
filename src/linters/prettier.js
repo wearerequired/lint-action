@@ -25,7 +25,7 @@ class Prettier {
 
 		// Verify that Prettier is installed
 		try {
-			run(`${commandPrefix}prettier -v`, { dir });
+			run(`${commandPrefix} prettier -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -44,7 +44,8 @@ class Prettier {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--write" : "--list-different";
-		return run(`${prefix}prettier ${fixArg} --no-color ${args} "${files}"`, {
+		const commandPrefix = prefix || npmPrefix("prettier", dir);
+		return run(`${commandPrefix} prettier ${fixArg} --no-color ${args} "${files}"`, {
 			dir,
 			ignoreErrors: true
 		});

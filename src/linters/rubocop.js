@@ -32,8 +32,7 @@ class RuboCop {
 		}
 		// Verify that RuboCop is installed
 		try {
-			console.log(`Running ${prefix}rubocop -v in ${dir}`)
- 			run(`${prefix}rubocop -v`, { dir });
+ 			run(`${prefix} rubocop -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}

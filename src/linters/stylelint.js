@@ -25,7 +25,7 @@ class Stylelint {
 
 		// Verify that stylelint is installed
 		try {
-			run(`${commandPrefix}stylelint -v`, { dir });
+			run(`${commandPrefix} stylelint -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -45,7 +45,7 @@ class Stylelint {
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || npmPrefix("stylelint", dir);
-		return run(`${commandPrefix}stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`, {
+		return run(`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`, {
 			dir,
 			ignoreErrors: true
 		});
