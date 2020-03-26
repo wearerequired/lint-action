@@ -4,7 +4,7 @@ const { sep } = require("path");
 const commandExists = require("../../vendor/command-exists");
 const { log, run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { prefix } = require("../utils/prefix");
+const { getCommandPrefix } = require("../utils/prefix");
 
 const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
 
@@ -19,8 +19,9 @@ class Mypy {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix="") {
 		// Verify that Python is installed (required to execute Mypy)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
@@ -40,7 +41,7 @@ class Mypy {
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix="") {
 		if (extensions.length !== 1 || extensions[0] !== "py") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -60,10 +61,9 @@ class Mypy {
 		if (!specifiedPath) {
 			extraArgs = ` ${dir}`;
 		}
-		return run(`mypy ${args}${extraArgs}`, {
+		return run(`${prefix}mypy ${args}${extraArgs}`, {
 			dir,
-			ignoreErrors: true,
-			prefix: prefix('mypy')
+			ignoreErrors: true
 		});
 	}
 

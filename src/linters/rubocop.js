@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { prefix } = require("../utils/prefix");
+const { getCommandPrefix } = require("../utils/prefix");
 const { removeTrailingPeriod } = require("../utils/string");
 
 // Mapping of RuboCop severities to severities used for GitHub commit annotations
@@ -24,21 +24,18 @@ class RuboCop {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix="") {
 		// Verify that Ruby is installed (required to execute RuboCop)
 		if (!(await commandExists("ruby"))) {
 			throw new Error("Ruby is not installed");
 		}
-
-		const commandPrefix = prefix("rubocop");
-
-		// if using bundler, commandExists will always fail
-		if (!commandPrefix || !commandPrefix.includes("bundle")) {
-			// Verify that RuboCop is installed
-			if (!(await commandExists("rubocop"))) {
-				throw new Error(`${this.name} is not installed`);
-			}
+		// Verify that RuboCop is installed
+		try {
+ 			run(`${prefix}rubocop -v`, { dir });
+		} catch (err) {
+			throw new Error(`${this.name} is not installed`);
 		}
 	}
 
@@ -48,18 +45,18 @@ class RuboCop {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix="") {
 		if (extensions.length !== 1 || extensions[0] !== "rb") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
 		const fixArg = fix ? "--auto-correct" : "";
-		return run(`rubocop --format json ${fixArg} ${args}`, {
+		return run(`${prefix}rubocop --format json ${fixArg} ${args}`, {
 			dir,
-			ignoreErrors: true,
-			prefix: prefix('rubocop')
+			ignoreErrors: true
 		});
 	}
 

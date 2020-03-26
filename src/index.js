@@ -64,11 +64,12 @@ async function runAction() {
 			const fileExtensions = getInput(`${linterId}_extensions`, true);
 			const args = getInput(`${linterId}_args`) || "";
 			const lintDirRel = getInput(`${linterId}_dir`) || ".";
+			const prefix = getInput(`${linterId}_command_prefix`) || "";
 			const lintDirAbs = join(context.workspace, lintDirRel);
 
 			// Check that the linter and its dependencies are installed
 			log(`\nVerifying setup for ${linter.name}…`);
-			await linter.verifySetup(lintDirAbs);
+			await linter.verifySetup(lintDirAbs, prefix);
 			log(`Verified ${linter.name} setup`);
 
 			// Determine which files should be linted
@@ -79,7 +80,7 @@ async function runAction() {
 			log(
 				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);

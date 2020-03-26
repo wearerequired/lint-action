@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { npmPrefix } = require("../utils/npm/npm-prefix");
+const { npmPrefix } = require("../utils/prefix");
 
 /**
  * https://prettier.io
@@ -14,16 +14,18 @@ class Prettier {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix="") {
 		// Verify that NPM is installed (required to execute Prettier)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
+		const commandPrefix = prefix || npmPrefix("prettier", dir);
 
 		// Verify that Prettier is installed
 		try {
-			run("prettier -v", { dir, prefix: npmPrefix('prettier', { dir }) });
+			run(`${commandPrefix}prettier -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -35,16 +37,16 @@ class Prettier {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix="") {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--write" : "--list-different";
-		return run(`prettier ${fixArg} --no-color ${args} "${files}"`, {
+		return run(`${prefix}prettier ${fixArg} --no-color ${args} "${files}"`, {
 			dir,
-			ignoreErrors: true,
-			prefix: npmPrefix('prettier', { dir })
+			ignoreErrors: true
 		});
 	}
 

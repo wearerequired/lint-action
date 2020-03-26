@@ -2,7 +2,6 @@ const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
-const { prefix } = require('../utils/prefix');
 
 /**
  * https://black.readthedocs.io
@@ -15,8 +14,9 @@ class Black {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix="") {
 		// Verify that Python is installed (required to execute Black)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
@@ -34,15 +34,15 @@ class Black {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const files = `^.*\\.(${extensions.join("|")})$`;
 		const fixArg = fix ? "" : "--check --diff";
-		return run(`black ${fixArg} --include "${files}" ${args} "."`, {
+		return run(`${prefix}black ${fixArg} --include "${files}" ${args} "."`, {
 			dir,
-			ignoreErrors: true,
-			prefix: prefix('black')
+			ignoreErrors: true
 		});
 	}
 

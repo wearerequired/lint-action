@@ -3,7 +3,7 @@ const { sep } = require("path");
 const commandExists = require("../../vendor/command-exists");
 const { log, run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { prefix } = require("../utils/prefix");
+const { getCommandPrefix } = require("../utils/prefix");
 const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (\w*) (.*)$/gm;
@@ -19,8 +19,9 @@ class Flake8 {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix="") {
 		// Verify that Python is installed (required to execute Flake8)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
@@ -38,18 +39,18 @@ class Flake8 {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix="") {
 		if (fix) {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
 
 		const files = extensions.map(ext => `"**${sep}*.${ext}"`).join(",");
-		return run(`flake8 --filename ${files} ${args}`, {
+		return run(`${prefix}flake8 --filename ${files} ${args}`, {
 			dir,
-			ignoreErrors: true,
-			prefix: prefix('flake8')
+			ignoreErrors: true
 		});
 	}
 

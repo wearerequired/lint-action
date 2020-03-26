@@ -94,7 +94,7 @@ inputs:
     required: false
     default: "js"
   eslint_command_prefix:
-    description: Shell command to prepend to the linter command. Will default to yarn run --silent or npx --no-install depending on lockfile presence.
+    description: Shell command to prepend to the linter command. Will default to `npx --no-install` for NPM and `yarn run --silent` for Yarn.
     required: false
     default: ""
 
@@ -114,7 +114,7 @@ inputs:
     required: false
     default: "css,html,js,json,jsx,md,sass,scss,ts,tsx,vue,yaml,yml"
   prettier_command_prefix:
-    description: Shell command to prepend to the linter command. Will default to yarn run --silent or npx --no-install depending on lockfile presence.
+    description: Shell command to prepend to the linter command. Will default to `npx --no-install` for NPM and `yarn run --silent` for Yarn.
     required: false
     default: ""
 
@@ -134,7 +134,7 @@ inputs:
     required: false
     default: "js"
   xo_command_prefix:
-    description: Shell command to prepend to the linter command. Will default to yarn run --silent or npx --no-install depending on lockfile presence.
+    description: Shell command to prepend to the linter command. Will default to `npx --no-install` for NPM and `yarn run --silent` for Yarn.
     required: false
     default: ""
 

@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { npmPrefix } = require("../utils/npm/npm-prefix");
+const {npmPrefix} = require("../utils/prefix");
 const { removeTrailingPeriod } = require("../utils/string");
 
 /**
@@ -15,16 +15,18 @@ class ESLint {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute ESLint)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
+		const commandPrefix = prefix || npmPrefix("eslint", dir);
 
 		// Verify that ESLint is installed
 		try {
-			run("eslint -v", { dir, prefix: npmPrefix('eslint', { dir }) });
+			run(`${commandPrefix}eslint -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -36,17 +38,18 @@ class ESLint {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionsArg = extensions.map(ext => `.${ext}`).join(",");
 		const fixArg = fix ? "--fix" : "";
+		const commandPrefix = prefix || npmPrefix("eslint", dir);
 		return run(
-			`eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
+			`${commandPrefix}eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
 			{
 				dir,
-				ignoreErrors: true,
-				prefix: npmPrefix('eslint', { dir })
+				ignoreErrors: true
 			},
 		);
 	}
