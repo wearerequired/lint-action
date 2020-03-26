@@ -1,7 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { getCommandPrefix } = require("../utils/prefix");
 const { removeTrailingPeriod } = require("../utils/string");
 
 // Mapping of RuboCop severities to severities used for GitHub commit annotations
@@ -33,6 +32,7 @@ class RuboCop {
 		}
 		// Verify that RuboCop is installed
 		try {
+			console.log(`Running ${prefix}rubocop -v in ${dir}`)
  			run(`${prefix}rubocop -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);

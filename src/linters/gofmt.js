@@ -2,7 +2,6 @@ const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
-const { getCommandPrefix } = require("../utils/prefix");
 
 /**
  * https://golang.org/cmd/gofmt
