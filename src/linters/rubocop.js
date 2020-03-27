@@ -53,7 +53,7 @@ class RuboCop {
 		}
 
 		const fixArg = fix ? "--auto-correct" : "";
-		return run(`${prefix}rubocop --format json ${fixArg} ${args}`, {
+		return run(`${prefix} rubocop --format json ${fixArg} ${args}`, {
 			dir,
 			ignoreErrors: true
 		});
