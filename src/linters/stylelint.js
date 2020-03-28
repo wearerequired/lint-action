@@ -1,6 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
+const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const { runNpmBin } = require("../utils/npm/run-npm-bin");
+const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 
 /**
  * https://stylelint.io
@@ -13,16 +14,18 @@ class Stylelint {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute stylelint)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
 
 		// Verify that stylelint is installed
+		const commandPrefix = prefix || getNpmBinCommand(dir);
 		try {
-			runNpmBin("stylelint -v", { dir });
+			run(`${commandPrefix} stylelint -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -34,16 +37,21 @@ class Stylelint {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--fix" : "";
-		return runNpmBin(`stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`, {
-			dir,
-			ignoreErrors: true,
-		});
+		const commandPrefix = prefix || getNpmBinCommand(dir);
+		return run(
+			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`,
+			{
+				dir,
+				ignoreErrors: true,
+			},
+		);
 	}
 
 	/**

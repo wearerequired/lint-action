@@ -15,8 +15,9 @@ class SwiftLint {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that SwiftLint is installed
 		if (!(await commandExists("swiftlint"))) {
 			throw new Error(`${this.name} is not installed`);
@@ -29,9 +30,10 @@ class SwiftLint {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -40,7 +42,7 @@ class SwiftLint {
 		}
 
 		const fixArg = fix ? "autocorrect" : "";
-		return run(`swiftlint ${fixArg}`, {
+		return run(`${prefix} swiftlint ${fixArg}`, {
 			dir,
 			ignoreErrors: true,
 		});

@@ -1,6 +1,6 @@
 const { execSync } = require("child_process");
 
-const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false };
+const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
 /**
  * Logs to the console

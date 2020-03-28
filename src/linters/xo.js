@@ -1,5 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
-const { runNpmBin } = require("../utils/npm/run-npm-bin");
+const { run } = require("../utils/action");
+const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 const ESLint = require("./eslint");
 
 /**
@@ -14,16 +15,18 @@ class XO extends ESLint {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
 	 */
-	static async verifySetup(dir) {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute XO)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
 
 		// Verify that XO is installed
+		const commandPrefix = prefix || getNpmBinCommand(dir);
 		try {
-			runNpmBin("xo --version", { dir });
+			run(`${commandPrefix} xo --version`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -35,12 +38,14 @@ class XO extends ESLint {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false) {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionArgs = extensions.map(ext => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
-		return runNpmBin(`xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {
+		const commandPrefix = prefix || getNpmBinCommand(dir);
+		return run(`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {
 			dir,
 			ignoreErrors: true,
 		});
