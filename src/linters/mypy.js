@@ -20,7 +20,7 @@ class Mypy {
 	 * @param {string} dir - Directory to run the linting program in
 	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir, prefix="") {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that Python is installed (required to execute Mypy)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
@@ -38,9 +38,10 @@ class Mypy {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix="") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		if (extensions.length !== 1 || extensions[0] !== "py") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -62,7 +63,7 @@ class Mypy {
 		}
 		return run(`${prefix} mypy ${args}${extraArgs}`, {
 			dir,
-			ignoreErrors: true
+			ignoreErrors: true,
 		});
 	}
 

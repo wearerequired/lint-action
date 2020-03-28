@@ -25,14 +25,14 @@ class RuboCop {
 	 * @param {string} dir - Directory to run the linting program in
 	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir, prefix="") {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that Ruby is installed (required to execute RuboCop)
 		if (!(await commandExists("ruby"))) {
 			throw new Error("Ruby is not installed");
 		}
 		// Verify that RuboCop is installed
 		try {
- 			run(`${prefix} rubocop -v`, { dir });
+			run(`${prefix} rubocop -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -47,7 +47,7 @@ class RuboCop {
 	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix="") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		if (extensions.length !== 1 || extensions[0] !== "rb") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -55,7 +55,7 @@ class RuboCop {
 		const fixArg = fix ? "--auto-correct" : "";
 		return run(`${prefix} rubocop --format json ${fixArg} ${args}`, {
 			dir,
-			ignoreErrors: true
+			ignoreErrors: true,
 		});
 	}
 

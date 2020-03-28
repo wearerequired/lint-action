@@ -16,7 +16,7 @@ class Black {
 	 * @param {string} dir - Directory to run the linting program in
 	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir, prefix="") {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that Python is installed (required to execute Black)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
@@ -42,7 +42,7 @@ class Black {
 		const fixArg = fix ? "" : "--check --diff";
 		return run(`${prefix} black ${fixArg} --include "${files}" ${args} "."`, {
 			dir,
-			ignoreErrors: true
+			ignoreErrors: true,
 		});
 	}
 

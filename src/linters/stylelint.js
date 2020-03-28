@@ -16,7 +16,7 @@ class Stylelint {
 	 * @param {string} dir - Directory to run the linting program in
 	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir, prefix="") {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute stylelint)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
@@ -40,15 +40,18 @@ class Stylelint {
 	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix="") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || npmPrefix("stylelint", dir);
-		return run(`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`, {
-			dir,
-			ignoreErrors: true
-		});
+		return run(
+			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`,
+			{
+				dir,
+				ignoreErrors: true,
+			},
+		);
 	}
 
 	/**

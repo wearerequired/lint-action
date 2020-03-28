@@ -17,7 +17,7 @@ class XO extends ESLint {
 	 * @param {string} dir - Directory to run the linting program in
 	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir, prefix="") {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute XO)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
@@ -41,13 +41,13 @@ class XO extends ESLint {
 	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix="") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionArgs = extensions.map(ext => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || npmPrefix("xo", dir);
 		return run(`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {
 			dir,
-			ignoreErrors: true
+			ignoreErrors: true,
 		});
 	}
 }

@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
-const {npmPrefix} = require("../utils/prefix");
+const { npmPrefix } = require("../utils/prefix");
 const { removeTrailingPeriod } = require("../utils/string");
 
 /**
@@ -49,7 +49,7 @@ class ESLint {
 			`${commandPrefix} eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
 			{
 				dir,
-				ignoreErrors: true
+				ignoreErrors: true,
 			},
 		);
 	}

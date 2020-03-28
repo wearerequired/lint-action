@@ -18,7 +18,7 @@ class Golint {
 	 * @param {string} dir - Directory to run the linting program in
 	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir, prefix="") {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that golint is installed
 		if (!(await commandExists("golint"))) {
 			throw new Error(`${this.name} is not installed`);
@@ -34,7 +34,7 @@ class Golint {
 	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix="") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -44,7 +44,7 @@ class Golint {
 
 		return run(`${prefix} golint -set_exit_status ${args} "."`, {
 			dir,
-			ignoreErrors: true
+			ignoreErrors: true,
 		});
 	}
 

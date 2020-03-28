@@ -20,7 +20,7 @@ class Flake8 {
 	 * @param {string} dir - Directory to run the linting program in
 	 * @param {string} prefix - Prefix to the run command
 	 */
-	static async verifySetup(dir, prefix="") {
+	static async verifySetup(dir, prefix = "") {
 		// Verify that Python is installed (required to execute Flake8)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
@@ -41,7 +41,7 @@ class Flake8 {
 	 * @param {string} prefix - Prefix to the run command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix="") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		if (fix) {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
@@ -49,7 +49,7 @@ class Flake8 {
 		const files = extensions.map(ext => `"**${sep}*.${ext}"`).join(",");
 		return run(`${prefix} flake8 --filename ${files} ${args}`, {
 			dir,
-			ignoreErrors: true
+			ignoreErrors: true,
 		});
 	}
 

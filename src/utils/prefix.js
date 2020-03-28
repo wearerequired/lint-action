@@ -12,7 +12,9 @@ function getCommandPrefix(linter) {
 
 function npmPrefix(linter, dir) {
 	const commandPrefix = getCommandPrefix(linter);
-	if (commandPrefix) { return commandPrefix; }
+	if (commandPrefix) {
+		return commandPrefix;
+	}
 	return useYarn(dir) ? "yarn run --silent " : "npx --no-install ";
 }
 

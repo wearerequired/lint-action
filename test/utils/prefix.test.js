@@ -7,8 +7,8 @@ const DIR = "some-dir";
 jest.mock("../../src/utils/action");
 jest.mock("../../src/utils/npm/use-yarn");
 jest.mock("../../src/utils/prefix", () => ({
-  ...jest.genMockFromModule("../../src/utils/prefix"),
-  npmPrefix: jest.requireActual("../../src/utils/prefix").npmPrefix
+	...jest.genMockFromModule("../../src/utils/prefix"),
+	npmPrefix: jest.requireActual("../../src/utils/prefix").npmPrefix,
 }));
 
 describe("npmPrefix()", () => {
@@ -27,5 +27,5 @@ describe("npmPrefix()", () => {
 	test("should run existing prefix", () => {
 		getCommandPrefix.mockReturnValue("some prefix");
 		expect(npmPrefix(LINTER, DIR)).toEqual("some prefix");
-	})
+	});
 });
