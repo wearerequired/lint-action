@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const { getNpmPrefix } = require("../utils/command-prefix");
 const { initLintResult } = require("../utils/lint-result");
-const { npmPrefix } = require("../utils/prefix");
 const { removeTrailingPeriod } = require("../utils/string");
 
 /**
@@ -15,16 +15,16 @@ class ESLint {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute ESLint)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
-		const commandPrefix = prefix || npmPrefix("eslint", dir);
 
 		// Verify that ESLint is installed
+		const commandPrefix = prefix || getNpmPrefix("eslint", dir);
 		try {
 			run(`${commandPrefix} eslint -v`, { dir });
 		} catch (err) {
@@ -38,13 +38,13 @@ class ESLint {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionsArg = extensions.map(ext => `.${ext}`).join(",");
 		const fixArg = fix ? "--fix" : "";
-		const commandPrefix = prefix || npmPrefix("eslint", dir);
+		const commandPrefix = prefix || getNpmPrefix("eslint", dir);
 		return run(
 			`${commandPrefix} eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
 			{

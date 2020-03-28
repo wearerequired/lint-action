@@ -10,7 +10,7 @@ function getCommandPrefix(linter) {
 	return getInput(`${linter}_command_prefix`, true);
 }
 
-function npmPrefix(linter, dir) {
+function getNpmPrefix(linter, dir) {
 	const commandPrefix = getCommandPrefix(linter);
 	if (commandPrefix) {
 		return commandPrefix;
@@ -18,4 +18,4 @@ function npmPrefix(linter, dir) {
 	return useYarn(dir) ? "yarn run --silent " : "npx --no-install ";
 }
 
-module.exports = { getCommandPrefix, npmPrefix };
+module.exports = { getCommandPrefix, getNpmPrefix };

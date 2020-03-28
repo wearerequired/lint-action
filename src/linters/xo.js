@@ -1,6 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
-const { npmPrefix } = require("../utils/prefix");
+const { getNpmPrefix } = require("../utils/command-prefix");
 const ESLint = require("./eslint");
 
 /**
@@ -15,16 +15,16 @@ class XO extends ESLint {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute XO)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
-		const commandPrefix = prefix || npmPrefix("xo", dir);
 
 		// Verify that XO is installed
+		const commandPrefix = prefix || getNpmPrefix("xo", dir);
 		try {
 			run(`${commandPrefix} xo --version`, { dir });
 		} catch (err) {
@@ -38,13 +38,13 @@ class XO extends ESLint {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionArgs = extensions.map(ext => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
-		const commandPrefix = prefix || npmPrefix("xo", dir);
+		const commandPrefix = prefix || getNpmPrefix("xo", dir);
 		return run(`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {
 			dir,
 			ignoreErrors: true,

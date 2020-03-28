@@ -18,7 +18,7 @@ class Mypy {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
 		// Verify that Python is installed (required to execute Mypy)
@@ -38,7 +38,7 @@ class Mypy {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {

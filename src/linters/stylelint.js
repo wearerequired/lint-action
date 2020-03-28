@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const { getNpmPrefix } = require("../utils/command-prefix");
 const { initLintResult } = require("../utils/lint-result");
-const { npmPrefix } = require("../utils/prefix");
 
 /**
  * https://stylelint.io
@@ -14,16 +14,16 @@ class Stylelint {
 	/**
 	 * Verifies that all required programs are installed. Throws an error if programs are missing
 	 * @param {string} dir - Directory to run the linting program in
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
 		// Verify that NPM is installed (required to execute stylelint)
 		if (!(await commandExists("npm"))) {
 			throw new Error("NPM is not installed");
 		}
-		const commandPrefix = prefix || npmPrefix("stylelint", dir);
 
 		// Verify that stylelint is installed
+		const commandPrefix = prefix || getNpmPrefix("stylelint", dir);
 		try {
 			run(`${commandPrefix} stylelint -v`, { dir });
 		} catch (err) {
@@ -37,14 +37,14 @@ class Stylelint {
 	 * @param {string[]} extensions - File extensions which should be linted
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the run command
+	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--fix" : "";
-		const commandPrefix = prefix || npmPrefix("stylelint", dir);
+		const commandPrefix = prefix || getNpmPrefix("stylelint", dir);
 		return run(
 			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`,
 			{
