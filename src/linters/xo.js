@@ -1,6 +1,6 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
-const { getNpmPrefix } = require("../utils/command-prefix");
+const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 const ESLint = require("./eslint");
 
 /**
@@ -24,7 +24,7 @@ class XO extends ESLint {
 		}
 
 		// Verify that XO is installed
-		const commandPrefix = prefix || getNpmPrefix("xo", dir);
+		const commandPrefix = prefix || getNpmBinCommand(dir);
 		try {
 			run(`${commandPrefix} xo --version`, { dir });
 		} catch (err) {
@@ -44,7 +44,7 @@ class XO extends ESLint {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionArgs = extensions.map(ext => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
-		const commandPrefix = prefix || getNpmPrefix("xo", dir);
+		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {
 			dir,
 			ignoreErrors: true,

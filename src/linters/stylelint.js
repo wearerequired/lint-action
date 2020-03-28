@@ -1,7 +1,7 @@
 const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
-const { getNpmPrefix } = require("../utils/command-prefix");
 const { initLintResult } = require("../utils/lint-result");
+const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 
 /**
  * https://stylelint.io
@@ -23,7 +23,7 @@ class Stylelint {
 		}
 
 		// Verify that stylelint is installed
-		const commandPrefix = prefix || getNpmPrefix("stylelint", dir);
+		const commandPrefix = prefix || getNpmBinCommand(dir);
 		try {
 			run(`${commandPrefix} stylelint -v`, { dir });
 		} catch (err) {
@@ -44,7 +44,7 @@ class Stylelint {
 		const files =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--fix" : "";
-		const commandPrefix = prefix || getNpmPrefix("stylelint", dir);
+		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(
 			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`,
 			{
