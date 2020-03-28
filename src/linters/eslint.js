@@ -72,8 +72,15 @@ class ESLint {
 		for (const violation of outputJson) {
 			const { filePath, messages } = violation;
 			const path = filePath.substring(dir.length + 1);
+
 			for (const msg of messages) {
-				const { line, message, ruleId, severity } = msg;
+				const { fatal, line, message, ruleId, severity } = msg;
+
+				// Exit if a fatal ESLint error occurred
+				if (fatal) {
+					throw Error(`ESLint error: ${message}`);
+				}
+
 				const entry = {
 					path,
 					firstLine: line,
