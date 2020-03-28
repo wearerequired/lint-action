@@ -42,21 +42,22 @@ beforeAll(async () => {
 	await copy(testProjectsDir, tmpDir);
 });
 
-// Test lint and auto-fix modes
-describe.each([
-	["lint", false],
-	["auto-fix", true],
-])("%s", (lintMode, autoFix) => {
-	// Test all linters
-	describe.each(linterParams)(
-		"%s",
-		(projectName, linter, extensions, getLintParams, getFixParams) => {
-			const projectTmpDir = join(tmpDir, projectName);
-			const expected = autoFix ? getFixParams(projectTmpDir) : getLintParams(projectTmpDir);
+// Test all linters
+describe.each(linterParams)(
+	"%s",
+	(projectName, linter, extensions, getLintParams, getFixParams) => {
+		const projectTmpDir = join(tmpDir, projectName);
 
-			beforeAll(async () => {
-				await linter.verifySetup(projectTmpDir);
-			});
+		beforeAll(async () => {
+			await expect(linter.verifySetup(projectTmpDir)).resolves.toEqual(undefined);
+		});
+
+		// Test lint and auto-fix modes
+		describe.each([
+			["lint", false],
+			["auto-fix", true],
+		])("%s", (lintMode, autoFix) => {
+			const expected = autoFix ? getFixParams(projectTmpDir) : getLintParams(projectTmpDir);
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
@@ -91,6 +92,6 @@ describe.each([
 				const lintResult = linter.parseOutput(projectTmpDir, expected.cmdOutput);
 				expect(lintResult).toEqual(expected.lintResult);
 			});
-		},
-	);
-});
+		});
+	},
+);
