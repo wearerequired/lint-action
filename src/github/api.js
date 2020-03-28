@@ -17,7 +17,7 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 	for (const level of ["warning", "error"]) {
 		annotations = [
 			...annotations,
-			...lintResult[level].map(result => ({
+			...lintResult[level].map((result) => ({
 				path: result.path,
 				start_line: result.firstLine,
 				end_line: result.lastLine,

@@ -20,15 +20,15 @@
 	"peerDependencies": {},
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
-		"@samuelmeuli/prettier-config": "^1.0.0",
+		"@samuelmeuli/prettier-config": "^2.0.1",
 		"eslint": "6.8.0",
 		"eslint-config-airbnb-base": "14.1.0",
-		"eslint-config-prettier": "^6.10.0",
+		"eslint-config-prettier": "^6.10.1",
 		"eslint-plugin-import": "^2.20.1",
-		"eslint-plugin-jsdoc": "^22.0.1",
-		"fs-extra": "^8.1.0",
-		"jest": "^25.1.0",
-		"prettier": "^1.19.1"
+		"eslint-plugin-jsdoc": "^22.1.0",
+		"fs-extra": "^9.0.0",
+		"jest": "^25.2.3",
+		"prettier": "^2.0.2"
 	},
 	"eslintConfig": {
 		"root": true,

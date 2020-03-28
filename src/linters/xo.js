@@ -42,7 +42,7 @@ class XO extends ESLint {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		const extensionArgs = extensions.map(ext => `--extension ${ext}`).join(" ");
+		const extensionArgs = extensions.map((ext) => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "."`, {

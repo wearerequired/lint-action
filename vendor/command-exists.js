@@ -37,13 +37,13 @@ var constants = fs.constants || fs;
 
 var isUsingWindows = process.platform == "win32";
 
-var fileNotExists = function(commandName, callback) {
-	access(commandName, constants.F_OK, function(err) {
+var fileNotExists = function (commandName, callback) {
+	access(commandName, constants.F_OK, function (err) {
 		callback(!err);
 	});
 };
 
-var fileNotExistsSync = function(commandName) {
+var fileNotExistsSync = function (commandName) {
 	try {
 		accessSync(commandName, constants.F_OK);
 		return false;
@@ -52,13 +52,13 @@ var fileNotExistsSync = function(commandName) {
 	}
 };
 
-var localExecutable = function(commandName, callback) {
-	access(commandName, constants.F_OK | constants.X_OK, function(err) {
+var localExecutable = function (commandName, callback) {
+	access(commandName, constants.F_OK | constants.X_OK, function (err) {
 		callback(null, !err);
 	});
 };
 
-var localExecutableSync = function(commandName) {
+var localExecutableSync = function (commandName) {
 	try {
 		accessSync(commandName, constants.F_OK | constants.X_OK);
 		return true;
@@ -67,8 +67,8 @@ var localExecutableSync = function(commandName) {
 	}
 };
 
-var commandExistsUnix = function(commandName, cleanedCommandName, callback) {
-	fileNotExists(commandName, function(isFile) {
+var commandExistsUnix = function (commandName, cleanedCommandName, callback) {
+	fileNotExists(commandName, function (isFile) {
 		if (!isFile) {
 			var child = exec(
 				"command -v " +
@@ -77,7 +77,7 @@ var commandExistsUnix = function(commandName, cleanedCommandName, callback) {
 					" && { echo >&1 " +
 					cleanedCommandName +
 					"; exit 0; }",
-				function(error, stdout, stderr) {
+				function (error, stdout, stderr) {
 					callback(null, !!stdout);
 				},
 			);
@@ -88,12 +88,12 @@ var commandExistsUnix = function(commandName, cleanedCommandName, callback) {
 	});
 };
 
-var commandExistsWindows = function(commandName, cleanedCommandName, callback) {
+var commandExistsWindows = function (commandName, cleanedCommandName, callback) {
 	if (/[\x00-\x1f<>:"\|\?\*]/.test(commandName)) {
 		callback(null, false);
 		return;
 	}
-	var child = exec("where " + cleanedCommandName, function(error) {
+	var child = exec("where " + cleanedCommandName, function (error) {
 		if (error !== null) {
 			callback(null, false);
 		} else {
@@ -102,7 +102,7 @@ var commandExistsWindows = function(commandName, cleanedCommandName, callback) {
 	});
 };
 
-var commandExistsUnixSync = function(commandName, cleanedCommandName) {
+var commandExistsUnixSync = function (commandName, cleanedCommandName) {
 	if (fileNotExistsSync(commandName)) {
 		try {
 			var stdout = execSync(
@@ -121,7 +121,7 @@ var commandExistsUnixSync = function(commandName, cleanedCommandName) {
 	return localExecutableSync(commandName);
 };
 
-var commandExistsWindowsSync = function(commandName, cleanedCommandName, callback) {
+var commandExistsWindowsSync = function (commandName, cleanedCommandName, callback) {
 	if (/[\x00-\x1f<>:"\|\?\*]/.test(commandName)) {
 		return false;
 	}
@@ -133,7 +133,7 @@ var commandExistsWindowsSync = function(commandName, cleanedCommandName, callbac
 	}
 };
 
-var cleanInput = function(s) {
+var cleanInput = function (s) {
 	if (/[^A-Za-z0-9_\/:=-]/.test(s)) {
 		s = "'" + s.replace(/'/g, "'\\''") + "'";
 		s = s
@@ -144,7 +144,7 @@ var cleanInput = function(s) {
 };
 
 if (isUsingWindows) {
-	cleanInput = function(s) {
+	cleanInput = function (s) {
 		var isPathName = /[\\]/.test(s);
 		if (isPathName) {
 			var dirname = '"' + path.dirname(s) + '"';
@@ -158,8 +158,8 @@ if (isUsingWindows) {
 module.exports = function commandExists(commandName, callback) {
 	var cleanedCommandName = cleanInput(commandName);
 	if (!callback && typeof Promise !== "undefined") {
-		return new Promise(function(resolve, reject) {
-			commandExists(commandName, function(error, output) {
+		return new Promise(function (resolve, reject) {
+			commandExists(commandName, function (error, output) {
 				if (output) {
 					resolve(commandName);
 				} else {
@@ -175,7 +175,7 @@ module.exports = function commandExists(commandName, callback) {
 	}
 };
 
-module.exports.sync = function(commandName) {
+module.exports.sync = function (commandName) {
 	var cleanedCommandName = cleanInput(commandName);
 	if (isUsingWindows) {
 		return commandExistsWindowsSync(commandName, cleanedCommandName);

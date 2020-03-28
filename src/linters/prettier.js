@@ -66,7 +66,7 @@ class Prettier {
 		}
 
 		const paths = output.stdout.split(/\r?\n/);
-		lintResult.error = paths.map(path => ({
+		lintResult.error = paths.map((path) => ({
 			path,
 			firstLine: 1,
 			lastLine: 1,

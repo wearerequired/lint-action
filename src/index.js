@@ -11,7 +11,7 @@ const GIT_EMAIL = "lint-action@samuelmeuli.com";
 const GIT_NAME = "Lint Action";
 
 // Abort action on unhandled promise rejections
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", (err) => {
 	log(err, "error");
 	throw new Error(`Exiting because of unhandled promise rejection`);
 });

@@ -68,7 +68,7 @@ describe.each([
 				// stdout
 				const stdout = normalizeDates(cmdOutput.stdout);
 				if ("stdoutParts" in expected.cmdOutput) {
-					expected.cmdOutput.stdoutParts.forEach(stdoutPart =>
+					expected.cmdOutput.stdoutParts.forEach((stdoutPart) =>
 						expect(stdout).toEqual(expect.stringContaining(stdoutPart)),
 					);
 				} else if ("stdout" in expected.cmdOutput) {
@@ -78,7 +78,7 @@ describe.each([
 				// stderr
 				const stderr = normalizeDates(cmdOutput.stderr);
 				if ("stderrParts" in expected.cmdOutput) {
-					expected.cmdOutput.stderrParts.forEach(stderrParts =>
+					expected.cmdOutput.stderrParts.forEach((stderrParts) =>
 						expect(stderr).toEqual(expect.stringContaining(stderrParts)),
 					);
 				} else if ("stderr" in expected.cmdOutput) {

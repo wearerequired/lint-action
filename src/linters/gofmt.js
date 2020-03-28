@@ -69,7 +69,7 @@ class Gofmt {
 		// from the gofmt diff so the diff parser can read the diff without errors
 		const filteredOutput = output.stdout
 			.split(/\r?\n/)
-			.filter(line => !line.startsWith("diff -u"))
+			.filter((line) => !line.startsWith("diff -u"))
 			.join("\n");
 		lintResult.error = parseErrorsFromDiff(filteredOutput);
 

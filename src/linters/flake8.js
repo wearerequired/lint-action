@@ -46,7 +46,7 @@ class Flake8 {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
 
-		const files = extensions.map(ext => `"**${sep}*.${ext}"`).join(",");
+		const files = extensions.map((ext) => `"**${sep}*.${ext}"`).join(",");
 		return run(`${prefix} flake8 --filename ${files} ${args}`, {
 			dir,
 			ignoreErrors: true,

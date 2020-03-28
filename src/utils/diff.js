@@ -13,7 +13,7 @@ function parseErrorsFromDiff(diff) {
 		const { chunks, to: path } = file;
 		for (const chunk of chunks) {
 			const { oldStart, oldLines, changes } = chunk;
-			const chunkDiff = changes.map(change => change.content).join("\n");
+			const chunkDiff = changes.map((change) => change.content).join("\n");
 			errors.push({
 				path,
 				firstLine: oldStart,

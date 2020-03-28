@@ -54,7 +54,7 @@ describe("parseActionEnv()", () => {
 
 	// Remove GitHub environment variables
 	afterEach(() => {
-		Object.keys(ENV).forEach(varName => delete process.env[varName]);
+		Object.keys(ENV).forEach((varName) => delete process.env[varName]);
 	});
 
 	test("works when token is provided", () => {

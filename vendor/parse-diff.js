@@ -34,7 +34,7 @@ var defaultToWhiteSpace,
 	trimLeft,
 	slice = [].slice;
 
-module.exports = function(input) {
+module.exports = function (input) {
 	var add,
 		chunk,
 		current,
@@ -73,7 +73,7 @@ module.exports = function(input) {
 	ln_del = 0;
 	ln_add = 0;
 	current = null;
-	start = function(line) {
+	start = function (line) {
 		var fileNames;
 		file = {
 			chunks: [],
@@ -89,34 +89,34 @@ module.exports = function(input) {
 			}
 		}
 	};
-	restart = function() {
+	restart = function () {
 		if (!file || file.chunks.length) {
 			return start();
 		}
 	};
-	new_file = function() {
+	new_file = function () {
 		restart();
 		file.new = true;
 		return (file.from = "/dev/null");
 	};
-	deleted_file = function() {
+	deleted_file = function () {
 		restart();
 		file.deleted = true;
 		return (file.to = "/dev/null");
 	};
-	index = function(line) {
+	index = function (line) {
 		restart();
 		return (file.index = line.split(" ").slice(1));
 	};
-	from_file = function(line) {
+	from_file = function (line) {
 		restart();
 		return (file.from = parseFileFallback(line));
 	};
-	to_file = function(line) {
+	to_file = function (line) {
 		restart();
 		return (file.to = parseFileFallback(line));
 	};
-	chunk = function(line, match) {
+	chunk = function (line, match) {
 		var newLines, newStart, oldLines, oldStart;
 		ln_del = oldStart = +match[1];
 		oldLines = +(match[2] || 1);
@@ -132,7 +132,7 @@ module.exports = function(input) {
 		};
 		return file.chunks.push(current);
 	};
-	del = function(line) {
+	del = function (line) {
 		if (!current) {
 			return;
 		}
@@ -144,7 +144,7 @@ module.exports = function(input) {
 		});
 		return file.deletions++;
 	};
-	add = function(line) {
+	add = function (line) {
 		if (!current) {
 			return;
 		}
@@ -156,7 +156,7 @@ module.exports = function(input) {
 		});
 		return file.additions++;
 	};
-	normal = function(line) {
+	normal = function (line) {
 		if (!current) {
 			return;
 		}
@@ -168,7 +168,7 @@ module.exports = function(input) {
 			content: line,
 		});
 	};
-	eof = function(line) {
+	eof = function (line) {
 		var recentChange, ref;
 		(ref = current.changes), ([recentChange] = slice.call(ref, -1));
 		return current.changes.push({
@@ -194,7 +194,7 @@ module.exports = function(input) {
 		[/^\+/, add],
 		[/^\\ No newline at end of file$/, eof],
 	];
-	parse = function(line) {
+	parse = function (line) {
 		var j, len, m, p;
 		for (j = 0, len = schema.length; j < len; j++) {
 			p = schema[j];
@@ -213,20 +213,20 @@ module.exports = function(input) {
 	return files;
 };
 
-parseFile = function(s) {
+parseFile = function (s) {
 	var fileNames;
 	if (!s) {
 		return;
 	}
 	fileNames = s.match(/a\/.*(?= b)|b\/.*$/g);
-	fileNames.map(function(fileName, i) {
+	fileNames.map(function (fileName, i) {
 		return (fileNames[i] = fileName.replace(/^(a|b)\//, ""));
 	});
 	return fileNames;
 };
 
 // fallback function to overwrite file.from and file.to if executed
-parseFileFallback = function(s) {
+parseFileFallback = function (s) {
 	var t;
 	s = ltrim(s, "-");
 	s = ltrim(s, "+");
@@ -244,7 +244,7 @@ parseFileFallback = function(s) {
 	}
 };
 
-ltrim = function(s, chars) {
+ltrim = function (s, chars) {
 	s = makeString(s);
 	if (!chars && trimLeft) {
 		return trimLeft.call(s);
@@ -253,7 +253,7 @@ ltrim = function(s, chars) {
 	return s.replace(new RegExp("^" + chars + "+"), "");
 };
 
-makeString = function(s) {
+makeString = function (s) {
 	if (s === null) {
 		return "";
 	} else {
@@ -263,7 +263,7 @@ makeString = function(s) {
 
 trimLeft = String.prototype.trimLeft;
 
-defaultToWhiteSpace = function(chars) {
+defaultToWhiteSpace = function (chars) {
 	if (chars === null) {
 		return "\\s";
 	}
@@ -273,6 +273,6 @@ defaultToWhiteSpace = function(chars) {
 	return "[" + escapeRegExp(chars) + "]";
 };
 
-escapeRegExp = function(s) {
+escapeRegExp = function (s) {
 	return makeString(s).replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
 };
