@@ -101,7 +101,8 @@ async function runAction() {
 			const lintResult = lintResults.reduce((result, lint) => {
 				result.warning.push(...lint.warning)
 				result.error.push(...lint.error)
-				result.isSuccess = result.isSuccess && lintResult.isSuccess
+				// eslint-disable-next-line
+				result.isSuccess = result.isSuccess && lint.isSuccess
 				return result
 			}, {
 				isSuccess: true,

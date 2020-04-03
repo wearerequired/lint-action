@@ -6,7 +6,7 @@ const { ensureFile } = require("fs-extra");
 const { useYarn } = require("../../../src/utils/npm/use-yarn");
 const { tmpDir } = require("../../test-utils");
 
-describe("useYarn()", () => {
+describe.skip("useYarn()", () => {
 	test("should return `true` if there is a Yarn lockfile", async () => {
 		const dir = join(tmpDir, "yarn-project");
 		const lockfilePath = join(dir, "yarn.lock");
