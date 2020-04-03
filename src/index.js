@@ -69,42 +69,58 @@ async function runAction() {
 			log(`Directories ${linter.name} in ${directories}`);
 			await Promise.all(directoriesList.map(dir => {
 				const lintDirAbs = join(context.workspace, dir);
+
+				// Check that the linter and its dependencies are installed
 				log(`\nVerifying setup for ${linter.name}…`);
 				return linter.verifySetup(lintDirAbs, prefix);
 			}))
 
-			directoriesList.forEach(lintDirRel => {
+
+
+
+			// Determine which files should be linted
+			const fileExtList = fileExtensions.split(",");
+			log(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
+
+			// Lint and optionally auto-fix the matching files, parse code style violations
+
+			const lintResults = directoriesList.map(lintDirRel => {
 				const lintDirAbs = join(context.workspace, lintDirRel);
+
 				log(`Run ${linter.name} in ${lintDirAbs}`);
-				// Check that the linter and its dependencies are installed
 
-				log(`Verified ${linter.name} setup`);
-
-				// Determine which files should be linted
-				const fileExtList = fileExtensions.split(",");
-				log(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
-
-				// Lint and optionally auto-fix the matching files, parse code style violations
 				log(
 					`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
 				);
 				const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
 
 				// Parse output of linting command
-				const lintResult = linter.parseOutput(context.workspace, lintOutput);
-				const summary = getSummary(lintResult);
-				log(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
-
-				if (autoFix) {
-					// Commit and push auto-fix changes
-					if (git.hasChanges()) {
-						git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
-						git.pushChanges();
-					}
-				}
-
-				checks.push({ checkName: linter.name, lintResult, summary });
+				return linter.parseOutput(context.workspace, lintOutput);
 			})
+
+			const lintResult = lintResults.reduce((result, lint) => {
+				result.warning.push(...lint.warning)
+				result.error.push(...lint.error)
+				result.isSuccess = result.isSuccess && lintResult.isSuccess
+				return result
+			}, {
+				isSuccess: true,
+				warning: [],
+				error: [],
+			})
+
+			const summary = getSummary(lintResult);
+			log(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
+
+			if (autoFix) {
+				// Commit and push auto-fix changes
+				if (git.hasChanges()) {
+					git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
+					git.pushChanges();
+				}
+			}
+
+			checks.push({ checkName: linter.name, lintResult, summary });
 		}
 	}
 
