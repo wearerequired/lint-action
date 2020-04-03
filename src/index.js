@@ -66,36 +66,37 @@ async function runAction() {
 			const lintDirRel = getInput(`${linterId}_dir`) || ".";
 			const prefix = getInput(`${linterId}_command_prefix`) || "";
 			const lintDirAbs = join(context.workspace, lintDirRel);
-
+			const checkName = getInput(`${linterId}_check_name`) || "";
+			const linterName = `${linter.name} (${checkName})`
 			// Check that the linter and its dependencies are installed
-			log(`\nVerifying setup for ${linter.name}…`);
+			log(`\nVerifying setup for ${linterName}…`);
 			await linter.verifySetup(lintDirAbs, prefix);
-			log(`Verified ${linter.name} setup`);
+			log(`Verified ${linterName} setup`);
 
 			// Determine which files should be linted
 			const fileExtList = fileExtensions.split(",");
-			log(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
+			log(`Will use ${linterName} to check the files with extensions ${fileExtList}`);
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			log(
-				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
+				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linterName}…`,
 			);
 			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
 			const summary = getSummary(lintResult);
-			log(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
+			log(`${linterName} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
 
 			if (autoFix) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
-					git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
+					git.commitChanges(commitMsg.replace(/\${linter}/g, linterName));
 					git.pushChanges();
 				}
 			}
 
-			checks.push({ checkName: linter.name, lintResult, summary });
+			checks.push({ checkName: linterName, lintResult, summary });
 		}
 	}
 
