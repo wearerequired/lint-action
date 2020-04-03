@@ -67,12 +67,17 @@ async function runAction() {
 			const directories = getInput(`${linterId}_dir`) || '.'
 			const directoriesList = directories.split(",")
 			log(`Directories ${linter.name} in ${directories}`);
-			directoriesList.forEach(lintDirRel=>{
+			await Promise.all(directoriesList.map(dir => {
+				const lintDirAbs = join(context.workspace, dir);
+				log(`\nVerifying setup for ${linter.name}…`);
+				return linter.verifySetup(lintDirAbs, prefix);
+			}))
+
+			directoriesList.forEach(lintDirRel => {
 				const lintDirAbs = join(context.workspace, lintDirRel);
 				log(`Run ${linter.name} in ${lintDirAbs}`);
 				// Check that the linter and its dependencies are installed
-				log(`\nVerifying setup for ${linter.name}…`);
-				await linter.verifySetup(lintDirAbs, prefix);
+
 				log(`Verified ${linter.name} setup`);
 
 				// Determine which files should be linted
