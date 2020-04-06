@@ -34,6 +34,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
 - **Ruby:**
   - [RuboCop](https://rubocop.readthedocs.io)
 - **Swift:**
+  - [AppleSwiftFormat](https://github.com/apple/swift-format)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat)
   - [SwiftLint](https://github.com/realm/SwiftLint)
 

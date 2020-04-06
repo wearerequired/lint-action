@@ -86,12 +86,24 @@ jobs:
       - name: Install Swift dependencies
         if: startsWith(matrix.os, 'macos')
         run: |
+          # Because swift-format requires a matching toolchain, use the OSS
+          # toolchain to ensure that we are using a known revision of the
+          # toolchain which should enable the use of swift-format for testing.
+          curl -OL https://swift.org/builds/swift-5.2.1-release/xcode/swift-5.2.1-RELEASE/swift-5.2.1-RELEASE-osx.pkg
+          sudo installer -verbose -pkg "${PWD}/swift-5.2.1-RELEASE-osx.pkg" -target /
+          export TOOLCHAINS=swift
+
           brew update
           brew install mint
+
           cd ./test/linters/projects/swiftformat/
           mint bootstrap --link
+
           cd ../swiftlint/
           mint bootstrap --link
+
+          cd ../swift-format
+          brew install swift-format
 
       # Tests
 

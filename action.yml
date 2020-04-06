@@ -224,6 +224,26 @@ inputs:
 
   # Swift
 
+  appleswiftformat:
+    description: Enable or disable swift-format checks
+    required: false
+    default: false
+  appleswiftformat_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  appleswiftformat_dir:
+    description: Directory where the swift-format command should be run
+    required: false
+  appleswiftformat_extensions:
+    description: Extrensions of files to check with swift-format
+    required: false
+    default: "swift"
+  appleswiftformat_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   swiftformat:
     description: Enable or disable SwiftFormat checks
     required: false

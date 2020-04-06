@@ -7,6 +7,7 @@ const Mypy = require("./mypy");
 const Prettier = require("./prettier");
 const RuboCop = require("./rubocop");
 const Stylelint = require("./stylelint");
+const AppleSwiftFormat = require("./swift-format");
 const SwiftFormat = require("./swiftformat");
 const SwiftLint = require("./swiftlint");
 const XO = require("./xo");
@@ -26,6 +27,7 @@ const linters = {
 	black: Black,
 	gofmt: Gofmt,
 	prettier: Prettier,
+	appleswiftformat: AppleSwiftFormat,
 	swiftformat: SwiftFormat,
 };
 
