@@ -32,9 +32,13 @@ const linterParams = [
 	xoParams,
 ];
 
-// Only run Swift tests on macOS
+if (process.platform === "linux") {
+	linterParams.push(AppleSwiftFormatParams);
+}
+
+// Only run some Swift tests on macOS
 if (process.platform === "darwin") {
-	linterParams.push(AppleSwiftFormatParams, swiftformatParams, swiftlintParams);
+	linterParams.push(swiftformatParams, swiftlintParams);
 }
 
 // Copy linter test projects into temporary directory
