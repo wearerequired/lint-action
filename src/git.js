@@ -69,7 +69,7 @@ function pushChanges() {
 
 /**
  * Updates the global Git configuration with the provided information
- * @param {string} name - Git user name
+ * @param {string} name - Git username
  * @param {string} email - Git email address
  */
 function setUserInfo(name, email) {
