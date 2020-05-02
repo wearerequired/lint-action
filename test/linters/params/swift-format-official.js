@@ -1,9 +1,9 @@
 const { join } = require("path");
 
-const AppleSwiftFormat = require("../../../src/linters/swift-format");
+const SwiftFormatOfficial = require("../../../src/linters/swift-format-official");
 
-const testName = "swift-format";
-const linter = AppleSwiftFormat;
+const testName = "swift-format-official";
+const linter = SwiftFormatOfficial;
 const extensions = ["swift"];
 
 function getLintParams(dir) {

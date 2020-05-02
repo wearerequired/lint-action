@@ -2,14 +2,14 @@ const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
 
-const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
+const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: \w+: \((\w+)\) (.*)\.$/gm;
 
 /**
- * https://github.com/apple/swift-format
+ * https://github.com/nicklockwood/SwiftFormat
  */
-class AppleSwiftFormat {
+class SwiftFormatLockwood {
 	static get name() {
-		return "swift-format";
+		return "SwiftFormat";
 	}
 
 	/**
@@ -18,8 +18,8 @@ class AppleSwiftFormat {
 	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
-		// Verify that swift-format is installed.
-		if (!(await commandExists("swift-format"))) {
+		// Verify that SwiftFormat is installed
+		if (!(await commandExists("swiftformat"))) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
@@ -38,8 +38,8 @@ class AppleSwiftFormat {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		const mode = fix ? "format -i" : "lint";
-		return run(`${prefix} swift-format ${mode} ${args} --recursive "."`, {
+		const fixArg = fix ? "" : "--lint";
+		return run(`${prefix} swiftformat ${fixArg} ${args} "."`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -58,14 +58,16 @@ class AppleSwiftFormat {
 
 		const matches = output.stderr.matchAll(PARSE_REGEX);
 		for (const match of matches) {
-			const [_line, pathFull, line, _column, _level, message] = match;
+			const [_, pathFull, line, rule, message] = match;
 			const path = pathFull.substring(dir.length + 1);
 			const lineNr = parseInt(line, 10);
+			// SwiftFormat only seems to use the "warning" level, which this action will therefore
+			// categorize as errors
 			lintResult.error.push({
 				path,
 				firstLine: lineNr,
 				lastLine: lineNr,
-				message: `${message}`,
+				message: `${message} (${rule})`,
 			});
 		}
 
@@ -73,4 +75,4 @@ class AppleSwiftFormat {
 	}
 }
 
-module.exports = AppleSwiftFormat;
+module.exports = SwiftFormatLockwood;

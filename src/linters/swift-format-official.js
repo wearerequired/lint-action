@@ -2,14 +2,14 @@ const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
 const { initLintResult } = require("../utils/lint-result");
 
-const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: \w+: \((\w+)\) (.*)\.$/gm;
+const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
 
 /**
- * https://github.com/nicklockwood/SwiftFormat
+ * https://github.com/apple/swift-format
  */
-class SwiftFormat {
+class SwiftFormatOfficial {
 	static get name() {
-		return "SwiftFormat";
+		return "swift-format";
 	}
 
 	/**
@@ -18,8 +18,8 @@ class SwiftFormat {
 	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
-		// Verify that SwiftFormat is installed
-		if (!(await commandExists("swiftformat"))) {
+		// Verify that swift-format is installed.
+		if (!(await commandExists("swift-format"))) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
@@ -38,8 +38,8 @@ class SwiftFormat {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		const fixArg = fix ? "" : "--lint";
-		return run(`${prefix} swiftformat ${fixArg} ${args} "."`, {
+		const mode = fix ? "format -i" : "lint";
+		return run(`${prefix} swift-format ${mode} ${args} --recursive "."`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -58,16 +58,16 @@ class SwiftFormat {
 
 		const matches = output.stderr.matchAll(PARSE_REGEX);
 		for (const match of matches) {
-			const [_, pathFull, line, rule, message] = match;
+			const [_line, pathFull, line, _column, _level, message] = match;
 			const path = pathFull.substring(dir.length + 1);
 			const lineNr = parseInt(line, 10);
-			// SwiftFormat only seems to use the "warning" level, which this action will therefore
+			// swift-format only seems to use the "warning" level, which this action will therefore
 			// categorize as errors
 			lintResult.error.push({
 				path,
 				firstLine: lineNr,
 				lastLine: lineNr,
-				message: `${message} (${rule})`,
+				message: `${message}`,
 			});
 		}
 
@@ -75,4 +75,4 @@ class SwiftFormat {
 	}
 }
 
-module.exports = SwiftFormat;
+module.exports = SwiftFormatOfficial;

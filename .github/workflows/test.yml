@@ -83,7 +83,7 @@ jobs:
 
       # Swift (only on Linux)
 
-      - name: install swift-format
+      - name: Install Swift dependencies (Linux)
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           git clone -b swift-5.2-branch git://github.com/apple/swift-format
@@ -93,15 +93,13 @@ jobs:
 
       # Swift (only on macOS)
 
-      - name: Install Swift dependencies
+      - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
           brew update
           brew install mint
-
           cd ./test/linters/projects/swiftformat/
           mint bootstrap --link
-
           cd ../swiftlint/
           mint bootstrap --link
 

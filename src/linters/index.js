@@ -7,8 +7,8 @@ const Mypy = require("./mypy");
 const Prettier = require("./prettier");
 const RuboCop = require("./rubocop");
 const Stylelint = require("./stylelint");
-const AppleSwiftFormat = require("./swift-format");
-const SwiftFormat = require("./swiftformat");
+const SwiftFormatLockwood = require("./swift-format-lockwood");
+const SwiftFormatOfficial = require("./swift-format-official");
 const SwiftLint = require("./swiftlint");
 const XO = require("./xo");
 
@@ -27,8 +27,12 @@ const linters = {
 	black: Black,
 	gofmt: Gofmt,
 	prettier: Prettier,
-	appleswiftformat: AppleSwiftFormat,
-	swiftformat: SwiftFormat,
+	swift_format_lockwood: SwiftFormatLockwood,
+	swift_format_official: SwiftFormatOfficial,
+
+	// Alias of `swift_format_lockwood` (for backward compatibility)
+	// TODO: Remove alias in v2
+	swiftformat: SwiftFormatLockwood,
 };
 
 module.exports = linters;
