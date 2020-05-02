@@ -81,14 +81,24 @@ jobs:
           cd ./test/linters/projects/rubocop/
           bundle install
 
+      # Swift (only on Linux)
+
+      - name: Install Swift dependencies (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          git clone --branch 0.50200.0 --depth 1 git://github.com/apple/swift-format
+          cd swift-format
+          swift build -c release
+          echo "::add-path::${PWD}/.build/release"
+
       # Swift (only on macOS)
 
-      - name: Install Swift dependencies
+      - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
           brew update
           brew install mint
-          cd ./test/linters/projects/swiftformat/
+          cd ./test/linters/projects/swift-format-lockwood/
           mint bootstrap --link
           cd ../swiftlint/
           mint bootstrap --link

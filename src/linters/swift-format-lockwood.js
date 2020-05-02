@@ -7,7 +7,7 @@ const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: \w+: \((\w+)\) (.*)\.$/gm;
 /**
  * https://github.com/nicklockwood/SwiftFormat
  */
-class SwiftFormat {
+class SwiftFormatLockwood {
 	static get name() {
 		return "SwiftFormat";
 	}
@@ -75,4 +75,4 @@ class SwiftFormat {
 	}
 }
 
-module.exports = SwiftFormat;
+module.exports = SwiftFormatLockwood;
