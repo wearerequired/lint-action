@@ -39,8 +39,7 @@ class SwiftFormat {
 		}
 
 		const fixArg = fix ? "" : "--lint";
-		return run(`${prefix} swiftformat ${fixArg} ${args}`, {
-			dir,
+		return run(`${prefix} swiftformat ${fixArg} ${args} ${dir}`, {
 			ignoreErrors: true,
 		});
 	}
