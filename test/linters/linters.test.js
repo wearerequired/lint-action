@@ -13,7 +13,8 @@ const mypyParams = require("./params/mypy");
 const prettierParams = require("./params/prettier");
 const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
-const swiftformatParams = require("./params/swiftformat");
+const swiftFormatLockwood = require("./params/swift-format-lockwood");
+const swiftFormatOfficial = require("./params/swift-format-official");
 const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
 
@@ -30,10 +31,11 @@ const linterParams = [
 	stylelintParams,
 	xoParams,
 ];
-
-// Only run Swift tests on macOS
+if (process.platform === "linux") {
+	linterParams.push(swiftFormatOfficial);
+}
 if (process.platform === "darwin") {
-	linterParams.push(swiftformatParams, swiftlintParams);
+	linterParams.push(swiftFormatLockwood, swiftlintParams);
 }
 
 // Copy linter test projects into temporary directory

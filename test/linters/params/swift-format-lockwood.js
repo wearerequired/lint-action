@@ -1,9 +1,9 @@
 const { join } = require("path");
 
-const SwiftFormat = require("../../../src/linters/swiftformat");
+const SwiftFormatLockwood = require("../../../src/linters/swift-format-lockwood");
 
-const testName = "swiftformat";
-const linter = SwiftFormat;
+const testName = "swift-format-lockwood";
+const linter = SwiftFormatLockwood;
 const extensions = ["swift"];
 
 // Linting without auto-fixing

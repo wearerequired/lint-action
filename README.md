@@ -34,7 +34,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
 - **Ruby:**
   - [RuboCop](https://rubocop.readthedocs.io)
 - **Swift:**
-  - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat)
+  - [swift-format](https://github.com/apple/swift-format) (official)
+  - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
   - [SwiftLint](https://github.com/realm/SwiftLint)
 
 ## Usage
@@ -141,7 +142,7 @@ jobs:
 
 ### Linter-specific options
 
-`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `prettier`, `rubocop`, `stylelint`, `swiftformat`, `swiftlint` and `xo`:
+`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
@@ -156,6 +157,10 @@ jobs:
   <p align="center">
     <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="80%" />
   </p>
+
+- **`git_name`**: Username for auto-fix commits. Default: `"Lint Action"`
+
+- **`git_email`**: Email address for auto-fix commits. Default: `"lint-action@samuelmeuli.com"`
 
 - **`commit_message`**: Template for auto-fix commit messages. The `${linter}` variable can be used to insert the name of the linter. Default: `"Fix code style issues with ${linter}"`
 

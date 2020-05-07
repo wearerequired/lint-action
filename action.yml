@@ -7,6 +7,14 @@ inputs:
     description: Whether linters should try to fix code style issues automatically
     required: false
     default: false
+  git_name:
+    description: Username for auto-fix commits
+    required: false
+    default: Lint Action
+  git_email:
+    description: Email address for auto-fix commits
+    required: false
+    default: "lint-action@samuelmeuli.com"
   commit_message:
     description: 'Template for auto-fix commit messages. The "${linter}" variable can be used to insert the name of the linter which has created the auto-fix'
     required: false
@@ -224,6 +232,8 @@ inputs:
 
   # Swift
 
+  # Alias of `swift_format_lockwood` (for backward compatibility)
+  # TODO: Remove alias in v2
   swiftformat:
     description: Enable or disable SwiftFormat checks
     required: false
@@ -240,6 +250,46 @@ inputs:
     required: false
     default: "swift"
   swiftformat_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
+  swift_format_lockwood:
+    description: Enable or disable SwiftFormat checks
+    required: false
+    default: false
+  swift_format_lockwood_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  swift_format_lockwood_dir:
+    description: Directory where the SwiftFormat command should be run
+    required: false
+  swift_format_lockwood_extensions:
+    description: Extensions of files to check with SwiftFormat
+    required: false
+    default: "swift"
+  swift_format_lockwood_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
+  swift_format_official:
+    description: Enable or disable swift-format checks
+    required: false
+    default: false
+  swift_format_official_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  swift_format_official_dir:
+    description: Directory where the swift-format command should be run
+    required: false
+  swift_format_official_extensions:
+    description: Extrensions of files to check with swift-format
+    required: false
+    default: "swift"
+  swift_format_official_command_prefix:
     description: Shell command to prepend to the linter command
     required: false
     default: ""

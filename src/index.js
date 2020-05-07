@@ -7,9 +7,6 @@ const linters = require("./linters");
 const { getInput, log } = require("./utils/action");
 const { getSummary } = require("./utils/lint-result");
 
-const GIT_EMAIL = "lint-action@samuelmeuli.com";
-const GIT_NAME = "Lint Action";
-
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", (err) => {
 	log(err, "error");
@@ -22,7 +19,9 @@ process.on("unhandledRejection", (err) => {
 async function runAction() {
 	const context = getContext();
 	const autoFix = getInput("auto_fix") === "true";
-	const commitMsg = getInput("commit_message", true);
+	const gitName = getInput("git_name", true);
+	const gitEmail = getInput("git_email", true);
+	const commitMessage = getInput("commit_message", true);
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {
@@ -40,7 +39,7 @@ async function runAction() {
 
 	if (autoFix) {
 		// Set Git committer username and password
-		git.setUserInfo(GIT_NAME, GIT_EMAIL);
+		git.setUserInfo(gitName, gitEmail);
 	}
 	if (context.eventName === "pull_request") {
 		// Fetch and check out PR branch:
@@ -90,7 +89,7 @@ async function runAction() {
 			if (autoFix) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
-					git.commitChanges(commitMsg.replace(/\${linter}/g, linter.name));
+					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name));
 					git.pushChanges();
 				}
 			}
