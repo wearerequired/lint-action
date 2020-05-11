@@ -38,12 +38,9 @@ class SwiftLint {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
-		if (args || fileNames) {
-			throw new Error(`${this.name} error: Additional command-line arguments are not allowed`);
-		}
 
-		const fixArg = fix ? "autocorrect" : "";
-		return run(`${prefix} swiftlint ${fixArg}`, {
+		const fixArg = fix ? "autocorrect" : "lint";
+		return run(`${prefix} swiftlint ${fixArg} ${args} ${fileNames}`, {
 			dir,
 			ignoreErrors: true,
 		});
