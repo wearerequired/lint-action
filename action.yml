@@ -90,7 +90,7 @@ inputs:
     description: Enable or disable ESLint checks
     required: false
     default: false
-  eslint_files: The Files to be linted
+  eslint_files:
     description: Target files to be linted
     required: false
     default: "."

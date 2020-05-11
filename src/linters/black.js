@@ -35,12 +35,13 @@ class Black {
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @param {string} prefix - Prefix to the lint command
+	 * @param {string[]|string} fileNames - File names which should be linted
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "", fileNames = ".") {
 		const files = `^.*\\.(${extensions.join("|")})$`;
 		const fixArg = fix ? "" : "--check --diff";
-		return run(`${prefix} black ${fixArg} --include "${files}" ${args} "."`, {
+		return run(`${prefix} black ${fixArg} --include "${files}" ${args} ${fileNames}`, {
 			dir,
 			ignoreErrors: true,
 		});

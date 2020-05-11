@@ -39,9 +39,10 @@ class Mypy {
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @param {string} prefix - Prefix to the lint command
+	 * @param {string[]|string} fileNames - File names which should be linted
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "", fileNames = "") {
 		if (extensions.length !== 1 || extensions[0] !== "py") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -61,7 +62,7 @@ class Mypy {
 		if (!specifiedPath) {
 			extraArgs = ` ${dir}`;
 		}
-		return run(`${prefix} mypy ${args}${extraArgs}`, {
+		return run(`${prefix} mypy ${args}${extraArgs} ${fileNames}`, {
 			dir,
 			ignoreErrors: true,
 		});

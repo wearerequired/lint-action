@@ -62,6 +62,7 @@ async function runAction() {
 		if (getInput(linterId) === "true") {
 			const fileExtensions = getInput(`${linterId}_extensions`, true);
 			const args = getInput(`${linterId}_args`) || "";
+			const files = getInput(`${linterId}_files`) || "";
 			const lintDirRel = getInput(`${linterId}_dir`) || ".";
 			const prefix = getInput(`${linterId}_command_prefix`) || "";
 			const lintDirAbs = join(context.workspace, lintDirRel);
@@ -74,12 +75,16 @@ async function runAction() {
 			// Determine which files should be linted
 			const fileExtList = fileExtensions.split(",");
 			log(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
+			
+			// Determine which filenames should be linted
+			const fileNames = files.split(",");
+			log(`Will use ${linter.name} to check these files ${fileNames}`);
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			log(
 				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix, fileNames);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);

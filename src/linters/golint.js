@@ -32,9 +32,10 @@ class Golint {
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @param {string} prefix - Prefix to the lint command
+	 * @param {string[]|string} fileNames - File names which should be linted
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "", fileNames = ".") {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -42,7 +43,7 @@ class Golint {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
 
-		return run(`${prefix} golint -set_exit_status ${args} "."`, {
+		return run(`${prefix} golint -set_exit_status ${args} ${fileNames}`, {
 			dir,
 			ignoreErrors: true,
 		});

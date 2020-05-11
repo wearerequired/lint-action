@@ -39,15 +39,16 @@ class Flake8 {
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @param {string} prefix - Prefix to the lint command
+	 * @param {string[]|string} fileNames - File names which should be linted
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "", fileNames = "") {
 		if (fix) {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
 
 		const files = extensions.map((ext) => `"**${sep}*.${ext}"`).join(",");
-		return run(`${prefix} flake8 --filename ${files} ${args}`, {
+		return run(`${prefix} flake8 --filename ${files} ${args} ${fileNames}`, {
 			dir,
 			ignoreErrors: true,
 		});
