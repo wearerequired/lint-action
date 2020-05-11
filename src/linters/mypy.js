@@ -62,7 +62,7 @@ class Mypy {
 		if (!specifiedPath) {
 			extraArgs = ` ${dir}`;
 		}
-		return run(`${prefix} mypy ${args}${extraArgs} ${fileNames}`, {
+		return run(`${prefix} mypy ${args}${extraArgs} "${fileNames}"`, {
 			dir,
 			ignoreErrors: true,
 		});

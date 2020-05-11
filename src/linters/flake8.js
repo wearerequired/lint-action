@@ -48,7 +48,7 @@ class Flake8 {
 		}
 
 		const files = extensions.map((ext) => `"**${sep}*.${ext}"`).join(",");
-		return run(`${prefix} flake8 --filename ${files} ${args} ${fileNames}`, {
+		return run(`${prefix} flake8 --filename ${files} ${args} "${fileNames}"`, {
 			dir,
 			ignoreErrors: true,
 		});

@@ -54,7 +54,7 @@ class RuboCop {
 		}
 
 		const fixArg = fix ? "--auto-correct" : "";
-		return run(`${prefix} rubocop --format json ${fixArg} ${args} ${fileNames}`, {
+		return run(`${prefix} rubocop --format json ${fixArg} ${args} "${fileNames}"`, {
 			dir,
 			ignoreErrors: true,
 		});

@@ -47,7 +47,7 @@ class Stylelint {
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(
-			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}" ${fileNames}`,
+			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}" "${fileNames}"`,
 			{
 				dir,
 				ignoreErrors: true,

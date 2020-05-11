@@ -78,7 +78,7 @@ async function runAction() {
 			
 			// Determine which filenames should be linted
 			const fileNames = files.split(",");
-			log(`Will use ${linter.name} to check these files ${fileNames}`);
+			log(`Will use ${linter.name} to check these files "${fileNames}"`);
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			log(

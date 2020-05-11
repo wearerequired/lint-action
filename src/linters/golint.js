@@ -43,7 +43,7 @@ class Golint {
 			log(`${this.name} does not support auto-fixing`, "warning");
 		}
 
-		return run(`${prefix} golint -set_exit_status ${args} ${fileNames}`, {
+		return run(`${prefix} golint -set_exit_status ${args} "${fileNames}"`, {
 			dir,
 			ignoreErrors: true,
 		});

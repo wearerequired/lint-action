@@ -40,7 +40,7 @@ class SwiftFormatLockwood {
 		}
 
 		const fixArg = fix ? "" : "--lint";
-		return run(`${prefix} swiftformat ${fixArg} ${args} ${fileNames}`, {
+		return run(`${prefix} swiftformat ${fixArg} ${args} "${fileNames}"`, {
 			dir,
 			ignoreErrors: true,
 		});

@@ -40,7 +40,7 @@ class SwiftFormatOfficial {
 		}
 
 		const mode = fix ? "format -i" : "lint";
-		return run(`${prefix} swift-format ${mode} ${args} --recursive ${fileNames}`, {
+		return run(`${prefix} swift-format ${mode} ${args} --recursive "${fileNames}"`, {
 			dir,
 			ignoreErrors: true,
 		});
