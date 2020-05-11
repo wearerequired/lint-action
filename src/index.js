@@ -75,7 +75,7 @@ async function runAction() {
 			// Determine which files should be linted
 			const fileExtList = fileExtensions.split(",");
 			log(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
-			
+
 			// Determine which filenames should be linted
 			const fileNames = files.split(",");
 			log(`Will use ${linter.name} to check these files "${fileNames}"`);

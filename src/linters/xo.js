@@ -46,10 +46,13 @@ class XO extends ESLint {
 		const extensionArgs = extensions.map((ext) => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
-		return run(`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "${fileNames}"`, {
-			dir,
-			ignoreErrors: true,
-		});
+		return run(
+			`${commandPrefix} xo ${extensionArgs} ${fixArg} --reporter json ${args} "${fileNames}"`,
+			{
+				dir,
+				ignoreErrors: true,
+			},
+		);
 	}
 }
 
