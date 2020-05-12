@@ -27,7 +27,8 @@ function checkOutRemoteBranch(context) {
 
 	// Switch to remote branch
 	log(`Switching to the "${context.branch}" branch`);
-	run(`git switch --force-create ${context.branch} --track ${remote}/${context.branch}`);
+	run(`git branch -f ${context.branch} --track ${remote}/${context.branch}`);
+	run(`git checkout ${context.branch}`);
 }
 
 /**
