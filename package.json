@@ -65,7 +65,8 @@
 	"eslintIgnore": [
 		"node_modules/",
 		"test/linters/projects/",
-		"test/tmp/"
+		"test/tmp/",
+		"vendor/"
 	],
 	"jest": {
 		"globalSetup": "./test/setup.js",

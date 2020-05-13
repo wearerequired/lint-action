@@ -4,3 +4,4 @@
 node_modules/
 test/linters/projects/
 test/tmp/
+vendor/

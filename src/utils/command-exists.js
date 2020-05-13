@@ -1,4 +1,4 @@
-const checkForCommand = require("../../vendor/command-exists");
+const checkForCommand = require("../../vendor/command-exists.min");
 
 /**
  * Returns whether the provided shell command is available
