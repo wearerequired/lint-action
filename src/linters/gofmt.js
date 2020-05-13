@@ -1,5 +1,5 @@
-const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const commandExists = require("../utils/command-exists");
 const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
 

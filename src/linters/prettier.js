@@ -1,5 +1,5 @@
-const commandExists = require("../../vendor/command-exists");
 const { run } = require("../utils/action");
+const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 

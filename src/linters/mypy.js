@@ -1,8 +1,8 @@
 const fs = require("fs");
 const { sep } = require("path");
 
-const commandExists = require("../../vendor/command-exists");
 const { log, run } = require("../utils/action");
+const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 
 const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
