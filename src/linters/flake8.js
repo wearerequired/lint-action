@@ -27,7 +27,9 @@ class Flake8 {
 		}
 
 		// Verify that Flake8 is installed
-		if (!(await commandExists("flake8"))) {
+		try {
+			run(`${prefix} flake8 --version`, { dir });
+		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}

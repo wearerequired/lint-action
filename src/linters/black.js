@@ -23,7 +23,9 @@ class Black {
 		}
 
 		// Verify that Black is installed
-		if (!(await commandExists("black"))) {
+		try {
+			run(`${prefix} black --version`, { dir });
+		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
