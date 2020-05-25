@@ -18,7 +18,9 @@
 		"format": "prettier --list-different '**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}'",
 		"format:fix": "yarn format --write"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"minimatch": "^3.0.4"
+	},
 	"peerDependencies": {},
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
