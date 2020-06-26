@@ -49,12 +49,10 @@ class Clippy {
 			log(`${this.name} does only suport auto-fixing in nightly channel`, "warning");
 		}
 
-		return run(`${prefix} cargo clippy --message-format json ${args}`,
-			{
-				dir,
-				ignoreErrors: true,
-			}
-		);
+		return run(`${prefix} cargo clippy --message-format json ${args}`, {
+			dir,
+			ignoreErrors: true,
+		});
 	}
 
 	/**
@@ -68,19 +66,19 @@ class Clippy {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = false;
 
-		const lines = output.stdout.split('\n').map(line => {
+		const lines = output.stdout.split("\n").map((line) => {
 			let parsedLine;
 			try {
-			parsedLine = JSON.parse(line);
+				parsedLine = JSON.parse(line);
 			} catch (err) {
 				throw Error(
-					`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`
+					`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`,
 				);
 			}
 			return parsedLine;
 		});
 
-		lines.forEach(line => {
+		lines.forEach((line) => {
 			if (line.reason === "compiler-message") {
 				if (line.message.level === "warning") {
 					const { message, spans } = line.message;
@@ -93,8 +91,7 @@ class Clippy {
 							message,
 						});
 					}
-				}
-				else if (line.message.level === "error") {
+				} else if (line.message.level === "error") {
 					const { message, spans } = line.message;
 					// don't add the message counting the errors
 					if (message.code !== null) {
@@ -106,8 +103,7 @@ class Clippy {
 						});
 					}
 				}
-			}
-			else if (line.reason === "build-finished") {
+			} else if (line.reason === "build-finished") {
 				lintResult.isSuccess = line.success;
 			}
 		});
