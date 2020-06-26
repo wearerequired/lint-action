@@ -4,6 +4,7 @@ const { copy } = require("fs-extra");
 
 const { normalizeDates, testProjectsDir, tmpDir } = require("../test-utils");
 const blackParams = require("./params/black");
+const clippyParams = require("./params/clippy");
 const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
 const flake8Params = require("./params/flake8");
@@ -20,6 +21,7 @@ const xoParams = require("./params/xo");
 
 const linterParams = [
 	blackParams,
+	clippyParams,
 	eslintParams,
 	eslintTypescriptParams,
 	flake8Params,
