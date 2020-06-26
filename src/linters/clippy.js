@@ -68,41 +68,41 @@ class Clippy {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = false;
 
-		let lines = output.stdout.split('\n').map(line => {
-			let output;
+		const lines = output.stdout.split('\n').map(line => {
+			let parsedLine;
 			try {
-			output = JSON.parse(line);
+			parsedLine = JSON.parse(line);
 			} catch (err) {
 				throw Error(
 					`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`
 				);
 			}
-			return output;
+			return parsedLine;
 		});
 
 		lines.forEach(line => {
 			if (line.reason === "compiler-message") {
 				if (line.message.level === "warning") {
-					const message = line.message;
+					const { message, spans } = line.message;
 					// don't add the message counting the warnings
 					if (message.code !== null) {
 						lintResult.warning.push({
-							path: message.spans[0].file_name,
-							firstLine: message.spans[0].line_start,
-							lastLine: message.spans[0].line_end,
-							message: message.message,
+							path: spans[0].file_name,
+							firstLine: spans[0].line_start,
+							lastLine: spans[0].line_end,
+							message,
 						});
 					}
 				}
 				else if (line.message.level === "error") {
-					const message = line.message;
+					const { message, spans } = line.message;
 					// don't add the message counting the errors
 					if (message.code !== null) {
 						lintResult.warning.push({
-							path: message.spans[0].file_name,
-							firstLine: message.spans[0].line_start,
-							lastLine: message.spans[0].line_end,
-							message: message.message,
+							path: spans[0].file_name,
+							firstLine: spans[0].line_start,
+							lastLine: spans[0].line_end,
+							message,
 						});
 					}
 				}
