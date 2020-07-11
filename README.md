@@ -37,6 +37,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [swift-format](https://github.com/apple/swift-format) (official)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
   - [SwiftLint](https://github.com/realm/SwiftLint)
+- **Dart Analyzer:**
+  - [dart-analyzer](https://dart.dev/guides/language/analysis-options) (by Dennis Kugelmann (simpleclub))
 
 ## Usage
 
