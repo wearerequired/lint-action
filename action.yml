@@ -322,6 +322,21 @@ inputs:
     description: Enable or disable Dart Analyzer checks
     required: false
     default: false
+  dart_analyzer_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  dart_analyzer_dir:
+    description: Directory where the dart_analyzer command should be run
+    required: false
+  dart_analyzer_extensions:
+    description: Extensions of files to check with dart_analyzer
+    required: false
+    default: "dart"
+  dart_analyzer_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
 
 runs:
   using: node12
