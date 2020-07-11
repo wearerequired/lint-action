@@ -1,4 +1,5 @@
 const DartAnalyzer = require("../../../src/linters/dart-analyzer");
+const { getViolationSeparator } = require("../../../src/utils/dart-analyzer");
 
 const testName = "dart-analyzer";
 const linter = DartAnalyzer;
@@ -6,12 +7,13 @@ const extensions = ["dart"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
+	const sep = getViolationSeparator();
 	const stdoutFile1 = `Analyzing dart-analyzer...
-  error • Undefined name '_count'. • main.dart:10:3 • undefined_identifier
-  lint • Avoid \`print\` calls in production code. • main.dart:15:3 • avoid_print
-  hint • Unused import: 'dart:io'. • main.dart:1:8 • unused_import
-  hint • The value of the local variable 'unused_var' isn't used. • main.dart:4:7 • unused_local_variable
-  hint • 'decrement' is deprecated and shouldn't be used. dont use it. • main.dart:5:3 • deprecated_member_use_from_same_package
+  error ${sep} Undefined name '_count'. ${sep} main.dart:10:3 ${sep} undefined_identifier
+  lint ${sep} Avoid \`print\` calls in production code. ${sep} main.dart:15:3 ${sep} avoid_print
+  hint ${sep} Unused import: 'dart:io'. ${sep} main.dart:1:8 ${sep} unused_import
+  hint ${sep} The value of the local variable 'unused_var' isn't used. ${sep} main.dart:4:7 ${sep} unused_local_variable
+  hint ${sep} 'decrement' is deprecated and shouldn't be used. dont use it. ${sep} main.dart:5:3 ${sep} deprecated_member_use_from_same_package
 1 error, 1 lint and 3 hints found.`;
 	return {
 		// Expected output of the linting function

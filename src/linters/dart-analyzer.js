@@ -1,5 +1,6 @@
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
+const { getViolationSeparator } = require("../utils/dart-analyzer");
 const { initLintResult } = require("../utils/lint-result");
 
 /**
@@ -62,7 +63,7 @@ class DartAnalyzer {
 		const violations = output.stdout.split("\n").filter((line) => line.startsWith("  "));
 
 		for (const violation of violations) {
-			const items = violation.split("•").map((item) => item.trim());
+			const items = violation.split(getViolationSeparator()).map((item) => item.trim());
 
 			const type = items[0];
 			const message = items[1];
