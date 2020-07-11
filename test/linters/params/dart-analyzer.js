@@ -1,5 +1,4 @@
 const DartAnalyzer = require("../../../src/linters/dart-analyzer");
-const { joinDoubleBackslash } = require("../../test-utils");
 
 const testName = "dart-analyzer";
 const linter = DartAnalyzer;
