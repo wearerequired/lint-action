@@ -1,0 +1,8 @@
+analyzer:
+  errors:
+    analysis_option_deprecated: warning
+
+linter:
+  rules:
+    - camel_case_types
+    - avoid_print
