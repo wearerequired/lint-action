@@ -28,7 +28,8 @@ function getLintParams(dir) {
 					path: "main.dart",
 					firstLine: 15,
 					lastLine: 15,
-					message: "Avoid `print` calls in production code. ([avoid_print](https://dart-lang.github.io/linter/lints/avoid_print))",
+					message:
+						"Avoid `print` calls in production code. ([avoid_print](https://dart-lang.github.io/linter/lints/avoid_print))",
 				},
 				{
 					path: "main.dart",
@@ -40,13 +41,15 @@ function getLintParams(dir) {
 					path: "main.dart",
 					firstLine: 4,
 					lastLine: 4,
-					message: "The value of the local variable 'unused_var' isn't used. (unused_local_variable)",
+					message:
+						"The value of the local variable 'unused_var' isn't used. (unused_local_variable)",
 				},
 				{
 					path: "main.dart",
 					firstLine: 5,
 					lastLine: 5,
-					message: "'decrement' is deprecated and shouldn't be used. dont use it. (deprecated_member_use_from_same_package)",
+					message:
+						"'decrement' is deprecated and shouldn't be used. dont use it. (deprecated_member_use_from_same_package)",
 				},
 			],
 			error: [

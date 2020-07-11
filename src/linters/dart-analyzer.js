@@ -40,16 +40,12 @@ class DartAnalyzer {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-
 		const commandPrefix = prefix || "";
 
-		return run(
-			`${commandPrefix} dartanalyzer ${args} "."`,
-			{
-				dir,
-				ignoreErrors: true,
-			},
-		);
+		return run(`${commandPrefix} dartanalyzer ${args} "."`, {
+			dir,
+			ignoreErrors: true,
+		});
 	}
 
 	/**
@@ -63,10 +59,10 @@ class DartAnalyzer {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = output.status === 0;
 
-		const violations = output.stdout.split('\n').filter(line => line.startsWith("  "));
+		const violations = output.stdout.split("\n").filter((line) => line.startsWith("  "));
 
 		for (const violation of violations) {
-			const items = violation.split("•").map(item => item.trim());
+			const items = violation.split("•").map((item) => item.trim());
 
 			const type = items[0];
 			const message = items[1];
@@ -89,7 +85,7 @@ class DartAnalyzer {
 				message: `${message} (${rule})`,
 			};
 
-			if (type === 'error') {
+			if (type === "error") {
 				lintResult.error.push(entry);
 			} else {
 				lintResult.warning.push(entry);
