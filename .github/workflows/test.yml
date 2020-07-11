@@ -103,6 +103,13 @@ jobs:
           cd ../swiftlint/
           mint bootstrap --link
 
+      # Dart analyzer
+
+      - name: Set up Dart SDK
+        uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
       # Tests
 
       - name: Run tests
