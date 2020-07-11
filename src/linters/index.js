@@ -1,4 +1,5 @@
 const Black = require("./black");
+const DartAnalyzer = require("./dart-analyzer");
 const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
@@ -14,6 +15,7 @@ const XO = require("./xo");
 
 const linters = {
 	// Linters
+	dart_analyzer: DartAnalyzer,
 	eslint: ESLint,
 	flake8: Flake8,
 	golint: Golint,
