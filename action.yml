@@ -149,6 +149,28 @@ inputs:
     required: false
     default: ""
 
+  # PHP
+
+  php_codesniffer:
+    description: Enable or disable PHP_CodeSniffer checks
+    required: false
+    default: false
+  php_codesniffer_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  php_codesniffer_dir:
+    description: Directory where the PHP_CodeSniffer command should be run
+    required: false
+  php_codesniffer_extensions:
+    description: Extensions of files to check with PHP_CodeSniffer
+    required: false
+    default: "php"
+  php_codesniffer_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   # Python
 
   black:

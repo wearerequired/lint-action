@@ -4,6 +4,7 @@ const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
 const Golint = require("./golint");
 const Mypy = require("./mypy");
+const PHPCodeSniffer = require("./php-codesniffer");
 const Prettier = require("./prettier");
 const RuboCop = require("./rubocop");
 const Stylelint = require("./stylelint");
@@ -18,6 +19,7 @@ const linters = {
 	flake8: Flake8,
 	golint: Golint,
 	mypy: Mypy,
+	php_codesniffer: PHPCodeSniffer,
 	rubocop: RuboCop,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
