@@ -1,6 +1,8 @@
 analyzer:
   errors:
     analysis_option_deprecated: warning
+  exclude:
+    - ignore_analyzer.dart
 
 linter:
   rules:

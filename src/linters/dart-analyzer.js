@@ -1,3 +1,7 @@
+const fs = require("fs");
+const minimatch = require("minimatch");
+const YAML = require("yaml");
+
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { getViolationSeparator } = require("../utils/dart-analyzer");
@@ -43,7 +47,7 @@ class DartAnalyzer {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const commandPrefix = prefix || "";
 
-		return run(`cd ${dir} && ${commandPrefix} dartanalyzer ${args} "." && cd ..`, {
+		return run(`cd ${dir} && ${commandPrefix} dartanalyzer ${args} --verbose "." && cd ..`, {
 			ignoreErrors: true,
 		});
 	}
@@ -59,7 +63,16 @@ class DartAnalyzer {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = output.status === 0;
 
-		const violations = output.stdout.split("\n").filter((line) => line.startsWith("  "));
+		const lines = output.stdout.split("\n");
+		const analysisOptionsFileLocationPrefix = "Loaded analysis options from ";
+		const analysisOptionsFilePath = lines
+			.filter((line) => line.startsWith(analysisOptionsFileLocationPrefix))[0]
+			.replace(analysisOptionsFileLocationPrefix, "");
+
+		const analysisOptionsFile = YAML.parse(fs.readFileSync(analysisOptionsFilePath, "utf8"));
+		const excludedFiles = ((analysisOptionsFile || {}).analyzer || {}).exclude || [];
+
+		const violations = lines.filter((line) => line.startsWith("  ") && !line.startsWith("   "));
 
 		for (const violation of violations) {
 			const items = violation.split(getViolationSeparator()).map((item) => item.trim());
@@ -71,24 +84,35 @@ class DartAnalyzer {
 			const path = location[0];
 			const line = parseInt(location[1], 10);
 
-			const ruleId = items[3];
-
-			let rule = ruleId;
-			if (type === "lint") {
-				rule = `[${ruleId}](https://dart-lang.github.io/linter/lints/${ruleId})`;
+			// Check if file was excluded by analysis options
+			let isExcluded = false;
+			for (const excludedFile of excludedFiles) {
+				if (minimatch(path, excludedFile)) {
+					isExcluded = true;
+				}
 			}
+			if (!isExcluded) {
+				const ruleId = items[3];
 
-			const entry = {
-				path,
-				firstLine: line,
-				lastLine: line,
-				message: `${message} (${rule})`,
-			};
+				let rule = ruleId;
+				if (type === "lint") {
+					rule = `[${ruleId}](https://dart-lang.github.io/linter/lints/${ruleId})`;
+				} else {
+					rule = `[${ruleId}](https://dart.dev/tools/diagnostic-messages#${ruleId})`;
+				}
 
-			if (type === "error") {
-				lintResult.error.push(entry);
-			} else {
-				lintResult.warning.push(entry);
+				const entry = {
+					path,
+					firstLine: line,
+					lastLine: line,
+					message: `${message} (${rule})`,
+				};
+
+				if (type === "error") {
+					lintResult.error.push(entry);
+				} else {
+					lintResult.warning.push(entry);
+				}
 			}
 		}
 		return lintResult;

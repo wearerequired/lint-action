@@ -1,6 +1,7 @@
-import 'dart:io';
+import 'ignore_analyzer.dart';
 
 void main() {
+  var another_unused_var = ''; // ignore: unused_local_variable
   var unused_var = '';
   decrement();
 }
