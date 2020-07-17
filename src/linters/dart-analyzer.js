@@ -1,7 +1,7 @@
 const fs = require("fs");
-const minimatch = require("minimatch");
-const YAML = require("yaml");
 
+const minimatch = require("../../vendor/minimatch");
+const { YAML } = require("../../vendor/yaml");
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { getViolationSeparator } = require("../utils/dart-analyzer");
