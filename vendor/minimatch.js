@@ -28,7 +28,7 @@ try {
 } catch (er) {}
 
 var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
-var expand = require('brace-expansion')
+var expand = require('./brace-expansion')
 
 var plTypes = {
 	'!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
