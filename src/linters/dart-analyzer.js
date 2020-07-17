@@ -43,8 +43,7 @@ class DartAnalyzer {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const commandPrefix = prefix || "";
 
-		return run(`${commandPrefix} dartanalyzer ${args} "."`, {
-			dir,
+		return run(`cd ${dir} && ${commandPrefix} dartanalyzer ${args} "." && cd ..`, {
 			ignoreErrors: true,
 		});
 	}
