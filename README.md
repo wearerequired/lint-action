@@ -107,6 +107,75 @@ jobs:
           prettier: true
 ```
 
+### PHP example (PHP_CodeSniffer)
+
+```yml
+name: Lint
+
+on: push
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          coverage: none
+          tools: phpcs
+
+      - name: Run linters
+        uses: samuelmeuli/lint-action@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Enable linters
+          php_codesniffer: true
+          # Optional: Ignore warnings
+          php_codesniffer_args: "-n"
+```
+
+If you prefer to use [Composer](https://getcomposer.org/) you can also use this:
+
+```yml
+name: Lint
+
+on: push
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          coverage: none
+          tools: composer
+
+      - name: Install PHP dependencies
+        run: |
+          composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
+          echo "::add-path::vendor/bin"
+
+      - name: Run linters
+        uses: samuelmeuli/lint-action@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Enable linters
+          php_codesniffer: true
+```
+
 ### Python example (Flake8 and Black)
 
 ```yml
