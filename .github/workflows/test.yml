@@ -106,9 +106,9 @@ jobs:
         run: |
           brew update
           brew install mint
-          brew unlink swiftlint
           cd ./test/linters/projects/swift-format-lockwood/
           mint bootstrap --link
+          brew unlink swiftlint
           cd ../swiftlint/
           mint bootstrap --link
 
