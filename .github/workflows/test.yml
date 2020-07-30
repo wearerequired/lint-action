@@ -106,9 +106,10 @@ jobs:
         run: |
           brew update
           brew install mint
+          # If installed, unlink swiftlint, workaround for https://github.com/yonaskolb/Mint/issues/182
+          brew unlink swiftlint || true
           cd ./test/linters/projects/swift-format-lockwood/
           mint bootstrap --link
-          brew unlink swiftlint
           cd ../swiftlint/
           mint bootstrap --link
 
