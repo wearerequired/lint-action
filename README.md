@@ -27,6 +27,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [ESLint](https://eslint.org)
   - [Prettier](https://prettier.io)
   - [XO](https://github.com/xojs/xo)
+- **PHP:**
+  - [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)
 - **Python:**
   - [Black](https://black.readthedocs.io)
   - [Flake8](http://flake8.pycqa.org)

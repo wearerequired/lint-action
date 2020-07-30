@@ -56,6 +56,14 @@ jobs:
           cd ../xo/
           yarn install
 
+      # PHP
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          coverage: none
+          tools: phpcs
+
       # Python
 
       - name: Set up Python
