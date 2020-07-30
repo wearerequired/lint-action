@@ -69,7 +69,11 @@ class Flake8 {
 		const matches = output.stdout.matchAll(PARSE_REGEX);
 		for (const match of matches) {
 			const [_, pathFull, line, rule, text] = match;
-			const path = pathFull.substring(2); // Remove "./" or ".\" from start of path
+			const leadingSep = `.${sep}`;
+			let path = pathFull;
+			if (path.startsWith(leadingSep)) {
+				path = path.substring(2); // Remove "./" or ".\" from start of path
+			}
 			const lineNr = parseInt(line, 10);
 			lintResult.error.push({
 				path,
