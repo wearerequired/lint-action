@@ -85,7 +85,7 @@ jobs:
       # Ruby
 
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
 
