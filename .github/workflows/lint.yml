@@ -1,8 +1,10 @@
 name: Lint
 
 on:
-  - pull_request
-  - push
+  push:
+    branches:
+      - $default-branch
+  pull_request:
 
 jobs:
   lint:
