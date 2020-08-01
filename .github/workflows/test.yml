@@ -146,7 +146,7 @@ jobs:
       - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
-          brew update
+          brew update >/dev/null
           brew install mint
           # If installed, unlink swiftlint, workaround for https://github.com/yonaskolb/Mint/issues/182
           brew unlink swiftlint || true
