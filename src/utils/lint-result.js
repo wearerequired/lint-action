@@ -1,6 +1,11 @@
 /**
+ * GitHub Actions workflow's environment variables
+ * @typedef {{isSuccess: boolean, warning: object[], error: object[]}} LintResult
+ */
+
+/**
  * Returns an object for storing linting results
- * @returns {{isSuccess: boolean, warning: [], error: []}} - Default object
+ * @returns {LintResult} - Default object
  */
 function initLintResult() {
 	return {
@@ -12,7 +17,7 @@ function initLintResult() {
 
 /**
  * Returns a text summary of the number of issues found when linting
- * @param {{isSuccess: boolean, warning: object[], error: object[]}} lintResult - Parsed linter
+ * @param {LintResult} lintResult - Parsed linter
  * output
  * @returns {string} - Text summary
  */

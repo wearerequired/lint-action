@@ -23,13 +23,13 @@
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
-		"eslint": "6.8.0",
-		"eslint-config-airbnb-base": "14.1.0",
+		"eslint": "7.6.0",
+		"eslint-config-airbnb-base": "14.2.0",
 		"eslint-config-prettier": "^6.11.0",
-		"eslint-plugin-import": "^2.20.2",
-		"eslint-plugin-jsdoc": "^25.4.0",
-		"fs-extra": "^9.0.0",
-		"jest": "^26.0.1",
+		"eslint-plugin-import": "^2.22.0",
+		"eslint-plugin-jsdoc": "^30.1.0",
+		"fs-extra": "^9.0.1",
+		"jest": "^26.2.2",
 		"prettier": "^2.0.5"
 	},
 	"eslintConfig": {
@@ -41,6 +41,11 @@
 		"env": {
 			"node": true,
 			"jest": true
+		},
+		"settings": {
+			"jsdoc": {
+				"mode": "typescript"
+			}
 		},
 		"rules": {
 			"no-await-in-loop": "off",

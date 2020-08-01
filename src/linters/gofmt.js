@@ -53,7 +53,7 @@ class Gofmt {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {{isSuccess: boolean, warning: [], error: []}} - Parsed lint result
+	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
