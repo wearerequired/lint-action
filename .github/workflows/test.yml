@@ -134,6 +134,15 @@ jobs:
 
       # Swift (only on macOS)
 
+      - name: Set up mint cache
+        if: startsWith(matrix.os, 'macos')
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/lib/mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-
+
       - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
