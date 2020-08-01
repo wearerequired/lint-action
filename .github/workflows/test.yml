@@ -111,7 +111,7 @@ jobs:
       - name: Set up bundle cache
         uses: actions/cache@v2
         with:
-          path: vendor/bundle
+          path: ./test/linters/projects/**/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
