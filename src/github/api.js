@@ -9,7 +9,7 @@ const { capitalizeFirstLetter } = require("../utils/string");
  * @param {string} sha - SHA of the commit which should be annotated
  * @param {import('./context').GithubContext} context - Information about the GitHub repository and
  * action trigger event
- * @param {{isSuccess: boolean, warning: [], error: []}} lintResult - Parsed lint result
+ * @param {import('../utils/lint-result').LintResult} lintResult - Parsed lint result
  * @param {string} summary - Summary for the GitHub check
  */
 async function createCheck(linterName, sha, context, lintResult, summary) {
