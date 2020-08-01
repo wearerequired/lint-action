@@ -49,11 +49,11 @@ beforeAll(async () => {
 // Test all linters
 describe.each(linterParams)(
 	"%s",
-	(projectName, linter, extensions, getLintParams, getFixParams) => {
+	(projectName, linter, commandPrefix, extensions, getLintParams, getFixParams) => {
 		const projectTmpDir = join(tmpDir, projectName);
 
 		beforeAll(async () => {
-			await expect(linter.verifySetup(projectTmpDir)).resolves.toEqual(undefined);
+			await expect(linter.verifySetup(projectTmpDir, commandPrefix)).resolves.toEqual(undefined);
 		});
 
 		// Test lint and auto-fix modes
@@ -65,7 +65,7 @@ describe.each(linterParams)(
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
-				const cmdOutput = linter.lint(projectTmpDir, extensions, "", autoFix);
+				const cmdOutput = linter.lint(projectTmpDir, extensions, "", autoFix, commandPrefix);
 
 				// Exit code
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);

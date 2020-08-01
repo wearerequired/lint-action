@@ -4,6 +4,7 @@ const SwiftFormatOfficial = require("../../../src/linters/swift-format-official"
 
 const testName = "swift-format-official";
 const linter = SwiftFormatOfficial;
+const commandPrefix = "";
 const extensions = ["swift"];
 
 function getLintParams(dir) {
@@ -71,4 +72,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];

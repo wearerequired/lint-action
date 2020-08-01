@@ -42,6 +42,18 @@ jobs:
         with:
           node-version: 12
 
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Set up yarn cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./test/linters/projects/**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: Install Node.js dependencies
         run: |
           cd ./test/linters/projects/eslint/
@@ -70,6 +82,19 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Get pip cache directory path
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Set up pip cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('./test/linters/projects/**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install Python dependencies
         run: |
           cd ./test/linters/projects/
@@ -81,12 +106,21 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
+          bundler: 2
+
+      - name: Set up bundle cache
+        uses: actions/cache@v2
+        with:
+          path: ./test/linters/projects/**/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
 
       - name: Install Ruby dependencies
         run: |
-          gem install bundler
           cd ./test/linters/projects/rubocop/
-          bundle install
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
 
       # Swift (only on Linux)
 
@@ -100,10 +134,19 @@ jobs:
 
       # Swift (only on macOS)
 
+      - name: Set up mint cache
+        if: startsWith(matrix.os, 'macos')
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/lib/mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-
+
       - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
-          brew update
+          brew update >/dev/null
           brew install mint
           # If installed, unlink swiftlint, workaround for https://github.com/yonaskolb/Mint/issues/182
           brew unlink swiftlint || true
