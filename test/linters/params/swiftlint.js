@@ -4,6 +4,7 @@ const Swiftlint = require("../../../src/linters/swiftlint");
 
 const testName = "swiftlint";
 const linter = Swiftlint;
+const commandPrefix = "";
 const extensions = ["swift"];
 
 // Linting without auto-fixing
@@ -78,4 +79,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];

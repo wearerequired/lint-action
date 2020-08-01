@@ -3,6 +3,7 @@ const { joinDoubleBackslash } = require("../../test-utils");
 
 const testName = "eslint-typescript";
 const linter = ESLint;
+const commandPrefix = "";
 const extensions = ["js", "ts"];
 
 // Linting without auto-fixing
@@ -91,4 +92,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];

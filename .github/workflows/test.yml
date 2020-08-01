@@ -122,16 +122,6 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
 
-      - name: Add bundle bin path to $PATH
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
-        run: |
-          echo "::add-path::${PWD}/vendor/bundle/bin"
-
-      - name: Add bundle bin path to $PATH
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          echo "::add-path::${PWD}\vendor\bundle\bin"
-
       # Swift (only on Linux)
 
       - name: Install Swift dependencies (Linux)

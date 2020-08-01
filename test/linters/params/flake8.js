@@ -5,6 +5,7 @@ const Flake8 = require("../../../src/linters/flake8");
 
 const testName = "flake8";
 const linter = Flake8;
+const commandPrefix = "";
 const extensions = ["py"];
 
 // Linting without auto-fixing
@@ -49,4 +50,4 @@ function getLintParams(dir) {
 // Linting with auto-fixing
 const getFixParams = getLintParams; // Does not support auto-fixing -> option has no effect
 
-module.exports = [testName, linter, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];

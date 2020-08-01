@@ -3,6 +3,7 @@ const { TEST_DATE } = require("../../test-utils");
 
 const testName = "black";
 const linter = Black;
+const commandPrefix = "";
 const extensions = ["py"];
 
 // Linting without auto-fixing
@@ -61,4 +62,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
