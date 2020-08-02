@@ -27,8 +27,8 @@ To release a new version using semantic versioning follow these steps:
 
 ### Changelog format:
 
-	- Message (PR number, commit hash)
-	- Message (PR number, commit hash)
-	- …
+    - Message (PR number, commit hash)
+    - Message (PR number, commit hash)
+    - …
 
-	https://github.com/samuelmeuli/lint-action/compare/<old tag>...<new tag>
+    https://github.com/samuelmeuli/lint-action/compare/<old tag>...<new tag>
