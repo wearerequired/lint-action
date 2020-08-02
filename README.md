@@ -235,6 +235,27 @@ jobs:
 
 - **`commit_message`**: Template for auto-fix commit messages. The `${linter}` variable can be used to insert the name of the linter. Default: `"Fix code style issues with ${linter}"`
 
+### Linter support
+
+Some options are not be available for specific linters:
+
+| Linter                | auto-fixing | extensions |
+| --------------------- | :---------: | :--------: |
+| black                 |     ✅      |     ✅     |
+| eslint                |     ✅      |     ✅     |
+| flake8                |     ❌      |     ✅     |
+| gofmt                 |     ✅      |  ❌ (go)   |
+| golint                |     ❌      |  ❌ (go)   |
+| mypy                  |     ✅      |     ✅     |
+| php_codesniffer       |     ❌      |     ✅     |
+| prettier              |     ✅      |     ✅     |
+| rubocop               |     ✅      |  ❌ (rb)   |
+| stylelint             |     ✅      |     ✅     |
+| swift_format_official |     ✅      |     ✅     |
+| swift_format_lockwood |     ✅      | ❌ (swift) |
+| swiftlint             |     ✅      | ❌ (swift) |
+| xo                    |     ✅      |     ✅     |
+
 ## Limitations
 
 There are currently some limitations as to how this action (or any other action) can be used in the context of `pull_request` events from forks:
