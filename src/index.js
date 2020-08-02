@@ -22,6 +22,7 @@ async function runAction() {
 	const gitName = getInput("git_name", true);
 	const gitEmail = getInput("git_email", true);
 	const commitMessage = getInput("commit_message", true);
+	const checkName = getInput("check_name", true);
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {
@@ -94,7 +95,12 @@ async function runAction() {
 				}
 			}
 
-			checks.push({ checkName: linter.name, lintResult, summary });
+			const lintCheckName = checkName
+				.replace(/\${linter}/g, linter.name)
+				.replace(/\${dir}/g, lintDirRel !== "." ? `${lintDirRel}` : "")
+				.trim();
+
+			checks.push({ lintCheckName, lintResult, summary });
 		}
 	}
 
@@ -104,8 +110,8 @@ async function runAction() {
 	log(""); // Create empty line in logs
 	const headSha = git.getHeadSha();
 	await Promise.all(
-		checks.map(({ checkName, lintResult, summary }) =>
-			createCheck(checkName, headSha, context, lintResult, summary),
+		checks.map(({ lintCheckName, lintResult, summary }) =>
+			createCheck(lintCheckName, headSha, context, lintResult, summary),
 		),
 	);
 }
