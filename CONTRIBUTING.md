@@ -14,3 +14,21 @@ If you want to add support for an additional linter, please open an issue to dis
 - Update the [`action.yml`](./action.yml) file with the options provided by the new linter.
 - Mention your linter in the [`README.md`](./README.md) file.
 - Update the [test workflow file](./.github/workflows/test.yml).
+
+## Release process
+
+To release a new version using semantic versioning follow these steps:
+
+1. Bump the version in `package.json`.
+2. Create a commit with a message like "v1.1.1".
+3. Tag that commit with the same message.
+4. Create a release from that tag on GitHub (this will publish it on the Action Marketplace, too) with a changelog of the user-facing changes.
+5. Move the major version tag (such as `v1`, `v2`) to point to the Git ref of the current release.
+
+### Changelog format:
+
+	- Message (PR number, commit hash)
+	- Message (PR number, commit hash)
+	- …
+
+	https://github.com/samuelmeuli/lint-action/compare/<old tag>...<new tag>
