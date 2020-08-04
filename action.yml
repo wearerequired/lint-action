@@ -23,7 +23,7 @@ inputs:
     required: false
     default: "Fix code style issues with ${linter}"
   check_name:
-    description: 'Template for the name of the check. The "${linter}" and "${dir}" variables can be used to insert the name and directory of the linter. The default directory is omitted.'
+    description: 'Template for the name of the check run. The "${linter}" and "${dir}" variables can be used to insert the name and directory of the linter.'
     required: false
     default: "${linter}"
 
