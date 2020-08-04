@@ -22,6 +22,10 @@ inputs:
     description: 'Template for auto-fix commit messages. The "${linter}" variable can be used to insert the name of the linter which has created the auto-fix'
     required: false
     default: "Fix code style issues with ${linter}"
+  check_name:
+    description: 'Template for the name of the check run. The "${linter}" and "${dir}" variables can be used to insert the name and directory of the linter.'
+    required: false
+    default: "${linter}"
 
   # CSS
 
