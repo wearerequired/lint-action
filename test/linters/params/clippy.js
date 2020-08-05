@@ -8,12 +8,12 @@ const extensions = ["rs"];
 function getLintParams(dir) {
 	const srcPath = "/src/main.rs";
 	const rmeta = "/target/debug/deps/liblint-d12ea75e4c06d965.rmeta";
-	if (dir.includes('\\')) {
+	if (dir.includes("\\")) {
 		// Running under windows filesystem
 		const oneBackSlash = /\\/gi;
-		dir.replace(oneBackSlash, '\\\\');
+		dir.replace(oneBackSlash, "\\\\");
 		const oneSlash = /\//gi;
-		srcPath.replace(oneSlash, '\\\\');
+		srcPath.replace(oneSlash, "\\\\");
 	}
 	return {
 		// Expected output of the linting function
@@ -45,12 +45,12 @@ function getLintParams(dir) {
 function getFixParams(dir) {
 	const srcPath = "/src/main.rs";
 	const rmeta = "/target/debug/deps/liblint-d12ea75e4c06d965.rmeta";
-	if (dir.includes('\\')) {
+	if (dir.includes("\\")) {
 		// Running under windows filesystem
 		const oneBackSlash = /\\/gi;
-		dir.replace(oneBackSlash, '\\\\');
+		dir.replace(oneBackSlash, "\\\\");
 		const oneSlash = /\//gi;
-		srcPath.replace(oneSlash, '\\\\');
+		srcPath.replace(oneSlash, "\\\\");
 	}
 	return {
 		// Expected output of the linting function
