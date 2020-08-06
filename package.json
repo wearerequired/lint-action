@@ -7,7 +7,7 @@
 		"email": "me@samuelmeuli.com",
 		"url": "https://samuelmeuli.com"
 	},
-	"repository": "github:samuelmeuli/lint-action",
+	"repository": "github:wearerequired/lint-action",
 	"license": "MIT",
 	"private": true,
 	"main": "./src/index.js",

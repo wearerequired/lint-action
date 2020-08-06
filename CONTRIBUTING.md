@@ -31,4 +31,4 @@ To release a new version using semantic versioning follow these steps:
     - Message (PR number, commit hash)
     - …
 
-    https://github.com/samuelmeuli/lint-action/compare/<old tag>...<new tag>
+    https://github.com/wearerequired/lint-action/compare/<old tag>...<new tag>
