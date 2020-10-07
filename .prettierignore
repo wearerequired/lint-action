@@ -4,4 +4,3 @@
 node_modules/
 test/linters/projects/
 dist/
-vendor/
