@@ -602,6 +602,11 @@
   dependencies:
     "@types/yargs-parser" "*"
 
+"@vercel/ncc@^0.24.1":
+  version "0.24.1"
+  resolved "https://registry.yarnpkg.com/@vercel/ncc/-/ncc-0.24.1.tgz#3ea2932c85ba87f4de6fe550d60e1bf5c005985e"
+  integrity sha512-r9m7brz2hNmq5TF3sxrK4qR/FhXn44XIMglQUir4sT7Sh5GOaYXlMYikHFwJStf8rmQGTlvOoBXt4yHVonRG8A==
+
 abab@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.3.tgz#623e2075e02eb2d3f2475e49f99c91846467907a"
@@ -1057,6 +1062,11 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
+
+command-exists@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/command-exists/-/command-exists-1.2.9.tgz#c50725af3808c8ab0260fd60b01fbfa25b954f69"
+  integrity sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==
 
 comment-parser@^0.7.5:
   version "0.7.5"
@@ -3235,6 +3245,11 @@ parent-module@^1.0.0:
   integrity sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==
   dependencies:
     callsites "^3.0.0"
+
+parse-diff@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/parse-diff/-/parse-diff-0.7.1.tgz#9b7a2451c3725baf2c87c831ba192d40ee2237d4"
+  integrity sha512-1j3l8IKcy4yRK2W4o9EYvJLSzpAVwz4DXqCewYyx2vEwk2gcf3DBPqc8Fj4XV3K33OYJ08A8fWwyu/ykD/HUSg==
 
 parse-json@^2.2.0:
   version "2.2.0"
