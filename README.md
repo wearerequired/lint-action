@@ -166,7 +166,7 @@ jobs:
       - name: Install PHP dependencies
         run: |
           composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
-          echo "::add-path::vendor/bin"
+          echo "vendor/bin" >> $GITHUB_PATH
 
       - name: Run linters
         uses: wearerequired/lint-action@v1
