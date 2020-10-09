@@ -343,6 +343,10 @@ inputs:
     required: false
     default: ""
 
+outputs:
+  problems_detected:
+    description: Value is "true", if any linters fail or make code changes. Value is otherwise "false".
+
 runs:
   using: node12
   main: ./src/index.js

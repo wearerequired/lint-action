@@ -13,6 +13,14 @@ process.on("unhandledRejection", (err) => {
 	throw new Error(`Exiting because of unhandled promise rejection`);
 });
 
+
+// rather than npm install @actions/core, output using the console logging syntax
+// see https://help.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
+function setOutput(key, value) {
+    console.log(`::set-output name=${key}::${value}`)
+}
+
+
 /**
  * Parses the action configuration and runs all enabled linters on matching files
  */
@@ -23,6 +31,7 @@ async function runAction() {
 	const gitEmail = getInput("git_email", true);
 	const commitMessage = getInput("commit_message", true);
 	const checkName = getInput("check_name", true);
+	let problems = false;
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {
@@ -87,9 +96,14 @@ async function runAction() {
 			const summary = getSummary(lintResult);
 			log(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
 
+			if (!lintResult.isSuccess) {
+				problems=true;
+			}
+
 			if (autoFix) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
+					problems = true;
 					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name));
 					git.pushChanges();
 				}
@@ -114,6 +128,8 @@ async function runAction() {
 			createCheck(lintCheckName, headSha, context, lintResult, summary),
 		),
 	);
+
+	return setOutput('problems_detected', problems);
 }
 
 runAction();
