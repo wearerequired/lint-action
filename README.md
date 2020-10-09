@@ -267,6 +267,44 @@ There are currently some limitations as to how this action (or any other action)
 
 For details and comments, please refer to [#13](https://github.com/wearerequired/lint-action/issues/13).
 
+
+## Outputs
+
+You can use these outputs to trigger other Actions in your Workflow run based on the result of `lint-action`.
+
+- `problems_detected`: Returns "true" if one or more linters fail OR if autofix pushed a code change to the pull request.
+
+### Example
+
+This example demonstrate a scenario where Black is being used to enforce code style. If Black reformats any of your code
+it will create a commit and push it back to your repository. This example shows providing a personal access token on
+the checkout so that the commit is processed as that user ... which means that Github Action will trigger a new event
+and workflow. After running Black, we check the value of `problems_detected` to know whether or not to end this
+workflow since a new one will have been triggered by the push of the code change.
+
+**Note:** if you do not provide an access token for the checkout step, then the push will NOT trigger a new workflow.
+
+
+```yaml
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.BOT_TOKEN }}
+
+    - name: Check Code Style with Black
+      id: black
+      uses: wearerequired/lint-action@v1
+      with:
+        github_token: ${{ secrets.github_token }}
+        black: true
+        auto_fix: true
+        black_args: "--line-length 100"
+
+    - name: "Stop workflow for code style changes"
+      if: steps.black.outputs.problems_detected == 'true'
+      run: echo "Code style problems detected ... ending workflow." && exit 1
+```
+
+
 ## Related
 
 - [Electron Builder Action](https://github.com/samuelmeuli/action-electron-builder) – GitHub Action for building and releasing Electron apps
