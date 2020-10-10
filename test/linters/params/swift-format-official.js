@@ -18,7 +18,7 @@ function getLintParams(dir) {
 	return {
 		// Expected output of the linting function.
 		cmdOutput: {
-			status: 1,
+			status: 0,
 			stderrParts: [warning1, warning2, warning3, warning4],
 			stderr: `${warning1}\n${warning2}\n${warning3}\n${warning4}`,
 		},
