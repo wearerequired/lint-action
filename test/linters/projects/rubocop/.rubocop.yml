@@ -1,2 +1,6 @@
 Layout/EndOfLine:
   Enabled: false
+
+AllCops:
+  Exclude:
+    - 'vendor/**/*'
