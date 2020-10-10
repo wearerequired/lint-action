@@ -15,7 +15,7 @@ const prettierParams = require("./params/prettier");
 const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
-const swiftFormatOfficial = require("./params/swift-format-official");
+// const swiftFormatOfficial = require("./params/swift-format-official");
 const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
 
