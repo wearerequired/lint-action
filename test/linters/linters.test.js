@@ -34,7 +34,9 @@ const linterParams = [
 	xoParams,
 ];
 if (process.platform === "linux") {
-	linterParams.push(swiftFormatOfficial);
+	// Temporarily disabled because swift-format 0.50300.0 no longer returns a proper exit code, yet
+	// returns the errors in STDERR.
+	// linterParams.push(swiftFormatOfficial);
 }
 if (process.platform === "darwin") {
 	linterParams.push(swiftFormatLockwood, swiftlintParams);
