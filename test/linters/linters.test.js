@@ -54,7 +54,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-	// await remove(tmpDir);
+	await remove(tmpDir);
 });
 
 // Test all linters

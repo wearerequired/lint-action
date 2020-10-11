@@ -1,5 +1,4 @@
 const { mkdtempSync, realpathSync } = require("fs");
-const { tmpdir } = require("os");
 const { join } = require("path");
 
 const DATE_REGEX = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+ [+-]\d{4}/g;
@@ -10,7 +9,7 @@ const TEST_DATE = "2019-01-01 00:00:00.000000 +0000";
  * @returns {string} - File path
  */
 function createTmpDir() {
-	return mkdtempSync(join(tmpdir(), "lint-action-test-"));
+	return mkdtempSync(join(__dirname, "tmp-"));
 }
 
 /**
