@@ -39,7 +39,8 @@ function getLintParams(dir) {
 					path: "file1.js",
 					firstLine: 1,
 					lastLine: 1,
-					message: "The variable `str` should be named `string`. A more descriptive name will do too (unicorn/prevent-abbreviations)",
+					message:
+						"The variable `str` should be named `string`. A more descriptive name will do too (unicorn/prevent-abbreviations)",
 				},
 				{
 					path: "file1.js",
@@ -51,7 +52,8 @@ function getLintParams(dir) {
 					path: "file2.js",
 					firstLine: 1,
 					lastLine: 1,
-					message: "The variable `str` should be named `string`. A more descriptive name will do too (unicorn/prevent-abbreviations)",
+					message:
+						"The variable `str` should be named `string`. A more descriptive name will do too (unicorn/prevent-abbreviations)",
 				},
 				{
 					path: "file2.js",

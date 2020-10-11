@@ -3,7 +3,7 @@ const { joinDoubleBackslash } = require("../../test-utils");
 
 const testName = "eslint-typescript";
 const linter = ESLint;
-const commandPrefix = "npx --no-install";
+const commandPrefix = "";
 const extensions = ["js", "ts"];
 
 // Linting without auto-fixing
