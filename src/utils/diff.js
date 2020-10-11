@@ -1,4 +1,4 @@
-const parseDiff = require("../../vendor/parse-diff.min");
+const parseDiff = require("parse-diff");
 
 /**
  * Parses linting errors from a unified diff
