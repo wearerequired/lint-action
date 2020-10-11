@@ -3,5 +3,5 @@
 
 node_modules/
 test/linters/projects/
-test/tmp/
+dist/
 vendor/

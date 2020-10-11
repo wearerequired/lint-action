@@ -23,14 +23,14 @@
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
-		"eslint": "7.6.0",
+		"eslint": "7.11.0",
 		"eslint-config-airbnb-base": "14.2.0",
-		"eslint-config-prettier": "^6.11.0",
-		"eslint-plugin-import": "^2.22.0",
-		"eslint-plugin-jsdoc": "^30.1.0",
+		"eslint-config-prettier": "^6.12.0",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-jsdoc": "^30.6.4",
 		"fs-extra": "^9.0.1",
-		"jest": "^26.2.2",
-		"prettier": "^2.0.5"
+		"jest": "^26.5.2",
+		"prettier": "^2.1.2"
 	},
 	"eslintConfig": {
 		"root": true,

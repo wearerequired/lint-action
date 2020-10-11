@@ -15,12 +15,17 @@ function getLintParams(dir) {
 		"file1.swift",
 	)}:7:1: warning: [Indentation] replace leading whitespace with 2 spaces`;
 	const warning4 = `${join(dir, "file1.swift")}:7:23: warning: [Spacing]: add 1 space`;
+	// Files on macOS are not sorted.
+	const stderr =
+		process.platform === "darwin"
+			? `${warning2}\n${warning3}\n${warning4}\n${warning1}`
+			: `${warning1}\n${warning2}\n${warning3}\n${warning4}`;
 	return {
 		// Expected output of the linting function.
 		cmdOutput: {
-			status: 1,
+			status: 0,
 			stderrParts: [warning1, warning2, warning3, warning4],
-			stderr: `${warning1}\n${warning2}\n${warning3}\n${warning4}`,
+			stderr,
 		},
 		// Expected output of the parsing function.
 		lintResult: {

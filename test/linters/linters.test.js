@@ -1,8 +1,8 @@
 const { join } = require("path");
 
-const { copy } = require("fs-extra");
+const { copy, remove } = require("fs-extra");
 
-const { normalizeDates, testProjectsDir, tmpDir } = require("../test-utils");
+const { normalizeDates, normalizePaths, createTmpDir } = require("../test-utils");
 const blackParams = require("./params/black");
 const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
@@ -15,7 +15,7 @@ const prettierParams = require("./params/prettier");
 const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
-const swiftFormatOfficial = require("./params/swift-format-official");
+// const swiftFormatOfficial = require("./params/swift-format-official");
 const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
 
@@ -34,16 +34,24 @@ const linterParams = [
 	xoParams,
 ];
 if (process.platform === "linux") {
-	linterParams.push(swiftFormatOfficial);
+	// Temporarily disabled because swift-format 0.50300.0 no longer returns a proper exit code, yet
+	// returns the errors in STDERR.
+	// linterParams.push(swiftFormatOfficial);
 }
 if (process.platform === "darwin") {
 	linterParams.push(swiftFormatLockwood, swiftlintParams);
 }
 
+const tmpDir = createTmpDir();
+
 // Copy linter test projects into temporary directory
 beforeAll(async () => {
 	jest.setTimeout(60000);
-	await copy(testProjectsDir, tmpDir);
+	await copy(join(__dirname, "projects"), tmpDir);
+});
+
+afterAll(async () => {
+	await remove(tmpDir);
 });
 
 // Test all linters
@@ -51,7 +59,6 @@ describe.each(linterParams)(
 	"%s",
 	(projectName, linter, commandPrefix, extensions, getLintParams, getFixParams) => {
 		const projectTmpDir = join(tmpDir, projectName);
-
 		beforeAll(async () => {
 			await expect(linter.verifySetup(projectTmpDir, commandPrefix)).resolves.toEqual(undefined);
 		});
@@ -71,7 +78,8 @@ describe.each(linterParams)(
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);
 
 				// stdout
-				const stdout = normalizeDates(cmdOutput.stdout);
+				let stdout = normalizeDates(cmdOutput.stdout);
+				stdout = normalizePaths(stdout, tmpDir);
 				if ("stdoutParts" in expected.cmdOutput) {
 					expected.cmdOutput.stdoutParts.forEach((stdoutPart) =>
 						expect(stdout).toEqual(expect.stringContaining(stdoutPart)),
@@ -81,7 +89,8 @@ describe.each(linterParams)(
 				}
 
 				// stderr
-				const stderr = normalizeDates(cmdOutput.stderr);
+				let stderr = normalizeDates(cmdOutput.stderr);
+				stderr = normalizePaths(stderr, tmpDir);
 				if ("stderrParts" in expected.cmdOutput) {
 					expected.cmdOutput.stderrParts.forEach((stderrParts) =>
 						expect(stderr).toEqual(expect.stringContaining(stderrParts)),

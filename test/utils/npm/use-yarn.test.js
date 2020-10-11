@@ -1,10 +1,16 @@
 const { mkdir } = require("fs").promises;
 const { join } = require("path");
 
-const { ensureFile } = require("fs-extra");
+const { ensureFile, remove } = require("fs-extra");
 
 const { useYarn } = require("../../../src/utils/npm/use-yarn");
-const { tmpDir } = require("../../test-utils");
+const { createTmpDir } = require("../../test-utils");
+
+const tmpDir = createTmpDir();
+
+afterAll(async () => {
+	await remove(tmpDir);
+});
 
 describe("useYarn()", () => {
 	test("should return `true` if there is a Yarn lockfile", async () => {

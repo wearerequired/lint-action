@@ -16,6 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
@@ -127,10 +128,10 @@ jobs:
       - name: Install Swift dependencies (Linux)
         if: startsWith(matrix.os, 'ubuntu')
         run: |
-          git clone --branch 0.50200.0 --depth 1 git://github.com/apple/swift-format
+          git clone --branch 0.50300.0 --depth 1 git://github.com/apple/swift-format
           cd swift-format
           swift build -c release
-          echo "::add-path::${PWD}/.build/release"
+          echo "${PWD}/.build/release" >> $GITHUB_PATH
 
       # Swift (only on macOS)
 

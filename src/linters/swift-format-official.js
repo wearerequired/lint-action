@@ -54,7 +54,6 @@ class SwiftFormatOfficial {
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
-		lintResult.isSuccess = output.status === 0;
 
 		const matches = output.stderr.matchAll(PARSE_REGEX);
 		for (const match of matches) {
@@ -70,6 +69,11 @@ class SwiftFormatOfficial {
 				message: `${message}`,
 			});
 		}
+
+		// Since 0.50300.0 swift-format exits with 0 even if there are formatting issues. Therefore,
+		// this function determines the success of the linting process based on the number of parsed
+		// errors.
+		lintResult.isSuccess = lintResult.error.length === 0;
 
 		return lintResult;
 	}

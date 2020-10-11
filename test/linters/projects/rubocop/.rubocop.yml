@@ -1,2 +1,12 @@
+inherit_mode:
+  merge:
+    - Exclude
+
+AllCops:
+  TargetRubyVersion: 2.4
+  NewCops: enable
+  Exclude:
+    - vendor/bundle/**/*
+
 Layout/EndOfLine:
   Enabled: false
