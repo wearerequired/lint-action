@@ -131,7 +131,7 @@ jobs:
           git clone --branch 0.50300.0 --depth 1 git://github.com/apple/swift-format
           cd swift-format
           swift build -c release
-          echo "::add-path::${PWD}/.build/release"
+          echo "${PWD}/.build/release" >> $GITHUB_PATH
 
       # Swift (only on macOS)
 
