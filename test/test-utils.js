@@ -1,11 +1,17 @@
+const { mkdtempSync, realpathSync } = require("fs");
 const { tmpdir } = require("os");
 const { join } = require("path");
 
 const DATE_REGEX = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+ [+-]\d{4}/g;
 const TEST_DATE = "2019-01-01 00:00:00.000000 +0000";
 
-const testProjectsDir = join(__dirname, "linters", "projects");
-const tmpDir = join(tmpdir(), "lint-action-test"); // Temporary directory that tests can write to
+/**
+ * Creates a temporary directory.
+ * @returns {string} - File path
+ */
+function createTmpDir() {
+	return mkdtempSync(join(tmpdir(), "lint-action-test-"));
+}
 
 /**
  * Some tools require paths to contain single forward slashes on macOS/Linux and double backslashes
@@ -22,6 +28,19 @@ function joinDoubleBackslash(...paths) {
 }
 
 /**
+ * Some tools output real paths for files. This function corrects these paths to use the provided
+ * path.
+ * @param {string} str - String in which paths should be replaced
+ * @param {string} path - Which path should be replaced
+ * @returns {string} - Normalized paths
+ */
+function normalizePaths(str, path) {
+	const pathToSearch = realpathSync(path);
+	const pathToSearchEscaped = pathToSearch.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+	return str.replace(new RegExp(pathToSearchEscaped, "g"), path);
+}
+
+/**
  * Find dates in the provided string and replace them with {@link TEST_DATE}
  * @param {string} str - String in which dates should be replaced
  * @returns {string} - Normalized date
@@ -30,4 +49,4 @@ function normalizeDates(str) {
 	return str.replace(DATE_REGEX, TEST_DATE);
 }
 
-module.exports = { TEST_DATE, joinDoubleBackslash, normalizeDates, testProjectsDir, tmpDir };
+module.exports = { TEST_DATE, joinDoubleBackslash, normalizeDates, normalizePaths, createTmpDir };
