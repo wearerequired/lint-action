@@ -266,3 +266,7 @@ There are currently some limitations as to how this action (or any other action)
 - The action doesn't have permission to create annotations for commits on forks and can therefore not display linting errors. [Source 1](https://github.community/t5/GitHub-Actions/Token-permissions-for-forks-once-again/m-p/33839), [source 2](https://github.com/actions/labeler/issues/12)
 
 For details and comments, please refer to [#13](https://github.com/wearerequired/lint-action/issues/13).
+
+<br>
+
+[![a required open source product - let's get in touch](https://media.required.com/images/open-source-banner.png)](https://required.com/en/lets-get-in-touch/)
