@@ -1,7 +1,9 @@
 const { readFileSync } = require("fs");
 
+const core = require("@actions/core");
+
 const { name: actionName } = require("../../package");
-const { getEnv, getInput } = require("../utils/action");
+const { getEnv } = require("../utils/action");
 
 /**
  * GitHub Actions workflow's environment variables
@@ -33,7 +35,7 @@ function parseActionEnv() {
 		workspace: getEnv("github_workspace", true),
 
 		// Information provided by action user
-		token: getInput("github_token", true),
+		token: core.getInput("github_token", { required: true }),
 	};
 }
 

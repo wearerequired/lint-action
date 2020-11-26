@@ -3,24 +3,6 @@ const { execSync } = require("child_process");
 const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
 /**
- * Logs to the console
- * @param {string} msg - Text to log to the console
- * @param {"info" | "warning" | "error"} level - Log level
- */
-function log(msg, level = "info") {
-	switch (level) {
-		case "error":
-			console.error(msg);
-			break;
-		case "warning":
-			console.warn(msg); // eslint-disable-line no-console
-			break;
-		default:
-			console.log(msg); // eslint-disable-line no-console
-	}
-}
-
-/**
  * Returns the value for an environment variable. If the variable is required but doesn't have a
  * value, an error is thrown
  * @param {string} name - Name of the environment variable
@@ -39,18 +21,6 @@ function getEnv(name, required = false) {
 		return null;
 	}
 	return value;
-}
-
-/**
- * Returns the value for an input variable. If the variable is required but doesn't have a value,
- * an error is thrown
- * @param {string} name - Name of the input variable
- * @param {boolean} required - Whether an error should be thrown if the variable doesn't have a
- * value
- * @returns {string | null} - Value of the input variable
- */
-function getInput(name, required = false) {
-	return getEnv(`INPUT_${name}`, required);
 }
 
 /**
@@ -85,8 +55,6 @@ function run(cmd, options) {
 }
 
 module.exports = {
-	log,
 	getEnv,
-	getInput,
 	run,
 };

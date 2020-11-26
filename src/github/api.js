@@ -1,5 +1,6 @@
+const core = require("@actions/core");
+
 const { name: actionName } = require("../../package");
-const { log } = require("../utils/action");
 const request = require("../utils/request");
 const { capitalizeFirstLetter } = require("../utils/string");
 
@@ -29,7 +30,7 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 
 	// Only use the first 50 annotations (limit for a single API request)
 	if (annotations.length > 50) {
-		log(
+		core.info(
 			`There are more than 50 errors/warnings from ${linterName}. Annotations are created for the first 50 issues only.`,
 		);
 		annotations = annotations.slice(0, 50);
@@ -46,7 +47,7 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 		},
 	};
 	try {
-		log(`Creating GitHub check with ${annotations.length} annotations for ${linterName}…`);
+		core.info(`Creating GitHub check with ${annotations.length} annotations for ${linterName}…`);
 		await request(`https://api.github.com/repos/${context.repository.repoName}/check-runs`, {
 			method: "POST",
 			headers: {
@@ -58,9 +59,9 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 			},
 			body,
 		});
-		log(`${linterName} check created successfully`);
+		core.info(`${linterName} check created successfully`);
 	} catch (err) {
-		log(err, "error");
+		core.error(err);
 		throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}`);
 	}
 }

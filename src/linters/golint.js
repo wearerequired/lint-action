@@ -1,4 +1,6 @@
-const { log, run } = require("../utils/action");
+const core = require("@actions/core");
+
+const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { capitalizeFirstLetter } = require("../utils/string");
@@ -39,7 +41,7 @@ class Golint {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		return run(`${prefix} golint -set_exit_status ${args} "."`, {

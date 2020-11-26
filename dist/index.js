@@ -792,7 +792,9 @@ escapeRegExp = function(s) {
 /***/ 109:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { log, run } = __webpack_require__(575);
+const core = __webpack_require__(186);
+
+const { run } = __webpack_require__(575);
 
 /**
  * Fetches and checks out the remote Git branch (if it exists, the fork repository will be used)
@@ -801,13 +803,13 @@ const { log, run } = __webpack_require__(575);
 function checkOutRemoteBranch(context) {
 	if (context.repository.hasFork) {
 		// Fork: Add fork repo as remote
-		log(`Adding "${context.repository.forkName}" fork as remote with Git`);
+		core.info(`Adding "${context.repository.forkName}" fork as remote with Git`);
 		run(
 			`git remote add fork https://${context.actor}:${context.token}@github.com/${context.repository.forkName}.git`,
 		);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
-		log(`Adding auth information to Git remote URL`);
+		core.info(`Adding auth information to Git remote URL`);
 		run(
 			`git remote set-url origin https://${context.actor}:${context.token}@github.com/${context.repository.repoName}.git`,
 		);
@@ -816,11 +818,11 @@ function checkOutRemoteBranch(context) {
 	const remote = context.repository.hasFork ? "fork" : "origin";
 
 	// Fetch remote branch
-	log(`Fetching remote branch "${context.branch}"`);
+	core.info(`Fetching remote branch "${context.branch}"`);
 	run(`git fetch --no-tags --depth=1 ${remote} ${context.branch}`);
 
 	// Switch to remote branch
-	log(`Switching to the "${context.branch}" branch`);
+	core.info(`Switching to the "${context.branch}" branch`);
 	run(`git branch --force ${context.branch} --track ${remote}/${context.branch}`);
 	run(`git checkout ${context.branch}`);
 }
@@ -830,7 +832,7 @@ function checkOutRemoteBranch(context) {
  * @param {string} message - Git commit message
  */
 function commitChanges(message) {
-	log(`Committing changes`);
+	core.info(`Committing changes`);
 	run(`git commit -am "${message}"`);
 }
 
@@ -840,7 +842,7 @@ function commitChanges(message) {
  */
 function getHeadSha() {
 	const sha = run("git rev-parse HEAD").stdout;
-	log(`SHA of last commit is "${sha}"`);
+	core.info(`SHA of last commit is "${sha}"`);
 	return sha;
 }
 
@@ -850,7 +852,7 @@ function getHeadSha() {
  */
 function hasChanges() {
 	const res = run("git diff-index --quiet HEAD --", { ignoreErrors: true }).status === 1;
-	log(`${res ? "Changes" : "No changes"} found with Git`);
+	core.info(`${res ? "Changes" : "No changes"} found with Git`);
 	return res;
 }
 
@@ -858,7 +860,7 @@ function hasChanges() {
  * Pushes all changes to the remote repository
  */
 function pushChanges() {
-	log("Pushing changes with Git");
+	core.info("Pushing changes with Git");
 	run("git push");
 }
 
@@ -868,7 +870,7 @@ function pushChanges() {
  * @param {string} email - Git email address
  */
 function setUserInfo(name, email) {
-	log(`Setting Git user information`);
+	core.info(`Setting Git user information`);
 	run(`git config --global user.name "${name}"`);
 	run(`git config --global user.email "${email}"`);
 }
@@ -888,8 +890,9 @@ module.exports = {
 /***/ 872:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const core = __webpack_require__(186);
+
 const { name: actionName } = __webpack_require__(306);
-const { log } = __webpack_require__(575);
 const request = __webpack_require__(408);
 const { capitalizeFirstLetter } = __webpack_require__(321);
 
@@ -919,7 +922,7 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 
 	// Only use the first 50 annotations (limit for a single API request)
 	if (annotations.length > 50) {
-		log(
+		core.info(
 			`There are more than 50 errors/warnings from ${linterName}. Annotations are created for the first 50 issues only.`,
 		);
 		annotations = annotations.slice(0, 50);
@@ -936,7 +939,7 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 		},
 	};
 	try {
-		log(`Creating GitHub check with ${annotations.length} annotations for ${linterName}…`);
+		core.info(`Creating GitHub check with ${annotations.length} annotations for ${linterName}…`);
 		await request(`https://api.github.com/repos/${context.repository.repoName}/check-runs`, {
 			method: "POST",
 			headers: {
@@ -948,9 +951,9 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 			},
 			body,
 		});
-		log(`${linterName} check created successfully`);
+		core.info(`${linterName} check created successfully`);
 	} catch (err) {
-		log(err, "error");
+		core.error(err);
 		throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}`);
 	}
 }
@@ -965,8 +968,10 @@ module.exports = { createCheck };
 
 const { readFileSync } = __webpack_require__(747);
 
+const core = __webpack_require__(186);
+
 const { name: actionName } = __webpack_require__(306);
-const { getEnv, getInput } = __webpack_require__(575);
+const { getEnv } = __webpack_require__(575);
 
 /**
  * GitHub Actions workflow's environment variables
@@ -998,7 +1003,7 @@ function parseActionEnv() {
 		workspace: getEnv("github_workspace", true),
 
 		// Information provided by action user
-		token: getInput("github_token", true),
+		token: core.getInput("github_token", { required: true }),
 	};
 }
 
@@ -1088,7 +1093,7 @@ module.exports = {
 
 const { join } = __webpack_require__(622);
 
-const core = __webpack_require__( 186 );
+const core = __webpack_require__(186);
 
 const git = __webpack_require__(109);
 const { createCheck } = __webpack_require__(872);
@@ -1116,11 +1121,11 @@ async function runAction() {
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {
 		core.error(
-			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details"
+			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
 		);
 		if (autoFix) {
 			core.error(
-				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details"
+				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
 			);
 		}
 	}
@@ -1148,7 +1153,7 @@ async function runAction() {
 	for (const [linterId, linter] of Object.entries(linters)) {
 		// Determine whether the linter should be executed on the commit
 		if (core.getInput(linterId) === "true") {
-			core.startGroup(`Run ${linter.name}`)
+			core.startGroup(`Run ${linter.name}`);
 
 			const fileExtensions = core.getInput(`${linterId}_extensions`, { required: true });
 			const args = core.getInput(`${linterId}_args`);
@@ -1157,7 +1162,7 @@ async function runAction() {
 			const lintDirAbs = join(context.workspace, lintDirRel);
 
 			// Check that the linter and its dependencies are installed
-			core.info(`\nVerifying setup for ${linter.name}…`);
+			core.info(`Verifying setup for ${linter.name}…`);
 			await linter.verifySetup(lintDirAbs, prefix);
 			core.info(`Verified ${linter.name} setup`);
 
@@ -1174,7 +1179,9 @@ async function runAction() {
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
 			const summary = getSummary(lintResult);
-			core.info(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
+			core.info(
+				`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`,
+			);
 
 			if (autoFix) {
 				// Commit and push auto-fix changes
@@ -1403,7 +1410,9 @@ module.exports = ESLint;
 
 const { sep } = __webpack_require__(622);
 
-const { log, run } = __webpack_require__(575);
+const core = __webpack_require__(186);
+
+const { run } = __webpack_require__(575);
 const commandExists = __webpack_require__(265);
 const { initLintResult } = __webpack_require__(149);
 const { capitalizeFirstLetter } = __webpack_require__(321);
@@ -1448,7 +1457,7 @@ class Flake8 {
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		const files = extensions.map((ext) => `"**${sep}*.${ext}"`).join(",");
@@ -1589,7 +1598,9 @@ module.exports = Gofmt;
 /***/ 658:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { log, run } = __webpack_require__(575);
+const core = __webpack_require__(186);
+
+const { run } = __webpack_require__(575);
 const commandExists = __webpack_require__(265);
 const { initLintResult } = __webpack_require__(149);
 const { capitalizeFirstLetter } = __webpack_require__(321);
@@ -1630,7 +1641,7 @@ class Golint {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		return run(`${prefix} golint -set_exit_status ${args} "."`, {
@@ -1724,7 +1735,9 @@ module.exports = linters;
 const fs = __webpack_require__(747);
 const { sep } = __webpack_require__(622);
 
-const { log, run } = __webpack_require__(575);
+const core = __webpack_require__(186);
+
+const { run } = __webpack_require__(575);
 const commandExists = __webpack_require__(265);
 const { initLintResult } = __webpack_require__(149);
 
@@ -1769,7 +1782,7 @@ class Mypy {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		let specifiedPath = false;
@@ -1835,7 +1848,9 @@ module.exports = Mypy;
 /***/ 405:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { log, run } = __webpack_require__(575);
+const core = __webpack_require__(186);
+
+const { run } = __webpack_require__(575);
 const commandExists = __webpack_require__(265);
 const { initLintResult } = __webpack_require__(149);
 const { removeTrailingPeriod } = __webpack_require__(321);
@@ -1879,7 +1894,7 @@ class PHPCodeSniffer {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionsArg = extensions.join(",");
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		return run(`${prefix} phpcs --extensions=${extensionsArg} --report=json -q ${args} "."`, {
@@ -2565,24 +2580,6 @@ const { execSync } = __webpack_require__(129);
 const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
 /**
- * Logs to the console
- * @param {string} msg - Text to log to the console
- * @param {"info" | "warning" | "error"} level - Log level
- */
-function log(msg, level = "info") {
-	switch (level) {
-		case "error":
-			console.error(msg);
-			break;
-		case "warning":
-			console.warn(msg); // eslint-disable-line no-console
-			break;
-		default:
-			console.log(msg); // eslint-disable-line no-console
-	}
-}
-
-/**
  * Returns the value for an environment variable. If the variable is required but doesn't have a
  * value, an error is thrown
  * @param {string} name - Name of the environment variable
@@ -2601,18 +2598,6 @@ function getEnv(name, required = false) {
 		return null;
 	}
 	return value;
-}
-
-/**
- * Returns the value for an input variable. If the variable is required but doesn't have a value,
- * an error is thrown
- * @param {string} name - Name of the input variable
- * @param {boolean} required - Whether an error should be thrown if the variable doesn't have a
- * value
- * @returns {string | null} - Value of the input variable
- */
-function getInput(name, required = false) {
-	return getEnv(`INPUT_${name}`, required);
 }
 
 /**
@@ -2647,9 +2632,7 @@ function run(cmd, options) {
 }
 
 module.exports = {
-	log,
 	getEnv,
-	getInput,
 	run,
 };
 

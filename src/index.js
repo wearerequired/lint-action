@@ -69,7 +69,7 @@ async function runAction() {
 			const lintDirAbs = join(context.workspace, lintDirRel);
 
 			// Check that the linter and its dependencies are installed
-			core.info(`\nVerifying setup for ${linter.name}…`);
+			core.info(`Verifying setup for ${linter.name}…`);
 			await linter.verifySetup(lintDirAbs, prefix);
 			core.info(`Verified ${linter.name} setup`);
 
