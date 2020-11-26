@@ -9,7 +9,7 @@ inputs:
   auto_fix:
     description: Whether linters should try to fix code style issues automatically
     required: false
-    default: false
+    default: "false"
   git_name:
     description: Username for auto-fix commits
     required: false
@@ -32,7 +32,7 @@ inputs:
   stylelint:
     description: Enable or disable stylelint checks
     required: false
-    default: false
+    default: "false"
   stylelint_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -54,7 +54,7 @@ inputs:
   gofmt:
     description: Enable or disable gofmt checks
     required: false
-    default: false
+    default: "false"
   gofmt_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -74,7 +74,7 @@ inputs:
   golint:
     description: Enable or disable golint checks
     required: false
-    default: false
+    default: "false"
   golint_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -96,7 +96,7 @@ inputs:
   eslint:
     description: Enable or disable ESLint checks
     required: false
-    default: false
+    default: "false"
   eslint_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -116,7 +116,7 @@ inputs:
   prettier:
     description: Enable or disable Prettier checks
     required: false
-    default: false
+    default: "false"
   prettier_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -136,7 +136,7 @@ inputs:
   xo:
     description: Enable or disable XO checks
     required: false
-    default: false
+    default: "false"
   xo_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -158,7 +158,7 @@ inputs:
   php_codesniffer:
     description: Enable or disable PHP_CodeSniffer checks
     required: false
-    default: false
+    default: "false"
   php_codesniffer_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -180,7 +180,7 @@ inputs:
   black:
     description: Enable or disable Black checks
     required: false
-    default: false
+    default: "false"
   black_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -200,7 +200,7 @@ inputs:
   flake8:
     description: Enable or disable Flake8 checks
     required: false
-    default: false
+    default: "false"
   flake8_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -220,7 +220,7 @@ inputs:
   mypy:
     description: Enable or disable Mypy checks
     required: false
-    default: false
+    default: "false"
   mypy_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -242,7 +242,7 @@ inputs:
   rubocop:
     description: Enable or disable RuboCop checks
     required: false
-    default: false
+    default: "false"
   rubocop_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -266,7 +266,7 @@ inputs:
   swiftformat:
     description: Enable or disable SwiftFormat checks
     required: false
-    default: false
+    default: "false"
   swiftformat_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -286,7 +286,7 @@ inputs:
   swift_format_lockwood:
     description: Enable or disable SwiftFormat checks
     required: false
-    default: false
+    default: "false"
   swift_format_lockwood_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -306,7 +306,7 @@ inputs:
   swift_format_official:
     description: Enable or disable swift-format checks
     required: false
-    default: false
+    default: "false"
   swift_format_official_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -326,7 +326,7 @@ inputs:
   swiftlint:
     description: Enable or disable SwiftLint checks
     required: false
-    default: false
+    default: "false"
   swiftlint_args:
     description: Additional arguments to pass to the linter
     required: false
