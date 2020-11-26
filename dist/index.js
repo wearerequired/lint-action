@@ -2,6 +2,399 @@ module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 241:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const os = __importStar(__webpack_require__(87));
+const utils_1 = __webpack_require__(278);
+/**
+ * Commands
+ *
+ * Command Format:
+ *   ::name key=value,key=value::message
+ *
+ * Examples:
+ *   ::warning::This is the message
+ *   ::set-env name=MY_VAR::some value
+ */
+function issueCommand(command, properties, message) {
+    const cmd = new Command(command, properties, message);
+    process.stdout.write(cmd.toString() + os.EOL);
+}
+exports.issueCommand = issueCommand;
+function issue(name, message = '') {
+    issueCommand(name, {}, message);
+}
+exports.issue = issue;
+const CMD_STRING = '::';
+class Command {
+    constructor(command, properties, message) {
+        if (!command) {
+            command = 'missing.command';
+        }
+        this.command = command;
+        this.properties = properties;
+        this.message = message;
+    }
+    toString() {
+        let cmdStr = CMD_STRING + this.command;
+        if (this.properties && Object.keys(this.properties).length > 0) {
+            cmdStr += ' ';
+            let first = true;
+            for (const key in this.properties) {
+                if (this.properties.hasOwnProperty(key)) {
+                    const val = this.properties[key];
+                    if (val) {
+                        if (first) {
+                            first = false;
+                        }
+                        else {
+                            cmdStr += ',';
+                        }
+                        cmdStr += `${key}=${escapeProperty(val)}`;
+                    }
+                }
+            }
+        }
+        cmdStr += `${CMD_STRING}${escapeData(this.message)}`;
+        return cmdStr;
+    }
+}
+function escapeData(s) {
+    return utils_1.toCommandValue(s)
+        .replace(/%/g, '%25')
+        .replace(/\r/g, '%0D')
+        .replace(/\n/g, '%0A');
+}
+function escapeProperty(s) {
+    return utils_1.toCommandValue(s)
+        .replace(/%/g, '%25')
+        .replace(/\r/g, '%0D')
+        .replace(/\n/g, '%0A')
+        .replace(/:/g, '%3A')
+        .replace(/,/g, '%2C');
+}
+//# sourceMappingURL=command.js.map
+
+/***/ }),
+
+/***/ 186:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const command_1 = __webpack_require__(241);
+const file_command_1 = __webpack_require__(717);
+const utils_1 = __webpack_require__(278);
+const os = __importStar(__webpack_require__(87));
+const path = __importStar(__webpack_require__(622));
+/**
+ * The code to exit an action
+ */
+var ExitCode;
+(function (ExitCode) {
+    /**
+     * A code indicating that the action was successful
+     */
+    ExitCode[ExitCode["Success"] = 0] = "Success";
+    /**
+     * A code indicating that the action was a failure
+     */
+    ExitCode[ExitCode["Failure"] = 1] = "Failure";
+})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));
+//-----------------------------------------------------------------------
+// Variables
+//-----------------------------------------------------------------------
+/**
+ * Sets env variable for this action and future actions in the job
+ * @param name the name of the variable to set
+ * @param val the value of the variable. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function exportVariable(name, val) {
+    const convertedVal = utils_1.toCommandValue(val);
+    process.env[name] = convertedVal;
+    const filePath = process.env['GITHUB_ENV'] || '';
+    if (filePath) {
+        const delimiter = '_GitHubActionsFileCommandDelimeter_';
+        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
+        file_command_1.issueCommand('ENV', commandValue);
+    }
+    else {
+        command_1.issueCommand('set-env', { name }, convertedVal);
+    }
+}
+exports.exportVariable = exportVariable;
+/**
+ * Registers a secret which will get masked from logs
+ * @param secret value of the secret
+ */
+function setSecret(secret) {
+    command_1.issueCommand('add-mask', {}, secret);
+}
+exports.setSecret = setSecret;
+/**
+ * Prepends inputPath to the PATH (for this action and future actions)
+ * @param inputPath
+ */
+function addPath(inputPath) {
+    const filePath = process.env['GITHUB_PATH'] || '';
+    if (filePath) {
+        file_command_1.issueCommand('PATH', inputPath);
+    }
+    else {
+        command_1.issueCommand('add-path', {}, inputPath);
+    }
+    process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;
+}
+exports.addPath = addPath;
+/**
+ * Gets the value of an input.  The value is also trimmed.
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   string
+ */
+function getInput(name, options) {
+    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';
+    if (options && options.required && !val) {
+        throw new Error(`Input required and not supplied: ${name}`);
+    }
+    return val.trim();
+}
+exports.getInput = getInput;
+/**
+ * Sets the value of an output.
+ *
+ * @param     name     name of the output to set
+ * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function setOutput(name, value) {
+    command_1.issueCommand('set-output', { name }, value);
+}
+exports.setOutput = setOutput;
+/**
+ * Enables or disables the echoing of commands into stdout for the rest of the step.
+ * Echoing is disabled by default if ACTIONS_STEP_DEBUG is not set.
+ *
+ */
+function setCommandEcho(enabled) {
+    command_1.issue('echo', enabled ? 'on' : 'off');
+}
+exports.setCommandEcho = setCommandEcho;
+//-----------------------------------------------------------------------
+// Results
+//-----------------------------------------------------------------------
+/**
+ * Sets the action status to failed.
+ * When the action exits it will be with an exit code of 1
+ * @param message add error issue message
+ */
+function setFailed(message) {
+    process.exitCode = ExitCode.Failure;
+    error(message);
+}
+exports.setFailed = setFailed;
+//-----------------------------------------------------------------------
+// Logging Commands
+//-----------------------------------------------------------------------
+/**
+ * Gets whether Actions Step Debug is on or not
+ */
+function isDebug() {
+    return process.env['RUNNER_DEBUG'] === '1';
+}
+exports.isDebug = isDebug;
+/**
+ * Writes debug message to user log
+ * @param message debug message
+ */
+function debug(message) {
+    command_1.issueCommand('debug', {}, message);
+}
+exports.debug = debug;
+/**
+ * Adds an error issue
+ * @param message error issue message. Errors will be converted to string via toString()
+ */
+function error(message) {
+    command_1.issue('error', message instanceof Error ? message.toString() : message);
+}
+exports.error = error;
+/**
+ * Adds an warning issue
+ * @param message warning issue message. Errors will be converted to string via toString()
+ */
+function warning(message) {
+    command_1.issue('warning', message instanceof Error ? message.toString() : message);
+}
+exports.warning = warning;
+/**
+ * Writes info to log with console.log.
+ * @param message info message
+ */
+function info(message) {
+    process.stdout.write(message + os.EOL);
+}
+exports.info = info;
+/**
+ * Begin an output group.
+ *
+ * Output until the next `groupEnd` will be foldable in this group
+ *
+ * @param name The name of the output group
+ */
+function startGroup(name) {
+    command_1.issue('group', name);
+}
+exports.startGroup = startGroup;
+/**
+ * End an output group.
+ */
+function endGroup() {
+    command_1.issue('endgroup');
+}
+exports.endGroup = endGroup;
+/**
+ * Wrap an asynchronous function call in a group.
+ *
+ * Returns the same type as the function itself.
+ *
+ * @param name The name of the group
+ * @param fn The function to wrap in the group
+ */
+function group(name, fn) {
+    return __awaiter(this, void 0, void 0, function* () {
+        startGroup(name);
+        let result;
+        try {
+            result = yield fn();
+        }
+        finally {
+            endGroup();
+        }
+        return result;
+    });
+}
+exports.group = group;
+//-----------------------------------------------------------------------
+// Wrapper action state
+//-----------------------------------------------------------------------
+/**
+ * Saves state for current action, the state can only be retrieved by this action's post job execution.
+ *
+ * @param     name     name of the state to store
+ * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function saveState(name, value) {
+    command_1.issueCommand('save-state', { name }, value);
+}
+exports.saveState = saveState;
+/**
+ * Gets the value of an state set by this action's main execution.
+ *
+ * @param     name     name of the state to get
+ * @returns   string
+ */
+function getState(name) {
+    return process.env[`STATE_${name}`] || '';
+}
+exports.getState = getState;
+//# sourceMappingURL=core.js.map
+
+/***/ }),
+
+/***/ 717:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+// For internal use, subject to change.
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const fs = __importStar(__webpack_require__(747));
+const os = __importStar(__webpack_require__(87));
+const utils_1 = __webpack_require__(278);
+function issueCommand(command, message) {
+    const filePath = process.env[`GITHUB_${command}`];
+    if (!filePath) {
+        throw new Error(`Unable to find environment variable for file command ${command}`);
+    }
+    if (!fs.existsSync(filePath)) {
+        throw new Error(`Missing file at path: ${filePath}`);
+    }
+    fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
+        encoding: 'utf8'
+    });
+}
+exports.issueCommand = issueCommand;
+//# sourceMappingURL=file-command.js.map
+
+/***/ }),
+
+/***/ 278:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// We use any as a valid input type
+/* eslint-disable @typescript-eslint/no-explicit-any */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+/**
+ * Sanitizes an input into a string so it can be passed into issueCommand safely
+ * @param input input to sanitize into a string
+ */
+function toCommandValue(input) {
+    if (input === null || input === undefined) {
+        return '';
+    }
+    else if (typeof input === 'string' || input instanceof String) {
+        return input;
+    }
+    return JSON.stringify(input);
+}
+exports.toCommandValue = toCommandValue;
+//# sourceMappingURL=utils.js.map
+
+/***/ }),
+
 /***/ 569:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -695,16 +1088,17 @@ module.exports = {
 
 const { join } = __webpack_require__(622);
 
+const core = __webpack_require__( 186 );
+
 const git = __webpack_require__(109);
 const { createCheck } = __webpack_require__(872);
 const { getContext } = __webpack_require__(476);
 const linters = __webpack_require__(565);
-const { getInput, log } = __webpack_require__(575);
 const { getSummary } = __webpack_require__(149);
 
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", (err) => {
-	log(err, "error");
+	core.error(err);
 	throw new Error(`Exiting because of unhandled promise rejection`);
 });
 
@@ -713,22 +1107,20 @@ process.on("unhandledRejection", (err) => {
  */
 async function runAction() {
 	const context = getContext();
-	const autoFix = getInput("auto_fix") === "true";
-	const gitName = getInput("git_name", true);
-	const gitEmail = getInput("git_email", true);
-	const commitMessage = getInput("commit_message", true);
-	const checkName = getInput("check_name", true);
+	const autoFix = core.getInput("auto_fix") === "true";
+	const gitName = core.getInput("git_name", { required: true });
+	const gitEmail = core.getInput("git_email", { required: true });
+	const commitMessage = core.getInput("commit_message", { required: true });
+	const checkName = core.getInput("check_name", { required: true });
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {
-		log(
-			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
-			"error",
+		core.error(
+			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details"
 		);
 		if (autoFix) {
-			log(
-				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
-				"error",
+			core.error(
+				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details"
 			);
 		}
 	}
@@ -755,24 +1147,26 @@ async function runAction() {
 	// Loop over all available linters
 	for (const [linterId, linter] of Object.entries(linters)) {
 		// Determine whether the linter should be executed on the commit
-		if (getInput(linterId) === "true") {
-			const fileExtensions = getInput(`${linterId}_extensions`, true);
-			const args = getInput(`${linterId}_args`) || "";
-			const lintDirRel = getInput(`${linterId}_dir`) || ".";
-			const prefix = getInput(`${linterId}_command_prefix`) || "";
+		if (core.getInput(linterId) === "true") {
+			core.startGroup(`Run ${linter.name}`)
+
+			const fileExtensions = core.getInput(`${linterId}_extensions`, { required: true });
+			const args = core.getInput(`${linterId}_args`);
+			const lintDirRel = core.getInput(`${linterId}_dir`) || ".";
+			const prefix = core.getInput(`${linterId}_command_prefix`);
 			const lintDirAbs = join(context.workspace, lintDirRel);
 
 			// Check that the linter and its dependencies are installed
-			log(`\nVerifying setup for ${linter.name}…`);
+			core.info(`\nVerifying setup for ${linter.name}…`);
 			await linter.verifySetup(lintDirAbs, prefix);
-			log(`Verified ${linter.name} setup`);
+			core.info(`Verified ${linter.name} setup`);
 
 			// Determine which files should be linted
 			const fileExtList = fileExtensions.split(",");
-			log(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
+			core.info(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
-			log(
+			core.info(
 				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
 			);
 			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
@@ -780,7 +1174,7 @@ async function runAction() {
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
 			const summary = getSummary(lintResult);
-			log(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
+			core.info(`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`);
 
 			if (autoFix) {
 				// Commit and push auto-fix changes
@@ -796,13 +1190,14 @@ async function runAction() {
 				.trim();
 
 			checks.push({ lintCheckName, lintResult, summary });
+
+			core.endGroup();
 		}
 	}
 
 	// Add commit annotations after running all linters. To be displayed on pull requests, the
 	// annotations must be added to the last commit on the branch. This can either be a user commit or
 	// one of the auto-fix commits
-	log(""); // Create empty line in logs
 	const headSha = git.getHeadSha();
 	await Promise.all(
 		checks.map(({ lintCheckName, lintResult, summary }) =>
@@ -2499,7 +2894,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.6.0\",\"description\":\"GitHub Action for detecting and fixing linting errors\",\"author\":{\"name\":\"Samuel Meuli\",\"email\":\"me@samuelmeuli.com\",\"url\":\"https://samuelmeuli.com\"},\"repository\":\"github:wearerequired/lint-action\",\"license\":\"MIT\",\"private\":true,\"main\":\"./dist/index.js\",\"scripts\":{\"test\":\"jest\",\"lint\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint:fix\":\"yarn lint --fix\",\"format\":\"prettier --list-different \\\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\\"\",\"format:fix\":\"yarn format --write\",\"build\":\"ncc build ./src/index.js\"},\"dependencies\":{\"command-exists\":\"^1.2.9\",\"parse-diff\":\"^0.7.1\"},\"peerDependencies\":{},\"devDependencies\":{\"@samuelmeuli/eslint-config\":\"^6.0.0\",\"@samuelmeuli/prettier-config\":\"^2.0.1\",\"@vercel/ncc\":\"^0.24.1\",\"eslint\":\"7.13.0\",\"eslint-config-airbnb-base\":\"14.2.1\",\"eslint-config-prettier\":\"^6.15.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jsdoc\":\"^30.7.8\",\"fs-extra\":\"^9.0.1\",\"jest\":\"^26.6.3\",\"prettier\":\"^2.2.0\"},\"eslintConfig\":{\"root\":true,\"extends\":[\"@samuelmeuli/eslint-config\",\"plugin:jsdoc/recommended\"],\"env\":{\"node\":true,\"jest\":true},\"settings\":{\"jsdoc\":{\"mode\":\"typescript\"}},\"rules\":{\"no-await-in-loop\":\"off\",\"no-unused-vars\":[\"error\",{\"args\":\"none\",\"varsIgnorePattern\":\"^_\"}],\"jsdoc/check-indentation\":\"error\",\"jsdoc/check-syntax\":\"error\",\"jsdoc/newline-after-description\":[\"error\",\"never\"],\"jsdoc/require-description\":\"error\",\"jsdoc/require-hyphen-before-param-description\":\"error\",\"jsdoc/require-jsdoc\":\"off\"}},\"eslintIgnore\":[\"node_modules/\",\"test/linters/projects/\",\"test/tmp/\",\"dist/\"],\"jest\":{\"globalSetup\":\"./test/setup.js\",\"globalTeardown\":\"./test/teardown.js\"},\"prettier\":\"@samuelmeuli/prettier-config\"}");
+module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.6.0\",\"description\":\"GitHub Action for detecting and fixing linting errors\",\"author\":{\"name\":\"Samuel Meuli\",\"email\":\"me@samuelmeuli.com\",\"url\":\"https://samuelmeuli.com\"},\"repository\":\"github:wearerequired/lint-action\",\"license\":\"MIT\",\"private\":true,\"main\":\"./dist/index.js\",\"scripts\":{\"test\":\"jest\",\"lint\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint:fix\":\"yarn lint --fix\",\"format\":\"prettier --list-different \\\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\\"\",\"format:fix\":\"yarn format --write\",\"build\":\"ncc build ./src/index.js\"},\"dependencies\":{\"@actions/core\":\"^1.2.6\",\"command-exists\":\"^1.2.9\",\"parse-diff\":\"^0.7.1\"},\"peerDependencies\":{},\"devDependencies\":{\"@samuelmeuli/eslint-config\":\"^6.0.0\",\"@samuelmeuli/prettier-config\":\"^2.0.1\",\"@vercel/ncc\":\"^0.24.1\",\"eslint\":\"7.13.0\",\"eslint-config-airbnb-base\":\"14.2.1\",\"eslint-config-prettier\":\"^6.15.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jsdoc\":\"^30.7.8\",\"fs-extra\":\"^9.0.1\",\"jest\":\"^26.6.3\",\"prettier\":\"^2.2.0\"},\"eslintConfig\":{\"root\":true,\"extends\":[\"@samuelmeuli/eslint-config\",\"plugin:jsdoc/recommended\"],\"env\":{\"node\":true,\"jest\":true},\"settings\":{\"jsdoc\":{\"mode\":\"typescript\"}},\"rules\":{\"no-await-in-loop\":\"off\",\"no-unused-vars\":[\"error\",{\"args\":\"none\",\"varsIgnorePattern\":\"^_\"}],\"jsdoc/check-indentation\":\"error\",\"jsdoc/check-syntax\":\"error\",\"jsdoc/newline-after-description\":[\"error\",\"never\"],\"jsdoc/require-description\":\"error\",\"jsdoc/require-hyphen-before-param-description\":\"error\",\"jsdoc/require-jsdoc\":\"off\"}},\"eslintIgnore\":[\"node_modules/\",\"test/linters/projects/\",\"test/tmp/\",\"dist/\"],\"jest\":{\"globalSetup\":\"./test/setup.js\",\"globalTeardown\":\"./test/teardown.js\"},\"prettier\":\"@samuelmeuli/prettier-config\"}");
 
 /***/ }),
 
@@ -2524,6 +2919,14 @@ module.exports = require("fs");
 
 "use strict";
 module.exports = require("https");
+
+/***/ }),
+
+/***/ 87:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("os");
 
 /***/ }),
 
@@ -2556,7 +2959,7 @@ module.exports = require("path");
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
-/******/ 			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 			threw = false;
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
