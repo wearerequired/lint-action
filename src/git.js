@@ -57,10 +57,9 @@ function getHeadSha() {
  * @returns {boolean} - Boolean indicating whether changes exist
  */
 function hasChanges() {
-	const output = run("git diff-index HEAD --", { ignoreErrors: true });
-	const hasChanged = output.status === 1;
-	core.info(`${hasChanged ? "Changes" : "No changes"} found with Git`);
-	return hasChanged;
+	const res = run(`git diff-index ${core.isDebug() ? '' : '--quiet'} HEAD --`, { ignoreErrors: true }).status === 1;
+	core.info(`${res ? "Changes" : "No changes"} found with Git`);
+	return res;
 }
 
 /**
