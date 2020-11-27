@@ -112,7 +112,7 @@ async function runAction() {
 	// Add commit annotations after running all linters. To be displayed on pull requests, the
 	// annotations must be added to the last commit on the branch. This can either be a user commit or
 	// one of the auto-fix commits
-	if (isPullRequest) {
+	if (isPullRequest && autoFix) {
 		headSha = git.getHeadSha();
 	}
 
