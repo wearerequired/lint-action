@@ -1,5 +1,7 @@
 const { execSync } = require("child_process");
 
+const core = require("@actions/core");
+
 const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
 /**
@@ -36,19 +38,28 @@ function run(cmd, options) {
 	};
 
 	try {
-		const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
-		return {
+		const stdout = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
+		const output = {
 			status: 0,
-			stdout: output.trim(),
+			stdout: stdout.trim(),
 			stderr: "",
 		};
+
+		core.debug(output.stdout);
+
+		return output;
 	} catch (err) {
 		if (optionsWithDefaults.ignoreErrors) {
-			return {
+			const output = {
 				status: err.status,
 				stdout: err.stdout.trim(),
 				stderr: err.stderr.trim(),
 			};
+
+			core.debug(output.stdout);
+			core.debug(output.stderr);
+
+			return output;
 		}
 		throw err;
 	}
