@@ -851,10 +851,10 @@ function getHeadSha() {
  * @returns {boolean} - Boolean indicating whether changes exist
  */
 function hasChanges() {
-	const output = run("git diff-index HEAD --", { ignoreErrors: true });
-	const hasChanged = output.status === 1;
-	core.info(`${hasChanged ? "Changes" : "No changes"} found with Git`);
-	return hasChanged;
+	const output = run("git diff-index --name-status --exit-code HEAD --", { ignoreErrors: true });
+	const hasChangedFiles = output.status === 1;
+	core.info(`${hasChangedFiles ? "Changes" : "No changes"} found with Git`);
+	return hasChangedFiles;
 }
 
 /**
@@ -2621,6 +2621,8 @@ function run(cmd, options) {
 		...options,
 	};
 
+	core.debug(cmd);
+
 	try {
 		const stdout = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
 		const output = {
@@ -2629,7 +2631,7 @@ function run(cmd, options) {
 			stderr: "",
 		};
 
-		core.debug(output.stdout);
+		core.debug(`Stdout: ${output.stdout}`);
 
 		return output;
 	} catch (err) {
@@ -2640,8 +2642,9 @@ function run(cmd, options) {
 				stderr: err.stderr.trim(),
 			};
 
-			core.debug(output.stdout);
-			core.debug(output.stderr);
+			core.debug(`Exit code: ${output.status}`);
+			core.debug(`Stdout: ${output.stdout}`);
+			core.debug(`Stderr: ${output.stderr}`);
 
 			return output;
 		}
