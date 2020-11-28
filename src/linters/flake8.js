@@ -1,6 +1,8 @@
 const { sep } = require("path");
 
-const { log, run } = require("../utils/action");
+const core = require("@actions/core");
+
+const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { capitalizeFirstLetter } = require("../utils/string");
@@ -45,7 +47,7 @@ class Flake8 {
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		const files = extensions.map((ext) => `"**${sep}*.${ext}"`).join(",");

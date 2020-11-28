@@ -1,7 +1,9 @@
 const fs = require("fs");
 const { sep } = require("path");
 
-const { log, run } = require("../utils/action");
+const core = require("@actions/core");
+
+const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 
@@ -46,7 +48,7 @@ class Mypy {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		let specifiedPath = false;

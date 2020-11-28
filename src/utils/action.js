@@ -1,24 +1,8 @@
 const { execSync } = require("child_process");
 
-const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
+const core = require("@actions/core");
 
-/**
- * Logs to the console
- * @param {string} msg - Text to log to the console
- * @param {"info" | "warning" | "error"} level - Log level
- */
-function log(msg, level = "info") {
-	switch (level) {
-		case "error":
-			console.error(msg);
-			break;
-		case "warning":
-			console.warn(msg); // eslint-disable-line no-console
-			break;
-		default:
-			console.log(msg); // eslint-disable-line no-console
-	}
-}
+const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
 /**
  * Returns the value for an environment variable. If the variable is required but doesn't have a
@@ -42,18 +26,6 @@ function getEnv(name, required = false) {
 }
 
 /**
- * Returns the value for an input variable. If the variable is required but doesn't have a value,
- * an error is thrown
- * @param {string} name - Name of the input variable
- * @param {boolean} required - Whether an error should be thrown if the variable doesn't have a
- * value
- * @returns {string | null} - Value of the input variable
- */
-function getInput(name, required = false) {
-	return getEnv(`INPUT_${name}`, required);
-}
-
-/**
  * Executes the provided shell command
  * @param {string} cmd - Shell command to execute
  * @param {{dir: string, ignoreErrors: boolean}} [options] - {@see RUN_OPTIONS_DEFAULTS}
@@ -65,28 +37,38 @@ function run(cmd, options) {
 		...options,
 	};
 
+	core.debug(cmd);
+
 	try {
-		const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
-		return {
+		const stdout = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
+		const output = {
 			status: 0,
-			stdout: output.trim(),
+			stdout: stdout.trim(),
 			stderr: "",
 		};
+
+		core.debug(`Stdout: ${output.stdout}`);
+
+		return output;
 	} catch (err) {
 		if (optionsWithDefaults.ignoreErrors) {
-			return {
+			const output = {
 				status: err.status,
 				stdout: err.stdout.trim(),
 				stderr: err.stderr.trim(),
 			};
+
+			core.debug(`Exit code: ${output.status}`);
+			core.debug(`Stdout: ${output.stdout}`);
+			core.debug(`Stderr: ${output.stderr}`);
+
+			return output;
 		}
 		throw err;
 	}
 }
 
 module.exports = {
-	log,
 	getEnv,
-	getInput,
 	run,
 };

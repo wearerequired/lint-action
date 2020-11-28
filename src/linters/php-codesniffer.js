@@ -1,4 +1,6 @@
-const { log, run } = require("../utils/action");
+const core = require("@actions/core");
+
+const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { removeTrailingPeriod } = require("../utils/string");
@@ -42,7 +44,7 @@ class PHPCodeSniffer {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const extensionsArg = extensions.join(",");
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		return run(`${prefix} phpcs --extensions=${extensionsArg} --report=json -q ${args} "."`, {
