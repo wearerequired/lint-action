@@ -851,9 +851,10 @@ function getHeadSha() {
  * @returns {boolean} - Boolean indicating whether changes exist
  */
 function hasChanges() {
-	const res = run("git diff-index --quiet HEAD --", { ignoreErrors: true }).status === 1;
-	core.info(`${res ? "Changes" : "No changes"} found with Git`);
-	return res;
+	const output = run("git diff-index HEAD --", { ignoreErrors: true });
+	const hasChanged = output.status === 1;
+	core.info(`${hasChanged ? "Changes" : "No changes"} found with Git`);
+	return hasChanged;
 }
 
 /**
@@ -2583,6 +2584,8 @@ module.exports = XO;
 
 const { execSync } = __webpack_require__(129);
 
+const core = __webpack_require__(186);
+
 const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
 /**
@@ -2619,19 +2622,28 @@ function run(cmd, options) {
 	};
 
 	try {
-		const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
-		return {
+		const stdout = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
+		const output = {
 			status: 0,
-			stdout: output.trim(),
+			stdout: stdout.trim(),
 			stderr: "",
 		};
+
+		core.debug(output.stdout);
+
+		return output;
 	} catch (err) {
 		if (optionsWithDefaults.ignoreErrors) {
-			return {
+			const output = {
 				status: err.status,
 				stdout: err.stdout.trim(),
 				stderr: err.stderr.trim(),
 			};
+
+			core.debug(output.stdout);
+			core.debug(output.stderr);
+
+			return output;
 		}
 		throw err;
 	}
