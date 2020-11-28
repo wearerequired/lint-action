@@ -1117,10 +1117,9 @@ async function runAction() {
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
 	const checkName = core.getInput("check_name", { required: true });
-	const isPullRequest = context.eventName === "pull_request";
 
 	// If on a PR from fork: Display messages regarding action limitations
-	if (isPullRequest && context.repository.hasFork) {
+	if (context.eventName === "pull_request" && context.repository.hasFork) {
 		core.error(
 			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
 		);
@@ -1135,7 +1134,7 @@ async function runAction() {
 		// Set Git committer username and password
 		git.setUserInfo(gitName, gitEmail);
 	}
-	if (isPullRequest) {
+	if (context.eventName === "pull_request") {
 		// Fetch and check out PR branch:
 		// - "push" event: Already on correct branch
 		// - "pull_request" event on origin, for code on origin: The Checkout Action
@@ -1147,8 +1146,6 @@ async function runAction() {
 		//   first
 		git.checkOutRemoteBranch(context);
 	}
-
-	let headSha = git.getHeadSha();
 
 	const checks = [];
 
@@ -1208,10 +1205,7 @@ async function runAction() {
 	// Add commit annotations after running all linters. To be displayed on pull requests, the
 	// annotations must be added to the last commit on the branch. This can either be a user commit or
 	// one of the auto-fix commits
-	if (isPullRequest) {
-		headSha = git.getHeadSha();
-	}
-
+	const headSha = git.getHeadSha();
 	await Promise.all(
 		checks.map(({ lintCheckName, lintResult, summary }) =>
 			createCheck(lintCheckName, headSha, context, lintResult, summary),
