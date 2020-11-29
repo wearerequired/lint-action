@@ -23,7 +23,6 @@ To release a new version using semantic versioning follow these steps:
 2. Create a commit with a message like "v1.1.1".
 3. Tag that commit with the same message.
 4. Create a release from that tag on GitHub (this will publish it on the Action Marketplace, too) with a changelog of the user-facing changes.
-5. Move the major version tag (such as `v1`, `v2`) to point to the Git ref of the current release.
 
 ### Changelog format:
 
