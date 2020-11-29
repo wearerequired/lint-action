@@ -6,6 +6,10 @@ inputs:
   github_token:
     description: The GITHUB_TOKEN secret
     required: true
+  continue_on_error:
+    description: Whether the workflow run should fail when a linter fails
+    required: false
+    default: "true"
   auto_fix:
     description: Whether linters should try to fix code style issues automatically
     required: false
