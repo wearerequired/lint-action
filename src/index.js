@@ -125,14 +125,16 @@ async function runAction() {
 		headSha = git.getHeadSha();
 	}
 
+	core.startGroup('Create check runs with commit annotations')
 	await Promise.all(
 		checks.map(({ lintCheckName, lintResult, summary }) =>
 			createCheck(lintCheckName, headSha, context, lintResult, summary),
 		),
 	);
+	core.endGroup();
 
 	if (hasFailures && !continueOnError) {
-		core.setFailed("Linting failures detected");
+		core.setFailed("Linting failures detected. See check runs with annotations for details.");
 	}
 }
 
