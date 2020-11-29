@@ -1114,6 +1114,7 @@ process.on("unhandledRejection", (err) => {
 async function runAction() {
 	const context = getContext();
 	const autoFix = core.getInput("auto_fix") === "true";
+	const continueOnError = core.getInput("continue_on_error") === "true";
 	const gitName = core.getInput("git_name", { required: true });
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
@@ -1151,6 +1152,7 @@ async function runAction() {
 
 	let headSha = git.getHeadSha();
 
+	let hasFailures = false;
 	const checks = [];
 
 	// Loop over all available linters
@@ -1187,6 +1189,10 @@ async function runAction() {
 				`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`,
 			);
 
+			if (!lintResult.isSuccess) {
+				hasFailures = true;
+			}
+
 			if (autoFix) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
@@ -1213,11 +1219,17 @@ async function runAction() {
 		headSha = git.getHeadSha();
 	}
 
+	core.startGroup("Create check runs with commit annotations");
 	await Promise.all(
 		checks.map(({ lintCheckName, lintResult, summary }) =>
 			createCheck(lintCheckName, headSha, context, lintResult, summary),
 		),
 	);
+	core.endGroup();
+
+	if (hasFailures && !continueOnError) {
+		core.setFailed("Linting failures detected. See check runs with annotations for details.");
+	}
 }
 
 runAction();

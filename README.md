@@ -63,7 +63,7 @@ jobs:
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable your linters here
 ```
 
@@ -101,7 +101,7 @@ jobs:
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable linters
           eslint: true
           prettier: true
@@ -133,7 +133,7 @@ jobs:
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable linters
           php_codesniffer: true
           # Optional: Ignore warnings
@@ -171,7 +171,7 @@ jobs:
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable linters
           php_codesniffer: true
 ```
@@ -203,7 +203,7 @@ jobs:
       - name: Run linters
         uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # Enable linters
           black: true
           flake8: true
@@ -222,6 +222,10 @@ jobs:
 - **`[linter]_command_prefix`:** Command prefix to be run before the linter command. Default: `""`.
 
 ### General options
+
+- **`github_token`:** The `GITHUB_TOKEN` to [authenticate on behalf of GitHub Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow#using-the-github_token-in-a-workflow).
+
+- **`continue_on_error`:** Whether the workflow run should also fail when linter failures are detected. Default: `true`
 
 - **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch. Default: `false`
 
