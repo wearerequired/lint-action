@@ -2898,7 +2898,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.6.0\",\"description\":\"GitHub Action for detecting and fixing linting errors\",\"author\":{\"name\":\"Samuel Meuli\",\"email\":\"me@samuelmeuli.com\",\"url\":\"https://samuelmeuli.com\"},\"repository\":\"github:wearerequired/lint-action\",\"license\":\"MIT\",\"private\":true,\"main\":\"./dist/index.js\",\"scripts\":{\"test\":\"jest\",\"lint\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint:fix\":\"yarn lint --fix\",\"format\":\"prettier --list-different \\\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\\"\",\"format:fix\":\"yarn format --write\",\"build\":\"ncc build ./src/index.js\"},\"dependencies\":{\"@actions/core\":\"^1.2.6\",\"command-exists\":\"^1.2.9\",\"parse-diff\":\"^0.7.1\"},\"peerDependencies\":{},\"devDependencies\":{\"@samuelmeuli/eslint-config\":\"^6.0.0\",\"@samuelmeuli/prettier-config\":\"^2.0.1\",\"@vercel/ncc\":\"^0.24.1\",\"eslint\":\"7.14.0\",\"eslint-config-airbnb-base\":\"14.2.1\",\"eslint-config-prettier\":\"^6.15.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jsdoc\":\"^30.7.8\",\"fs-extra\":\"^9.0.1\",\"jest\":\"^26.6.3\",\"prettier\":\"^2.2.0\"},\"eslintConfig\":{\"root\":true,\"extends\":[\"@samuelmeuli/eslint-config\",\"plugin:jsdoc/recommended\"],\"env\":{\"node\":true,\"jest\":true},\"settings\":{\"jsdoc\":{\"mode\":\"typescript\"}},\"rules\":{\"no-await-in-loop\":\"off\",\"no-unused-vars\":[\"error\",{\"args\":\"none\",\"varsIgnorePattern\":\"^_\"}],\"jsdoc/check-indentation\":\"error\",\"jsdoc/check-syntax\":\"error\",\"jsdoc/newline-after-description\":[\"error\",\"never\"],\"jsdoc/require-description\":\"error\",\"jsdoc/require-hyphen-before-param-description\":\"error\",\"jsdoc/require-jsdoc\":\"off\"}},\"eslintIgnore\":[\"node_modules/\",\"test/linters/projects/\",\"test/tmp/\",\"dist/\"],\"jest\":{\"globalSetup\":\"./test/setup.js\",\"globalTeardown\":\"./test/teardown.js\"},\"prettier\":\"@samuelmeuli/prettier-config\"}");
+module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.6.0\",\"description\":\"GitHub Action for detecting and fixing linting errors\",\"author\":{\"name\":\"Samuel Meuli\",\"email\":\"me@samuelmeuli.com\",\"url\":\"https://samuelmeuli.com\"},\"repository\":\"github:wearerequired/lint-action\",\"license\":\"MIT\",\"private\":true,\"main\":\"./dist/index.js\",\"scripts\":{\"test\":\"jest\",\"lint\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint:fix\":\"yarn lint --fix\",\"format\":\"prettier --list-different \\\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\\"\",\"format:fix\":\"yarn format --write\",\"build\":\"ncc build ./src/index.js\"},\"dependencies\":{\"@actions/core\":\"^1.2.6\",\"command-exists\":\"^1.2.9\",\"parse-diff\":\"^0.7.1\"},\"peerDependencies\":{},\"devDependencies\":{\"@samuelmeuli/eslint-config\":\"^6.0.0\",\"@samuelmeuli/prettier-config\":\"^2.0.1\",\"@vercel/ncc\":\"^0.25.1\",\"eslint\":\"7.14.0\",\"eslint-config-airbnb-base\":\"14.2.1\",\"eslint-config-prettier\":\"^6.15.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jsdoc\":\"^30.7.8\",\"fs-extra\":\"^9.0.1\",\"jest\":\"^26.6.3\",\"prettier\":\"^2.2.0\"},\"eslintConfig\":{\"root\":true,\"extends\":[\"@samuelmeuli/eslint-config\",\"plugin:jsdoc/recommended\"],\"env\":{\"node\":true,\"jest\":true},\"settings\":{\"jsdoc\":{\"mode\":\"typescript\"}},\"rules\":{\"no-await-in-loop\":\"off\",\"no-unused-vars\":[\"error\",{\"args\":\"none\",\"varsIgnorePattern\":\"^_\"}],\"jsdoc/check-indentation\":\"error\",\"jsdoc/check-syntax\":\"error\",\"jsdoc/newline-after-description\":[\"error\",\"never\"],\"jsdoc/require-description\":\"error\",\"jsdoc/require-hyphen-before-param-description\":\"error\",\"jsdoc/require-jsdoc\":\"off\"}},\"eslintIgnore\":[\"node_modules/\",\"test/linters/projects/\",\"test/tmp/\",\"dist/\"],\"jest\":{\"globalSetup\":\"./test/setup.js\",\"globalTeardown\":\"./test/teardown.js\"},\"prettier\":\"@samuelmeuli/prettier-config\"}");
 
 /***/ }),
 
@@ -2906,7 +2906,7 @@ module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.6.0\",\"d
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("child_process");
+module.exports = require("child_process");;
 
 /***/ }),
 
@@ -2914,7 +2914,7 @@ module.exports = require("child_process");
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("fs");
+module.exports = require("fs");;
 
 /***/ }),
 
@@ -2922,7 +2922,7 @@ module.exports = require("fs");
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("https");
+module.exports = require("https");;
 
 /***/ }),
 
@@ -2930,7 +2930,7 @@ module.exports = require("https");
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("os");
+module.exports = require("os");;
 
 /***/ }),
 
@@ -2938,7 +2938,7 @@ module.exports = require("os");
 /***/ ((module) => {
 
 "use strict";
-module.exports = require("path");
+module.exports = require("path");;
 
 /***/ })
 
