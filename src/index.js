@@ -125,7 +125,7 @@ async function runAction() {
 		headSha = git.getHeadSha();
 	}
 
-	core.startGroup('Create check runs with commit annotations')
+	core.startGroup("Create check runs with commit annotations");
 	await Promise.all(
 		checks.map(({ lintCheckName, lintResult, summary }) =>
 			createCheck(lintCheckName, headSha, context, lintResult, summary),

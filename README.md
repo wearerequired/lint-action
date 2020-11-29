@@ -225,7 +225,7 @@ jobs:
 
 - **`github_token`:** The `GITHUB_TOKEN` to [authenticate on behalf of GitHub Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow#using-the-github_token-in-a-workflow).
 
-- **`continue_on_error`:** Whether the workflow run should also fail when linter failures are detected. Default: `false`
+- **`continue_on_error`:** Whether the workflow run should also fail when linter failures are detected. Default: `true`
 
 - **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch. Default: `false`
 
