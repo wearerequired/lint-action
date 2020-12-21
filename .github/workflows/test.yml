@@ -79,7 +79,7 @@ jobs:
       # Python
 
       - name: Set up Python
-        uses: actions/setup-python@v2.1.4
+        uses: actions/setup-python@v2.2.1
         with:
           python-version: 3.8
 
