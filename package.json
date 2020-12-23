@@ -29,7 +29,7 @@
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
 		"@vercel/ncc": "^0.26.1",
-		"eslint": "7.15.0",
+		"eslint": "7.16.0",
 		"eslint-config-airbnb-base": "14.2.1",
 		"eslint-config-prettier": "^7.1.0",
 		"eslint-plugin-import": "^2.22.1",
