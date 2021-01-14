@@ -3,7 +3,7 @@ module.exports =
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 241:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -15,8 +15,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const os = __importStar(__webpack_require__(87));
-const utils_1 = __webpack_require__(278);
+const os = __importStar(__nccwpck_require__(87));
+const utils_1 = __nccwpck_require__(278);
 /**
  * Commands
  *
@@ -89,7 +89,7 @@ function escapeProperty(s) {
 /***/ }),
 
 /***/ 186:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -110,11 +110,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const command_1 = __webpack_require__(241);
-const file_command_1 = __webpack_require__(717);
-const utils_1 = __webpack_require__(278);
-const os = __importStar(__webpack_require__(87));
-const path = __importStar(__webpack_require__(622));
+const command_1 = __nccwpck_require__(241);
+const file_command_1 = __nccwpck_require__(717);
+const utils_1 = __nccwpck_require__(278);
+const os = __importStar(__nccwpck_require__(87));
+const path = __importStar(__nccwpck_require__(622));
 /**
  * The code to exit an action
  */
@@ -334,7 +334,7 @@ exports.getState = getState;
 /***/ }),
 
 /***/ 717:
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -349,9 +349,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__webpack_require__(747));
-const os = __importStar(__webpack_require__(87));
-const utils_1 = __webpack_require__(278);
+const fs = __importStar(__nccwpck_require__(747));
+const os = __importStar(__nccwpck_require__(87));
+const utils_1 = __nccwpck_require__(278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -396,23 +396,23 @@ exports.toCommandValue = toCommandValue;
 /***/ }),
 
 /***/ 569:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __webpack_require__(325);
+module.exports = __nccwpck_require__(325);
 
 
 /***/ }),
 
 /***/ 325:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-var exec = __webpack_require__(129).exec;
-var execSync = __webpack_require__(129).execSync;
-var fs = __webpack_require__(747);
-var path = __webpack_require__(622);
+var exec = __nccwpck_require__(129).exec;
+var execSync = __nccwpck_require__(129).execSync;
+var fs = __nccwpck_require__(747);
+var path = __nccwpck_require__(622);
 var access = fs.access;
 var accessSync = fs.accessSync;
 var constants = fs.constants || fs;
@@ -790,11 +790,11 @@ escapeRegExp = function(s) {
 /***/ }),
 
 /***/ 109:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const { run } = __webpack_require__(575);
+const { run } = __nccwpck_require__(575);
 
 /**
  * Fetches and checks out the remote Git branch (if it exists, the fork repository will be used)
@@ -889,13 +889,13 @@ module.exports = {
 /***/ }),
 
 /***/ 872:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const { name: actionName } = __webpack_require__(306);
-const request = __webpack_require__(408);
-const { capitalizeFirstLetter } = __webpack_require__(321);
+const { name: actionName } = __nccwpck_require__(306);
+const request = __nccwpck_require__(408);
+const { capitalizeFirstLetter } = __nccwpck_require__(321);
 
 /**
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
@@ -965,14 +965,14 @@ module.exports = { createCheck };
 /***/ }),
 
 /***/ 476:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { readFileSync } = __webpack_require__(747);
+const { readFileSync } = __nccwpck_require__(747);
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const { name: actionName } = __webpack_require__(306);
-const { getEnv } = __webpack_require__(575);
+const { name: actionName } = __nccwpck_require__(306);
+const { getEnv } = __nccwpck_require__(575);
 
 /**
  * GitHub Actions workflow's environment variables
@@ -1090,17 +1090,17 @@ module.exports = {
 /***/ }),
 
 /***/ 351:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { join } = __webpack_require__(622);
+const { join } = __nccwpck_require__(622);
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const git = __webpack_require__(109);
-const { createCheck } = __webpack_require__(872);
-const { getContext } = __webpack_require__(476);
-const linters = __webpack_require__(565);
-const { getSummary } = __webpack_require__(149);
+const git = __nccwpck_require__(109);
+const { createCheck } = __nccwpck_require__(872);
+const { getContext } = __nccwpck_require__(476);
+const linters = __nccwpck_require__(565);
+const { getSummary } = __nccwpck_require__(149);
 
 // Abort action on unhandled promise rejections
 process.on("unhandledRejection", (err) => {
@@ -1238,12 +1238,12 @@ runAction();
 /***/ }),
 
 /***/ 844:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { parseErrorsFromDiff } = __webpack_require__(388);
-const { initLintResult } = __webpack_require__(149);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { parseErrorsFromDiff } = __nccwpck_require__(388);
+const { initLintResult } = __nccwpck_require__(149);
 
 /**
  * https://black.readthedocs.io
@@ -1311,13 +1311,13 @@ module.exports = Black;
 /***/ }),
 
 /***/ 169:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
-const { getNpmBinCommand } = __webpack_require__(838);
-const { removeTrailingPeriod } = __webpack_require__(321);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
+const { getNpmBinCommand } = __nccwpck_require__(838);
+const { removeTrailingPeriod } = __nccwpck_require__(321);
 
 /**
  * https://eslint.org
@@ -1425,16 +1425,16 @@ module.exports = ESLint;
 /***/ }),
 
 /***/ 636:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { sep } = __webpack_require__(622);
+const { sep } = __nccwpck_require__(622);
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
-const { capitalizeFirstLetter } = __webpack_require__(321);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
+const { capitalizeFirstLetter } = __nccwpck_require__(321);
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (\w*) (.*)$/gm;
 
@@ -1524,12 +1524,12 @@ module.exports = Flake8;
 /***/ }),
 
 /***/ 796:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { parseErrorsFromDiff } = __webpack_require__(388);
-const { initLintResult } = __webpack_require__(149);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { parseErrorsFromDiff } = __nccwpck_require__(388);
+const { initLintResult } = __nccwpck_require__(149);
 
 /**
  * https://golang.org/cmd/gofmt
@@ -1615,14 +1615,14 @@ module.exports = Gofmt;
 /***/ }),
 
 /***/ 658:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
-const { capitalizeFirstLetter } = __webpack_require__(321);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
+const { capitalizeFirstLetter } = __nccwpck_require__(321);
 
 const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
 
@@ -1702,22 +1702,22 @@ module.exports = Golint;
 /***/ }),
 
 /***/ 565:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const Black = __webpack_require__(844);
-const ESLint = __webpack_require__(169);
-const Flake8 = __webpack_require__(636);
-const Gofmt = __webpack_require__(796);
-const Golint = __webpack_require__(658);
-const Mypy = __webpack_require__(510);
-const PHPCodeSniffer = __webpack_require__(405);
-const Prettier = __webpack_require__(460);
-const RuboCop = __webpack_require__(399);
-const Stylelint = __webpack_require__(194);
-const SwiftFormatLockwood = __webpack_require__(983);
-const SwiftFormatOfficial = __webpack_require__(828);
-const SwiftLint = __webpack_require__(439);
-const XO = __webpack_require__(728);
+const Black = __nccwpck_require__(844);
+const ESLint = __nccwpck_require__(169);
+const Flake8 = __nccwpck_require__(636);
+const Gofmt = __nccwpck_require__(796);
+const Golint = __nccwpck_require__(658);
+const Mypy = __nccwpck_require__(510);
+const PHPCodeSniffer = __nccwpck_require__(405);
+const Prettier = __nccwpck_require__(460);
+const RuboCop = __nccwpck_require__(399);
+const Stylelint = __nccwpck_require__(194);
+const SwiftFormatLockwood = __nccwpck_require__(983);
+const SwiftFormatOfficial = __nccwpck_require__(828);
+const SwiftLint = __nccwpck_require__(439);
+const XO = __nccwpck_require__(728);
 
 const linters = {
 	// Linters
@@ -1749,16 +1749,16 @@ module.exports = linters;
 /***/ }),
 
 /***/ 510:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const fs = __webpack_require__(747);
-const { sep } = __webpack_require__(622);
+const fs = __nccwpck_require__(747);
+const { sep } = __nccwpck_require__(622);
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
 
@@ -1865,14 +1865,14 @@ module.exports = Mypy;
 /***/ }),
 
 /***/ 405:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
-const { removeTrailingPeriod } = __webpack_require__(321);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
+const { removeTrailingPeriod } = __nccwpck_require__(321);
 
 /**
  * https://github.com/squizlabs/PHP_CodeSniffer
@@ -1972,12 +1972,12 @@ module.exports = PHPCodeSniffer;
 /***/ }),
 
 /***/ 460:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
-const { getNpmBinCommand } = __webpack_require__(838);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
+const { getNpmBinCommand } = __nccwpck_require__(838);
 
 /**
  * https://prettier.io
@@ -2060,12 +2060,12 @@ module.exports = Prettier;
 /***/ }),
 
 /***/ 399:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
-const { removeTrailingPeriod } = __webpack_require__(321);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
+const { removeTrailingPeriod } = __nccwpck_require__(321);
 
 // Mapping of RuboCop severities to severities used for GitHub commit annotations
 const severityMap = {
@@ -2169,12 +2169,12 @@ module.exports = RuboCop;
 /***/ }),
 
 /***/ 194:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
-const { getNpmBinCommand } = __webpack_require__(838);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
+const { getNpmBinCommand } = __nccwpck_require__(838);
 
 /**
  * https://stylelint.io
@@ -2273,11 +2273,11 @@ module.exports = Stylelint;
 /***/ }),
 
 /***/ 983:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: \w+: \((\w+)\) (.*)\.$/gm;
 
@@ -2358,11 +2358,11 @@ module.exports = SwiftFormatLockwood;
 /***/ }),
 
 /***/ 828:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
 
@@ -2447,11 +2447,11 @@ module.exports = SwiftFormatOfficial;
 /***/ }),
 
 /***/ 439:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { initLintResult } = __webpack_require__(149);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (warning|error): (.*)$/gm;
 
@@ -2530,12 +2530,12 @@ module.exports = SwiftLint;
 /***/ }),
 
 /***/ 728:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { run } = __webpack_require__(575);
-const commandExists = __webpack_require__(265);
-const { getNpmBinCommand } = __webpack_require__(838);
-const ESLint = __webpack_require__(169);
+const { run } = __nccwpck_require__(575);
+const commandExists = __nccwpck_require__(265);
+const { getNpmBinCommand } = __nccwpck_require__(838);
+const ESLint = __nccwpck_require__(169);
 
 /**
  * https://github.com/xojs/xo
@@ -2592,11 +2592,11 @@ module.exports = XO;
 /***/ }),
 
 /***/ 575:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { execSync } = __webpack_require__(129);
+const { execSync } = __nccwpck_require__(129);
 
-const core = __webpack_require__(186);
+const core = __nccwpck_require__(186);
 
 const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
 
@@ -2673,9 +2673,9 @@ module.exports = {
 /***/ }),
 
 /***/ 265:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const checkForCommand = __webpack_require__(569);
+const checkForCommand = __nccwpck_require__(569);
 
 /**
  * Returns whether the provided shell command is available
@@ -2699,9 +2699,9 @@ module.exports = commandExists;
 /***/ }),
 
 /***/ 388:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const parseDiff = __webpack_require__(833);
+const parseDiff = __nccwpck_require__(833);
 
 /**
  * Parses linting errors from a unified diff
@@ -2788,9 +2788,9 @@ module.exports = {
 /***/ }),
 
 /***/ 838:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { useYarn } = __webpack_require__(753);
+const { useYarn } = __nccwpck_require__(753);
 
 /**
  * Returns the NPM or Yarn command ({@see useYarn()}) for executing an NPM binary
@@ -2808,10 +2808,10 @@ module.exports = { getNpmBinCommand };
 /***/ }),
 
 /***/ 753:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { existsSync } = __webpack_require__(747);
-const { join } = __webpack_require__(622);
+const { existsSync } = __nccwpck_require__(747);
+const { join } = __nccwpck_require__(622);
 
 const YARN_LOCK_NAME = "yarn.lock";
 
@@ -2834,9 +2834,9 @@ module.exports = { useYarn };
 /***/ }),
 
 /***/ 408:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const https = __webpack_require__(211);
+const https = __nccwpck_require__(211);
 
 /**
  * Helper function for making HTTP requests
@@ -2910,7 +2910,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.7.0\",\"description\":\"GitHub Action for detecting and fixing linting errors\",\"author\":{\"name\":\"Samuel Meuli\",\"email\":\"me@samuelmeuli.com\",\"url\":\"https://samuelmeuli.com\"},\"repository\":\"github:wearerequired/lint-action\",\"license\":\"MIT\",\"private\":true,\"main\":\"./dist/index.js\",\"scripts\":{\"test\":\"jest\",\"lint\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint:fix\":\"yarn lint --fix\",\"format\":\"prettier --list-different \\\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\\"\",\"format:fix\":\"yarn format --write\",\"build\":\"ncc build ./src/index.js\"},\"dependencies\":{\"@actions/core\":\"^1.2.6\",\"command-exists\":\"^1.2.9\",\"parse-diff\":\"^0.7.1\"},\"peerDependencies\":{},\"devDependencies\":{\"@samuelmeuli/eslint-config\":\"^6.0.0\",\"@samuelmeuli/prettier-config\":\"^2.0.1\",\"@vercel/ncc\":\"^0.25.1\",\"eslint\":\"7.15.0\",\"eslint-config-airbnb-base\":\"14.2.1\",\"eslint-config-prettier\":\"^7.0.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jsdoc\":\"^30.7.8\",\"fs-extra\":\"^9.0.1\",\"jest\":\"^26.6.3\",\"prettier\":\"^2.2.1\"},\"eslintConfig\":{\"root\":true,\"extends\":[\"@samuelmeuli/eslint-config\",\"plugin:jsdoc/recommended\"],\"env\":{\"node\":true,\"jest\":true},\"settings\":{\"jsdoc\":{\"mode\":\"typescript\"}},\"rules\":{\"no-await-in-loop\":\"off\",\"no-unused-vars\":[\"error\",{\"args\":\"none\",\"varsIgnorePattern\":\"^_\"}],\"jsdoc/check-indentation\":\"error\",\"jsdoc/check-syntax\":\"error\",\"jsdoc/newline-after-description\":[\"error\",\"never\"],\"jsdoc/require-description\":\"error\",\"jsdoc/require-hyphen-before-param-description\":\"error\",\"jsdoc/require-jsdoc\":\"off\"}},\"eslintIgnore\":[\"node_modules/\",\"test/linters/projects/\",\"test/tmp/\",\"dist/\"],\"jest\":{\"globalSetup\":\"./test/setup.js\",\"globalTeardown\":\"./test/teardown.js\"},\"prettier\":\"@samuelmeuli/prettier-config\"}");
+module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.7.0\",\"description\":\"GitHub Action for detecting and fixing linting errors\",\"author\":{\"name\":\"Samuel Meuli\",\"email\":\"me@samuelmeuli.com\",\"url\":\"https://samuelmeuli.com\"},\"repository\":\"github:wearerequired/lint-action\",\"license\":\"MIT\",\"private\":true,\"main\":\"./dist/index.js\",\"scripts\":{\"test\":\"jest\",\"lint\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint:fix\":\"yarn lint --fix\",\"format\":\"prettier --list-different \\\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\\"\",\"format:fix\":\"yarn format --write\",\"build\":\"ncc build ./src/index.js\"},\"dependencies\":{\"@actions/core\":\"^1.2.6\",\"command-exists\":\"^1.2.9\",\"parse-diff\":\"^0.7.1\"},\"peerDependencies\":{},\"devDependencies\":{\"@samuelmeuli/eslint-config\":\"^6.0.0\",\"@samuelmeuli/prettier-config\":\"^2.0.1\",\"@vercel/ncc\":\"^0.26.2\",\"eslint\":\"7.17.0\",\"eslint-config-airbnb-base\":\"14.2.1\",\"eslint-config-prettier\":\"^7.1.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jsdoc\":\"^30.7.13\",\"fs-extra\":\"^9.0.1\",\"jest\":\"^26.6.3\",\"prettier\":\"^2.2.1\"},\"eslintConfig\":{\"root\":true,\"extends\":[\"@samuelmeuli/eslint-config\",\"plugin:jsdoc/recommended\"],\"env\":{\"node\":true,\"jest\":true},\"settings\":{\"jsdoc\":{\"mode\":\"typescript\"}},\"rules\":{\"no-await-in-loop\":\"off\",\"no-unused-vars\":[\"error\",{\"args\":\"none\",\"varsIgnorePattern\":\"^_\"}],\"jsdoc/check-indentation\":\"error\",\"jsdoc/check-syntax\":\"error\",\"jsdoc/newline-after-description\":[\"error\",\"never\"],\"jsdoc/require-description\":\"error\",\"jsdoc/require-hyphen-before-param-description\":\"error\",\"jsdoc/require-jsdoc\":\"off\"}},\"eslintIgnore\":[\"node_modules/\",\"test/linters/projects/\",\"test/tmp/\",\"dist/\"],\"jest\":{\"globalSetup\":\"./test/setup.js\",\"globalTeardown\":\"./test/teardown.js\"},\"prettier\":\"@samuelmeuli/prettier-config\"}");
 
 /***/ }),
 
@@ -2960,7 +2960,7 @@ module.exports = require("path");;
 /******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
+/******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(__webpack_module_cache__[moduleId]) {
 /******/ 			return __webpack_module_cache__[moduleId].exports;
@@ -2975,7 +2975,7 @@ module.exports = require("path");;
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
-/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 			__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nccwpck_require__);
 /******/ 			threw = false;
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
@@ -2988,10 +2988,10 @@ module.exports = require("path");;
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
-/******/ 	__webpack_require__.ab = __dirname + "/";/************************************************************************/
+/******/ 	__nccwpck_require__.ab = __dirname + "/";/************************************************************************/
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(351);
+/******/ 	return __nccwpck_require__(351);
 /******/ })()
 ;
