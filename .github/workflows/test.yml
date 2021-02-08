@@ -48,7 +48,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Set up yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.4
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('./test/linters/projects/**/yarn.lock') }}
@@ -89,7 +89,7 @@ jobs:
           echo "::set-output name=dir::$(pip cache dir)"
 
       - name: Set up pip cache
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.4
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('./test/linters/projects/**/requirements.txt') }}
@@ -110,7 +110,7 @@ jobs:
           bundler: 2
 
       - name: Set up bundle cache
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.4
         with:
           path: ./test/linters/projects/**/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock') }}
@@ -137,7 +137,7 @@ jobs:
 
       - name: Set up mint cache
         if: startsWith(matrix.os, 'macos')
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.4
         with:
           path: /usr/local/lib/mint
           key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile') }}
