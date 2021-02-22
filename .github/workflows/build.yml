@@ -16,7 +16,7 @@ jobs:
         with:
           # Custom token to allow commits trigger other workflows.
           token: ${{ secrets.BUILD_ACTION_GITHUB_TOKEN }}
-          
+
       - name: Set up Node.js
         uses: actions/setup-node@v2.1.4
         with:
