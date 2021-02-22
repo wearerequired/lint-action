@@ -150,9 +150,9 @@ jobs:
           brew update >/dev/null
           brew install mint
           cd ./test/linters/projects/swift-format-lockwood/
-          mint bootstrap --link --overwrite
+          mint bootstrap --link --overwrite=y
           cd ../swiftlint/
-          mint bootstrap --link --overwrite
+          mint bootstrap --link --overwrite=y
 
       # Tests
 
