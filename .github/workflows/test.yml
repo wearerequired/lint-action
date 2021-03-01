@@ -9,6 +9,9 @@ on:
   pull_request:
     paths-ignore:
       - "**.md"
+  pull_request_target:
+    paths-ignore:
+      - "**.md"
 
 jobs:
   test:
