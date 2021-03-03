@@ -40,7 +40,11 @@ function run(cmd, options) {
 	core.debug(cmd);
 
 	try {
-		const stdout = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
+		const stdout = execSync(cmd, {
+			encoding: "utf8",
+			cwd: optionsWithDefaults.dir,
+			maxBuffer: 20 * 1024 * 1024,
+		});
 		const output = {
 			status: 0,
 			stdout: stdout.trim(),
