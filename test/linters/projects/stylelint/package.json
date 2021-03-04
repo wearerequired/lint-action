@@ -3,6 +3,6 @@
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {
-		"stylelint": "^13.2.1"
+		"stylelint": "^13.11.0"
 	}
 }
