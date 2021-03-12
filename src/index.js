@@ -25,7 +25,7 @@ async function runAction() {
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
 	const checkName = core.getInput("check_name", { required: true });
-	const isPullRequest = context.eventName === "pull_request";
+	const isPullRequest = context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (isPullRequest && context.repository.hasFork) {
