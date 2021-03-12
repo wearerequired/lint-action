@@ -3,6 +3,6 @@
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {
-		"prettier": "^1.19.1"
+		"prettier": "^2.2.1"
 	}
 }
