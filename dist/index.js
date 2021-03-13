@@ -1102,12 +1102,6 @@ const { getContext } = __nccwpck_require__(476);
 const linters = __nccwpck_require__(565);
 const { getSummary } = __nccwpck_require__(149);
 
-// Abort action on unhandled promise rejections
-process.on("unhandledRejection", (err) => {
-	core.error(err);
-	throw new Error(`Exiting because of unhandled promise rejection`);
-});
-
 /**
  * Parses the action configuration and runs all enabled linters on matching files
  */
@@ -1119,7 +1113,8 @@ async function runAction() {
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
 	const checkName = core.getInput("check_name", { required: true });
-	const isPullRequest = context.eventName === "pull_request" || context.eventName === "pull_request_target";
+	const isPullRequest =
+		context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (isPullRequest && context.repository.hasFork) {
@@ -1232,7 +1227,10 @@ async function runAction() {
 	}
 }
 
-runAction();
+runAction().catch((error) => {
+	core.debug(error.stack || "No error stack trace");
+	core.setFailed(error.message);
+});
 
 
 /***/ }),
