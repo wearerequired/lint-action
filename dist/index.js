@@ -1026,7 +1026,7 @@ function parseEnvFile(eventPath) {
  * @returns {string} - Branch name
  */
 function parseBranch(eventName, event) {
-	if (eventName === "push") {
+	if (eventName === "push" || eventName === "workflow_dispatch") {
 		return event.ref.substring(11); // Remove "refs/heads/" from start of string
 	}
 	if (eventName === "pull_request" || eventName === "pull_request_target") {
