@@ -1029,7 +1029,7 @@ function parseBranch(eventName, event) {
 	if (eventName === "push") {
 		return event.ref.substring(11); // Remove "refs/heads/" from start of string
 	}
-	if (eventName === "pull_request") {
+	if (eventName === "pull_request" || eventName === "pull_request_target") {
 		return event.pull_request.head.ref;
 	}
 	throw Error(`${actionName} does not support "${eventName}" GitHub events`);
@@ -1045,7 +1045,7 @@ function parseBranch(eventName, event) {
 function parseRepository(eventName, event) {
 	const repoName = event.repository.full_name;
 	let forkName;
-	if (eventName === "pull_request") {
+	if (eventName === "pull_request" || eventName === "pull_request_target") {
 		// "pull_request" events are triggered on the repository where the PR is made. The PR branch can
 		// be on the same repository (`forkRepository` is set to `null`) or on a fork (`forkRepository`
 		// is defined)
@@ -1102,12 +1102,6 @@ const { getContext } = __nccwpck_require__(476);
 const linters = __nccwpck_require__(565);
 const { getSummary } = __nccwpck_require__(149);
 
-// Abort action on unhandled promise rejections
-process.on("unhandledRejection", (err) => {
-	core.error(err);
-	throw new Error(`Exiting because of unhandled promise rejection`);
-});
-
 /**
  * Parses the action configuration and runs all enabled linters on matching files
  */
@@ -1119,7 +1113,8 @@ async function runAction() {
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
 	const checkName = core.getInput("check_name", { required: true });
-	const isPullRequest = context.eventName === "pull_request";
+	const isPullRequest =
+		context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (isPullRequest && context.repository.hasFork) {
@@ -1232,7 +1227,10 @@ async function runAction() {
 	}
 }
 
-runAction();
+runAction().catch((error) => {
+	core.debug(error.stack || "No error stack trace");
+	core.setFailed(error.message);
+});
 
 
 /***/ }),
