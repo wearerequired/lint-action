@@ -32,7 +32,7 @@ inputs:
     required: false
     default: "${linter}"
   neutral_check_on_warning:
-    description: 'Whether the check run should conclude with a neutral status instead of success when the linter finds only warnings'
+    description: Whether the check run should conclude with a neutral status instead of success when the linter finds only warnings
     required: false
     default: "false"
 
