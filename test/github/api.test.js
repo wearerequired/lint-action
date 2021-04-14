@@ -36,12 +36,12 @@ describe("createCheck()", () => {
 
 	test("mocked request should be successful", async () => {
 		await expect(
-			createCheck("check-name", "sha", context, LINT_RESULT, "summary"),
+			createCheck("check-name", "sha", context, LINT_RESULT, false, "summary"),
 		).resolves.toEqual(undefined);
 	});
 
 	test("mocked request should fail when no lint results are provided", async () => {
-		await expect(createCheck("check-name", "sha", context, null, "summary")).rejects.toEqual(
+		await expect(createCheck("check-name", "sha", context, null, false, "summary")).rejects.toEqual(
 			expect.any(Error),
 		);
 	});

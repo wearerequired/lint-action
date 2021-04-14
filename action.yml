@@ -31,6 +31,10 @@ inputs:
     description: 'Template for the name of the check run. The "${linter}" and "${dir}" variables can be used to insert the name and directory of the linter.'
     required: false
     default: "${linter}"
+  neutral_check_on_warning:
+    description: 'Whether the check run should conclude with a neutral status instead of success when the linter finds only warnings'
+    required: false
+    default: "false"
 
   # CSS
 
