@@ -11,7 +11,8 @@ const { capitalizeFirstLetter } = require("../utils/string");
  * @param {import('./context').GithubContext} context - Information about the GitHub repository and
  * action trigger event
  * @param {import('../utils/lint-result').LintResult} lintResult - Parsed lint result
- * @param {boolean} neutralCheckOnWarning - Whether the check run should conclude as neutral if there are only warnings
+ * @param {boolean} neutralCheckOnWarning - Whether the check run should conclude as neutral if
+ * there are only warnings
  * @param {string} summary - Summary for the GitHub check
  */
 async function createCheck(linterName, sha, context, lintResult, neutralCheckOnWarning, summary) {
@@ -51,7 +52,7 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 	const body = {
 		name: linterName,
 		head_sha: sha,
-		conclusion: conclusion,
+		conclusion,
 		output: {
 			title: capitalizeFirstLetter(summary),
 			summary: `${linterName} found ${summary}`,
