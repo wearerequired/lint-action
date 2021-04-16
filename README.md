@@ -224,7 +224,6 @@ jobs:
 
 > NOTE: To ensure all workflows are automatically re-run after a successful fix is pushed use a [Personal Access Token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token). See the following [discussion](https://github.community/t/triggering-a-new-workflow-from-another-workflow/16250/37) for more details.
 
-
 - **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch. Default: `false`
 
   <p align="center">
