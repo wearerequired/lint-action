@@ -7,6 +7,10 @@ inputs:
     description: The GitHub token used to authenticated with GitHub.
     required: false
     default: ${{ github.token }}
+  auto_fix_token:
+    description: The GitHub token used for pushing changes to GitHub when auto_fix is enabled.
+    required: false
+    default: ${{ github.token }}
   continue_on_error:
     description: Whether the workflow run should also fail when linter failures are detected
     required: false
