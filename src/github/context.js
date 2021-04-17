@@ -36,7 +36,7 @@ function parseActionEnv() {
 
 		// Information provided by action user
 		token: core.getInput("github_token", { required: true }),
-		auto_fix_token: getInput("auto_fix_token", true),
+		auto_fix_token: core.getInput("auto_fix_token", true),
 	};
 }
 
