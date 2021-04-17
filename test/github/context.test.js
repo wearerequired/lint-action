@@ -33,6 +33,7 @@ describe("parseActionEnv()", () => {
 		GITHUB_EVENT_PATH: EVENT_PATH,
 		GITHUB_WORKSPACE: REPOSITORY_DIR,
 		INPUT_GITHUB_TOKEN: TOKEN,
+		INPUT_AUTO_FIX_TOKEN: TOKEN,
 	};
 
 	// Expected result from parsing the environment variables
@@ -41,6 +42,7 @@ describe("parseActionEnv()", () => {
 		eventName: EVENT_NAME,
 		eventPath: EVENT_PATH,
 		token: TOKEN,
+		auto_fix_token: TOKEN,
 		workspace: REPOSITORY_DIR,
 	};
 
