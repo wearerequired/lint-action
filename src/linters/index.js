@@ -12,6 +12,7 @@ const SwiftFormatLockwood = require("./swift-format-lockwood");
 const SwiftFormatOfficial = require("./swift-format-official");
 const SwiftLint = require("./swiftlint");
 const XO = require("./xo");
+const DotNetFormat = require("./dotnet-format");
 
 const linters = {
 	// Linters
@@ -27,6 +28,7 @@ const linters = {
 
 	// Formatters (should be run after linters)
 	black: Black,
+	dotnetformat: DotNetFormat,
 	gofmt: Gofmt,
 	prettier: Prettier,
 	swift_format_lockwood: SwiftFormatLockwood,
