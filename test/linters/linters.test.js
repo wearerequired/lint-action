@@ -18,6 +18,7 @@ const swiftFormatLockwood = require("./params/swift-format-lockwood");
 // const swiftFormatOfficial = require("./params/swift-format-official");
 const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
+const dotnetFormatParams = require("./params/dotnet-format")
 
 const linterParams = [
 	blackParams,
@@ -32,6 +33,7 @@ const linterParams = [
 	ruboCopParams,
 	stylelintParams,
 	xoParams,
+	dotnetFormatParams,
 ];
 if (process.platform === "linux") {
 	// Temporarily disabled because swift-format 0.50300.0 no longer returns a proper exit code, yet
