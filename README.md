@@ -39,6 +39,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [swift-format](https://github.com/apple/swift-format) (official)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
   - [SwiftLint](https://github.com/realm/SwiftLint)
+- **.NET:**
+  - [dotnet-format](https://github.com/dotnet/format)
 
 ## Usage
 
@@ -200,6 +202,34 @@ jobs:
         with:
           black: true
           flake8: true
+```
+
+### .NET example
+
+```yml
+name: Lint
+
+on: push
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK 5
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          dotnet-format: true
+          auto-fix: true
 ```
 
 ## Configuration
