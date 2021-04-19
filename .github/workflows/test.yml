@@ -101,6 +101,18 @@ jobs:
           cd ./test/linters/projects/
           pip install -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt
 
+      # Go
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Install .NET dependencies
+        run: |
+          cd ./test/linters/projects/dotnet-format
+          dotnet restore
+
       # Ruby
 
       - name: Set up Ruby
