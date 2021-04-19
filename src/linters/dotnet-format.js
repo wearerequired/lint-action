@@ -20,3 +20,5 @@ class DotNetFormat {
 		}
 	}
 }
+
+module.exports = DotNetFormat;
