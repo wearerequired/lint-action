@@ -1,4 +1,3 @@
-module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -874,152 +873,6 @@ module.exports = {
 	parseEnvFile,
 	parseRepository,
 };
-
-
-/***/ }),
-
-/***/ 351:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const { join } = __nccwpck_require__(622);
-
-const core = __nccwpck_require__(186);
-
-const git = __nccwpck_require__(109);
-const { createCheck } = __nccwpck_require__(872);
-const { getContext } = __nccwpck_require__(476);
-const linters = __nccwpck_require__(565);
-const { getSummary } = __nccwpck_require__(149);
-
-/**
- * Parses the action configuration and runs all enabled linters on matching files
- */
-async function runAction() {
-	const context = getContext();
-	const autoFix = core.getInput("auto_fix") === "true";
-	const continueOnError = core.getInput("continue_on_error") === "true";
-	const gitName = core.getInput("git_name", { required: true });
-	const gitEmail = core.getInput("git_email", { required: true });
-	const commitMessage = core.getInput("commit_message", { required: true });
-	const checkName = core.getInput("check_name", { required: true });
-	const isPullRequest =
-		context.eventName === "pull_request" || context.eventName === "pull_request_target";
-
-	// If on a PR from fork: Display messages regarding action limitations
-	if (isPullRequest && context.repository.hasFork) {
-		core.error(
-			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
-		);
-		if (autoFix) {
-			core.error(
-				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
-			);
-		}
-	}
-
-	if (autoFix) {
-		// Set Git committer username and password
-		git.setUserInfo(gitName, gitEmail);
-	}
-	if (isPullRequest) {
-		// Fetch and check out PR branch:
-		// - "push" event: Already on correct branch
-		// - "pull_request" event on origin, for code on origin: The Checkout Action
-		//   (https://github.com/actions/checkout) checks out the PR's test merge commit instead of the
-		//   PR branch. Git is therefore in detached head state. To be able to push changes, the branch
-		//   needs to be fetched and checked out first
-		// - "pull_request" event on origin, for code on fork: Same as above, but the repo/branch where
-		//   changes need to be pushed is not yet available. The fork needs to be added as a Git remote
-		//   first
-		git.checkOutRemoteBranch(context);
-	}
-
-	let headSha = git.getHeadSha();
-
-	let hasFailures = false;
-	const checks = [];
-
-	// Loop over all available linters
-	for (const [linterId, linter] of Object.entries(linters)) {
-		// Determine whether the linter should be executed on the commit
-		if (core.getInput(linterId) === "true") {
-			core.startGroup(`Run ${linter.name}`);
-
-			const fileExtensions = core.getInput(`${linterId}_extensions`, { required: true });
-			const args = core.getInput(`${linterId}_args`);
-			const lintDirRel = core.getInput(`${linterId}_dir`) || ".";
-			const prefix = core.getInput(`${linterId}_command_prefix`);
-			const lintDirAbs = join(context.workspace, lintDirRel);
-
-			// Check that the linter and its dependencies are installed
-			core.info(`Verifying setup for ${linter.name}…`);
-			await linter.verifySetup(lintDirAbs, prefix);
-			core.info(`Verified ${linter.name} setup`);
-
-			// Determine which files should be linted
-			const fileExtList = fileExtensions.split(",");
-			core.info(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
-
-			// Lint and optionally auto-fix the matching files, parse code style violations
-			core.info(
-				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
-			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
-
-			// Parse output of linting command
-			const lintResult = linter.parseOutput(context.workspace, lintOutput);
-			const summary = getSummary(lintResult);
-			core.info(
-				`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`,
-			);
-
-			if (!lintResult.isSuccess) {
-				hasFailures = true;
-			}
-
-			if (autoFix) {
-				// Commit and push auto-fix changes
-				if (git.hasChanges()) {
-					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name));
-					git.pushChanges();
-				}
-			}
-
-			const lintCheckName = checkName
-				.replace(/\${linter}/g, linter.name)
-				.replace(/\${dir}/g, lintDirRel !== "." ? `${lintDirRel}` : "")
-				.trim();
-
-			checks.push({ lintCheckName, lintResult, summary });
-
-			core.endGroup();
-		}
-	}
-
-	// Add commit annotations after running all linters. To be displayed on pull requests, the
-	// annotations must be added to the last commit on the branch. This can either be a user commit or
-	// one of the auto-fix commits
-	if (isPullRequest && autoFix) {
-		headSha = git.getHeadSha();
-	}
-
-	core.startGroup("Create check runs with commit annotations");
-	await Promise.all(
-		checks.map(({ lintCheckName, lintResult, summary }) =>
-			createCheck(lintCheckName, headSha, context, lintResult, summary),
-		),
-	);
-	core.endGroup();
-
-	if (hasFailures && !continueOnError) {
-		core.setFailed("Linting failures detected. See check runs with annotations for details.");
-	}
-}
-
-runAction().catch((error) => {
-	core.debug(error.stack || "No error stack trace");
-	core.setFailed(error.message);
-});
 
 
 /***/ }),
@@ -2701,7 +2554,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse("{\"name\":\"lint-action\",\"version\":\"1.9.0\",\"description\":\"GitHub Action for detecting and fixing linting errors\",\"author\":{\"name\":\"Samuel Meuli\",\"email\":\"me@samuelmeuli.com\",\"url\":\"https://samuelmeuli.com\"},\"repository\":\"github:wearerequired/lint-action\",\"license\":\"MIT\",\"private\":true,\"main\":\"./dist/index.js\",\"scripts\":{\"test\":\"jest\",\"lint\":\"eslint --max-warnings 0 \\\"**/*.js\\\"\",\"lint:fix\":\"yarn lint --fix\",\"format\":\"prettier --list-different \\\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\\"\",\"format:fix\":\"yarn format --write\",\"build\":\"ncc build ./src/index.js\"},\"dependencies\":{\"@actions/core\":\"^1.2.6\",\"command-exists\":\"^1.2.9\",\"parse-diff\":\"^0.8.1\"},\"peerDependencies\":{},\"devDependencies\":{\"@samuelmeuli/eslint-config\":\"^6.0.0\",\"@samuelmeuli/prettier-config\":\"^2.0.1\",\"@vercel/ncc\":\"^0.27.0\",\"eslint\":\"7.21.0\",\"eslint-config-airbnb-base\":\"14.2.1\",\"eslint-config-prettier\":\"^8.1.0\",\"eslint-plugin-import\":\"^2.22.1\",\"eslint-plugin-jsdoc\":\"^32.2.0\",\"fs-extra\":\"^9.1.0\",\"jest\":\"^26.6.3\",\"prettier\":\"^2.2.1\"},\"eslintConfig\":{\"root\":true,\"extends\":[\"@samuelmeuli/eslint-config\",\"plugin:jsdoc/recommended\"],\"env\":{\"node\":true,\"jest\":true},\"settings\":{\"jsdoc\":{\"mode\":\"typescript\"}},\"rules\":{\"no-await-in-loop\":\"off\",\"no-unused-vars\":[\"error\",{\"args\":\"none\",\"varsIgnorePattern\":\"^_\"}],\"jsdoc/check-indentation\":\"error\",\"jsdoc/check-syntax\":\"error\",\"jsdoc/newline-after-description\":[\"error\",\"never\"],\"jsdoc/require-description\":\"error\",\"jsdoc/require-hyphen-before-param-description\":\"error\",\"jsdoc/require-jsdoc\":\"off\"}},\"eslintIgnore\":[\"node_modules/\",\"test/linters/projects/\",\"test/tmp/\",\"dist/\"],\"jest\":{\"globalSetup\":\"./test/setup.js\",\"globalTeardown\":\"./test/teardown.js\"},\"prettier\":\"@samuelmeuli/prettier-config\"}");
+module.exports = JSON.parse('{"name":"lint-action","version":"1.9.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.2.6","command-exists":"^1.2.9","parse-diff":"^0.8.1"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.28.4","eslint":"7.21.0","eslint-config-airbnb-base":"14.2.1","eslint-config-prettier":"^8.1.0","eslint-plugin-import":"^2.22.1","eslint-plugin-jsdoc":"^32.2.0","fs-extra":"^9.1.0","jest":"^26.6.3","prettier":"^2.2.1"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"globalSetup":"./test/setup.js","globalTeardown":"./test/teardown.js"},"prettier":"@samuelmeuli/prettier-config"}');
 
 /***/ }),
 
@@ -2753,8 +2606,9 @@ module.exports = require("path");;
 /******/ 	// The require function
 /******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -2779,10 +2633,152 @@ module.exports = require("path");;
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
-/******/ 	__nccwpck_require__.ab = __dirname + "/";/************************************************************************/
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	return __nccwpck_require__(351);
+/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+const { join } = __nccwpck_require__(622);
+
+const core = __nccwpck_require__(186);
+
+const git = __nccwpck_require__(109);
+const { createCheck } = __nccwpck_require__(872);
+const { getContext } = __nccwpck_require__(476);
+const linters = __nccwpck_require__(565);
+const { getSummary } = __nccwpck_require__(149);
+
+/**
+ * Parses the action configuration and runs all enabled linters on matching files
+ */
+async function runAction() {
+	const context = getContext();
+	const autoFix = core.getInput("auto_fix") === "true";
+	const continueOnError = core.getInput("continue_on_error") === "true";
+	const gitName = core.getInput("git_name", { required: true });
+	const gitEmail = core.getInput("git_email", { required: true });
+	const commitMessage = core.getInput("commit_message", { required: true });
+	const checkName = core.getInput("check_name", { required: true });
+	const isPullRequest =
+		context.eventName === "pull_request" || context.eventName === "pull_request_target";
+
+	// If on a PR from fork: Display messages regarding action limitations
+	if (isPullRequest && context.repository.hasFork) {
+		core.error(
+			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
+		);
+		if (autoFix) {
+			core.error(
+				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
+			);
+		}
+	}
+
+	if (autoFix) {
+		// Set Git committer username and password
+		git.setUserInfo(gitName, gitEmail);
+	}
+	if (isPullRequest) {
+		// Fetch and check out PR branch:
+		// - "push" event: Already on correct branch
+		// - "pull_request" event on origin, for code on origin: The Checkout Action
+		//   (https://github.com/actions/checkout) checks out the PR's test merge commit instead of the
+		//   PR branch. Git is therefore in detached head state. To be able to push changes, the branch
+		//   needs to be fetched and checked out first
+		// - "pull_request" event on origin, for code on fork: Same as above, but the repo/branch where
+		//   changes need to be pushed is not yet available. The fork needs to be added as a Git remote
+		//   first
+		git.checkOutRemoteBranch(context);
+	}
+
+	let headSha = git.getHeadSha();
+
+	let hasFailures = false;
+	const checks = [];
+
+	// Loop over all available linters
+	for (const [linterId, linter] of Object.entries(linters)) {
+		// Determine whether the linter should be executed on the commit
+		if (core.getInput(linterId) === "true") {
+			core.startGroup(`Run ${linter.name}`);
+
+			const fileExtensions = core.getInput(`${linterId}_extensions`, { required: true });
+			const args = core.getInput(`${linterId}_args`);
+			const lintDirRel = core.getInput(`${linterId}_dir`) || ".";
+			const prefix = core.getInput(`${linterId}_command_prefix`);
+			const lintDirAbs = join(context.workspace, lintDirRel);
+
+			// Check that the linter and its dependencies are installed
+			core.info(`Verifying setup for ${linter.name}…`);
+			await linter.verifySetup(lintDirAbs, prefix);
+			core.info(`Verified ${linter.name} setup`);
+
+			// Determine which files should be linted
+			const fileExtList = fileExtensions.split(",");
+			core.info(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
+
+			// Lint and optionally auto-fix the matching files, parse code style violations
+			core.info(
+				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
+			);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
+
+			// Parse output of linting command
+			const lintResult = linter.parseOutput(context.workspace, lintOutput);
+			const summary = getSummary(lintResult);
+			core.info(
+				`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`,
+			);
+
+			if (!lintResult.isSuccess) {
+				hasFailures = true;
+			}
+
+			if (autoFix) {
+				// Commit and push auto-fix changes
+				if (git.hasChanges()) {
+					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name));
+					git.pushChanges();
+				}
+			}
+
+			const lintCheckName = checkName
+				.replace(/\${linter}/g, linter.name)
+				.replace(/\${dir}/g, lintDirRel !== "." ? `${lintDirRel}` : "")
+				.trim();
+
+			checks.push({ lintCheckName, lintResult, summary });
+
+			core.endGroup();
+		}
+	}
+
+	// Add commit annotations after running all linters. To be displayed on pull requests, the
+	// annotations must be added to the last commit on the branch. This can either be a user commit or
+	// one of the auto-fix commits
+	if (isPullRequest && autoFix) {
+		headSha = git.getHeadSha();
+	}
+
+	core.startGroup("Create check runs with commit annotations");
+	await Promise.all(
+		checks.map(({ lintCheckName, lintResult, summary }) =>
+			createCheck(lintCheckName, headSha, context, lintResult, summary),
+		),
+	);
+	core.endGroup();
+
+	if (hasFailures && !continueOnError) {
+		core.setFailed("Linting failures detected. See check runs with annotations for details.");
+	}
+}
+
+runAction().catch((error) => {
+	core.debug(error.stack || "No error stack trace");
+	core.setFailed(error.message);
+});
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
