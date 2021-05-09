@@ -15,7 +15,7 @@ const prettierParams = require("./params/prettier");
 const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
-// const swiftFormatOfficial = require("./params/swift-format-official");
+const swiftFormatOfficial = require("./params/swift-format-official");
 const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
 
@@ -40,6 +40,9 @@ if (process.platform === "linux") {
 }
 if (process.platform === "darwin") {
 	linterParams.push(swiftFormatLockwood, swiftlintParams);
+}
+if (process.platform === "win32") {
+	linterParams.push(swiftFormatOfficial);
 }
 
 const tmpDir = createTmpDir();
