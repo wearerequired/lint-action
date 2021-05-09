@@ -1,4 +1,4 @@
-const { run } = require("../utils/action");
+const { run, execute } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 
@@ -38,11 +38,27 @@ class SwiftFormatOfficial {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		const mode = fix ? "format -i" : "lint";
-		return run(`${prefix} swift-format ${mode} ${args} --recursive "."`, {
-			dir,
-			ignoreErrors: true,
-		});
+		if (process.platform === "win32") {
+			if (args.length !== 0) {
+				throw new Error(`${this.name} error: args is unsupported on Windows`);
+			}
+			if (prefix.length !== 0) {
+				throw new Error(`${this.name} error: prefix is unsupported on Windows`);
+			}
+		}
+
+		const modeArgs = fix ? ["format", "-i"] : ["lint"];
+		if (process.platform === "win32") {
+			return execute("swift-format", modeArgs.concat(["--recursive", "."]), {
+				dir,
+				ignoreErrors: true,
+			});
+		} else {
+			return run(`${prefix} swift-format ${modeArgs.join(" ")} ${args} --recursive "."`, {
+				dir,
+				ignoreErrors: true,
+			});
+		}
 	}
 
 	/**
