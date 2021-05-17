@@ -1,0 +1,39 @@
+name: Test Action
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Run action
+    #if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run linters
+        uses: ./
+        with:
+          continue_on_error: true
+          eslint: true
+          prettier: true
+          prettier_extensions: "css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml"
