@@ -1,6 +1,6 @@
 const core = require("@actions/core");
 
-const { name: actionName } = require("../../package");
+const { name: actionName } = require("../../package.json");
 const request = require("../utils/request");
 const { capitalizeFirstLetter } = require("../utils/string");
 
