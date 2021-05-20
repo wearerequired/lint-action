@@ -693,9 +693,11 @@ const { capitalizeFirstLetter } = __nccwpck_require__(321);
  * @param {import('./context').GithubContext} context - Information about the GitHub repository and
  * action trigger event
  * @param {import('../utils/lint-result').LintResult} lintResult - Parsed lint result
+ * @param {boolean} neutralCheckOnWarning - Whether the check run should conclude as neutral if
+ * there are only warnings
  * @param {string} summary - Summary for the GitHub check
  */
-async function createCheck(linterName, sha, context, lintResult, summary) {
+async function createCheck(linterName, sha, context, lintResult, neutralCheckOnWarning, summary) {
 	let annotations = [];
 	for (const level of ["warning", "error"]) {
 		annotations = [
@@ -718,10 +720,21 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 		annotations = annotations.slice(0, 50);
 	}
 
+	let conclusion;
+	if (lintResult.isSuccess) {
+		if (annotations.length > 0 && neutralCheckOnWarning) {
+			conclusion = "neutral";
+		} else {
+			conclusion = "success";
+		}
+	} else {
+		conclusion = "failure";
+	}
+
 	const body = {
 		name: linterName,
 		head_sha: sha,
-		conclusion: lintResult.isSuccess ? "success" : "failure",
+		conclusion,
 		output: {
 			title: capitalizeFirstLetter(summary),
 			summary: `${linterName} found ${summary}`,
@@ -2659,6 +2672,7 @@ async function runAction() {
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
 	const checkName = core.getInput("check_name", { required: true });
+	const neutralCheckOnWarning = core.getInput("neutral_check_on_warning") === "true";
 	const isPullRequest =
 		context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
@@ -2763,7 +2777,7 @@ async function runAction() {
 	core.startGroup("Create check runs with commit annotations");
 	await Promise.all(
 		checks.map(({ lintCheckName, lintResult, summary }) =>
-			createCheck(lintCheckName, headSha, context, lintResult, summary),
+			createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
 		),
 	);
 	core.endGroup();
