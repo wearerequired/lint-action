@@ -19,6 +19,7 @@ async function runAction() {
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
 	const checkName = core.getInput("check_name", { required: true });
+	const neutralCheckOnWarning = core.getInput("neutral_check_on_warning") === "true";
 	const isPullRequest =
 		context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
@@ -123,7 +124,7 @@ async function runAction() {
 	core.startGroup("Create check runs with commit annotations");
 	await Promise.all(
 		checks.map(({ lintCheckName, lintResult, summary }) =>
-			createCheck(lintCheckName, headSha, context, lintResult, summary),
+			createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
 		),
 	);
 	core.endGroup();
