@@ -4,14 +4,17 @@ on:
   push:
     branches:
       - master
-  pull_request:
+  pull_request_target:
     branches:
       - master
+
+permissions:
+  checks: write
+  contents: read
 
 jobs:
   test:
     name: Run action
-    #if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -19,8 +22,15 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - name: Check out Git repository
+      - name: Check out repository (push)
+        if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@v2
+
+      - name: Check out repository (pull_request_target)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v1
