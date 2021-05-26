@@ -33,12 +33,15 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 12
 
       - name: Install dependencies
         run: yarn install
+
+      - name: Build action
+        run: yarn build
 
       - name: Run linters
         uses: ./
