@@ -1,0 +1,28 @@
+name: Mark stale issues and pull requests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 2 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/stale@v3
+        with:
+          stale-issue-message: |
+            A stale label has been added to this issue because it has been open 15 days with no activity. To keep this issue open, add a comment within 5 days.
+          stale-issue-label: "stale"
+          exempt-issue-labels: "bug,never-stale"
+          days-before-issue-stale: 15
+          days-before-issue-close: 5
+          stale-pr-message: |
+            Thank you for your contribution to this project!
+
+            A stale label has been added to this pull request because it has been open 45 days with no activity. To keep this PR open, add a comment or push a commit within 10 days.
+          stale-pr-label: "stale"
+          exempt-pr-labels: "waiting for review,never-stale"
+          days-before-pr-stale: 45
+          days-before-pr-close: 10
