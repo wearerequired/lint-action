@@ -26,7 +26,7 @@ function getLintParams(dir) {
 					path: "file1.py",
 					firstLine: 1,
 					lastLine: 11,
-					message: ` var_1 = 'hello'\n var_2 = 'world'\n \n \n-def main ():  # Whitespace error\n+def main():  # Whitespace error\n     print('hello ' + var_2)\n \n \n def add(num_1, num_2):\n     return num_1 + num_2`,
+					message: ` -var_1 = "hello"\n+var_1 = 'hello'\n -var_2 = "world"\n+-var_2 = 'world'\n \n \n-def main ():  # Whitespace error\n+def main():  # Whitespace error\n     -print("hello " + var_2)\n+print('hello ' + var_2)\n \n \n def add(num_1, num_2):\n     return num_1 + num_2`,
 				},
 				{
 					path: "file1.py",
