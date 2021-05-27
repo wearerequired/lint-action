@@ -4,6 +4,7 @@ const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
 const Golint = require("./golint");
 const Mypy = require("./mypy");
+const OITNB = require("./oitnb");
 const PHPCodeSniffer = require("./php-codesniffer");
 const Prettier = require("./prettier");
 const RuboCop = require("./rubocop");
@@ -28,6 +29,7 @@ const linters = {
 	// Formatters (should be run after linters)
 	black: Black,
 	gofmt: Gofmt,
+	oitnb: OITNB,
 	prettier: Prettier,
 	swift_format_lockwood: SwiftFormatLockwood,
 	swift_format_official: SwiftFormatOfficial,

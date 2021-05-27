@@ -246,6 +246,26 @@ inputs:
     required: false
     default: ""
 
+  oitnb:
+    description: Enable or disable OITNB checks
+    required: false
+    default: "false"
+  oitnb_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  oitnb_dir:
+    description: Directory where the OITNB command should be run
+    required: false
+  oitnb_extensions:
+    description: Extensions of files to check with OITNB
+    required: false
+    default: "py"
+  oitnb_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   # Ruby
 
   rubocop:
