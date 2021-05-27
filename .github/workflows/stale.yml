@@ -15,7 +15,7 @@ jobs:
           stale-issue-message: |
             A stale label has been added to this issue because it has been open 15 days with no activity. To keep this issue open, add a comment within 5 days.
           stale-issue-label: "stale"
-          exempt-issue-labels: "bug,blocked,never-stale"
+          exempt-issue-labels: "bug,blocked,in progress,never-stale"
           days-before-issue-stale: 15
           days-before-issue-close: 5
           stale-pr-message: |
