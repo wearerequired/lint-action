@@ -247,7 +247,7 @@ inputs:
     default: ""
 
   oitnb:
-    description: Enable or disable OITNB checks
+    description: Enable or disable oitnb checks
     required: false
     default: "false"
   oitnb_args:
@@ -255,10 +255,10 @@ inputs:
     required: false
     default: ""
   oitnb_dir:
-    description: Directory where the OITNB command should be run
+    description: Directory where the oitnb command should be run
     required: false
   oitnb_extensions:
-    description: Extensions of files to check with OITNB
+    description: Extensions of files to check with oitnb
     required: false
     default: "py"
   oitnb_command_prefix:

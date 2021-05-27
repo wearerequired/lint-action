@@ -6,9 +6,9 @@ const { initLintResult } = require("../utils/lint-result");
 /**
  * https://pypi.org/project/oitnb/
  */
-class OITNB {
+class Oitnb {
 	static get name() {
-		return "OITNB";
+		return "oitnb";
 	}
 
 	/**
@@ -17,12 +17,12 @@ class OITNB {
 	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
-		// Verify that Python is installed (required to execute OITNB)
+		// Verify that Python is installed (required to execute oitnb)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
 		}
 
-		// Verify that OITNB is installed
+		// Verify that oitnb is installed
 		try {
 			run(`${prefix} oitnb --version`, { dir });
 		} catch (err) {
@@ -63,4 +63,4 @@ class OITNB {
 	}
 }
 
-module.exports = OITNB;
+module.exports = Oitnb;

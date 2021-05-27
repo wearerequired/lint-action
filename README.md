@@ -33,7 +33,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [Black](https://black.readthedocs.io)
   - [Flake8](http://flake8.pycqa.org)
   - [Mypy](https://mypy.readthedocs.io/)
-  - [OITNB](https://pypi.org/project/oitnb/)
+  - [oitnb](https://pypi.org/project/oitnb/)
 - **Ruby:**
   - [RuboCop](https://rubocop.readthedocs.io)
 - **Swift:**

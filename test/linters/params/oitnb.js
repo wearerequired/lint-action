@@ -1,8 +1,8 @@
-const OITNB = require("../../../src/linters/oitnb");
+const Oitnb = require("../../../src/linters/oitnb");
 const { TEST_DATE } = require("../../test-utils");
 
 const testName = "oitnb";
-const linter = OITNB;
+const linter = Oitnb;
 const commandPrefix = "";
 const extensions = ["py"];
 
