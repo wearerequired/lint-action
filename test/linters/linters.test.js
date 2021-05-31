@@ -43,10 +43,10 @@ if (process.platform === "darwin") {
 }
 
 const tmpDir = createTmpDir();
+jest.setTimeout(70000);
 
 // Copy linter test projects into temporary directory
 beforeAll(async () => {
-	jest.setTimeout(60000);
 	await copy(join(__dirname, "projects"), tmpDir);
 });
 
