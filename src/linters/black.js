@@ -3,6 +3,8 @@ const commandExists = require("../utils/command-exists");
 const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * https://black.readthedocs.io
  */
@@ -53,7 +55,7 @@ class Black {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();

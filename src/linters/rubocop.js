@@ -3,6 +3,8 @@ const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { removeTrailingPeriod } = require("../utils/string");
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 // Mapping of RuboCop severities to severities used for GitHub commit annotations
 const severityMap = {
 	convention: "warning",
@@ -64,7 +66,7 @@ class RuboCop {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();

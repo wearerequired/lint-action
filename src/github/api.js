@@ -4,13 +4,16 @@ const { name: actionName } = require("../../package.json");
 const request = require("../utils/request");
 const { capitalizeFirstLetter } = require("../utils/string");
 
+/** @typedef {import('./context').GithubContext} GithubContext */
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
  * @param {string} linterName - Name of the linter for which a check should be created
  * @param {string} sha - SHA of the commit which should be annotated
- * @param {import('./context').GithubContext} context - Information about the GitHub repository and
+ * @param {GithubContext} context - Information about the GitHub repository and
  * action trigger event
- * @param {import('../utils/lint-result').LintResult} lintResult - Parsed lint result
+ * @param {LintResult} lintResult - Parsed lint result
  * @param {boolean} neutralCheckOnWarning - Whether the check run should conclude as neutral if
  * there are only warnings
  * @param {string} summary - Summary for the GitHub check
@@ -60,7 +63,9 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		},
 	};
 	try {
-		core.info(`Creating GitHub check with ${annotations.length} annotations for ${linterName}…`);
+		core.info(
+			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
+		);
 		await request(`https://api.github.com/repos/${context.repository.repoName}/check-runs`, {
 			method: "POST",
 			headers: {

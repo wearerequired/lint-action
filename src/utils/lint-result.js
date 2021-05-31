@@ -1,6 +1,9 @@
 /**
- * GitHub Actions workflow's environment variables
- * @typedef {{isSuccess: boolean, warning: object[], error: object[]}} LintResult
+ * Lint result object.
+ * @typedef LintResult
+ * @property {boolean} isSuccess Whether the result is success.
+ * @property {object[]} warning Warnings.
+ * @property {object[]} error Errors.
  */
 
 /**
