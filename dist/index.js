@@ -652,9 +652,11 @@ const core = __nccwpck_require__(186);
 
 const { run } = __nccwpck_require__(575);
 
+/** @typedef {import('./github/context').GithubContext} GithubContext */
+
 /**
  * Fetches and checks out the remote Git branch (if it exists, the fork repository will be used)
- * @param {import('./github/context').GithubContext} context - Information about the GitHub
+ * @param {GithubContext} context - Information about the GitHub
  */
 function checkOutRemoteBranch(context) {
 	if (context.repository.hasFork) {
@@ -753,13 +755,16 @@ const { name: actionName } = __nccwpck_require__(306);
 const request = __nccwpck_require__(408);
 const { capitalizeFirstLetter } = __nccwpck_require__(321);
 
+/** @typedef {import('./context').GithubContext} GithubContext */
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
  * @param {string} linterName - Name of the linter for which a check should be created
  * @param {string} sha - SHA of the commit which should be annotated
- * @param {import('./context').GithubContext} context - Information about the GitHub repository and
+ * @param {GithubContext} context - Information about the GitHub repository and
  * action trigger event
- * @param {import('../utils/lint-result').LintResult} lintResult - Parsed lint result
+ * @param {LintResult} lintResult - Parsed lint result
  * @param {boolean} neutralCheckOnWarning - Whether the check run should conclude as neutral if
  * there are only warnings
  * @param {string} summary - Summary for the GitHub check
@@ -845,19 +850,32 @@ const { getEnv } = __nccwpck_require__(575);
 
 /**
  * GitHub Actions workflow's environment variables
- * @typedef {{actor: string, eventName: string, eventPath: string, token: string, workspace:
- * string}} ActionEnv
+ * @typedef ActionEnv
+ * @property {string} actor Event actor.
+ * @property {string} eventName Event name.
+ * @property {string} eventPath Event path.
+ * @property {string} token Token.
+ * @property {string} workspace Workspace path.
  */
 
 /**
  * Information about the GitHub repository and its fork (if it exists)
- * @typedef {{repoName: string, forkName: string, hasFork: boolean}} GithubRepository
+ * @typedef GithubRepository
+ * @property {string} repoName Repo name.
+ * @property {string} forkName Fork name.
+ * @property {boolean} hasFork Whether repo has a fork.
  */
 
 /**
  * Information about the GitHub repository and action trigger event
- * @typedef {{actor: string, branch: string, event: object, eventName: string, repository:
- * GithubRepository, token: string, workspace: string}} GithubContext
+ * @typedef GithubContext
+ * @property {string} actor Event actor.
+ * @property {string} branch Branch name.
+ * @property {object} event Event.
+ * @property {string} eventName Event name.
+ * @property {GithubRepository} repository Information about the GitHub repository
+ * @property {string} token Token.
+ * @property {string} workspace Workspace path.
  */
 
 /**
@@ -966,6 +984,8 @@ const commandExists = __nccwpck_require__(265);
 const { parseErrorsFromDiff } = __nccwpck_require__(388);
 const { initLintResult } = __nccwpck_require__(149);
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * https://black.readthedocs.io
  */
@@ -1016,7 +1036,7 @@ class Black {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1039,6 +1059,8 @@ const commandExists = __nccwpck_require__(265);
 const { initLintResult } = __nccwpck_require__(149);
 const { getNpmBinCommand } = __nccwpck_require__(838);
 const { removeTrailingPeriod } = __nccwpck_require__(321);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://eslint.org
@@ -1095,7 +1117,7 @@ class ESLint {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1159,6 +1181,8 @@ const { capitalizeFirstLetter } = __nccwpck_require__(321);
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (\w*) (.*)$/gm;
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * http://flake8.pycqa.org
  */
@@ -1212,7 +1236,7 @@ class Flake8 {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1251,6 +1275,8 @@ const { run } = __nccwpck_require__(575);
 const commandExists = __nccwpck_require__(265);
 const { parseErrorsFromDiff } = __nccwpck_require__(388);
 const { initLintResult } = __nccwpck_require__(149);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://golang.org/cmd/gofmt
@@ -1302,7 +1328,7 @@ class Gofmt {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1346,6 +1372,8 @@ const { initLintResult } = __nccwpck_require__(149);
 const { capitalizeFirstLetter } = __nccwpck_require__(321);
 
 const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://github.com/golang/lint
@@ -1395,7 +1423,7 @@ class Golint {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1485,6 +1513,8 @@ const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * https://mypy.readthedocs.io/en/stable/
  */
@@ -1550,7 +1580,7 @@ class Mypy {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1594,6 +1624,8 @@ const { run } = __nccwpck_require__(575);
 const commandExists = __nccwpck_require__(265);
 const { parseErrorsFromDiff } = __nccwpck_require__(388);
 const { initLintResult } = __nccwpck_require__(149);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://pypi.org/project/oitnb/
@@ -1645,7 +1677,7 @@ class Oitnb {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1669,6 +1701,8 @@ const { run } = __nccwpck_require__(575);
 const commandExists = __nccwpck_require__(265);
 const { initLintResult } = __nccwpck_require__(149);
 const { removeTrailingPeriod } = __nccwpck_require__(321);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://github.com/squizlabs/PHP_CodeSniffer
@@ -1723,7 +1757,7 @@ class PHPCodeSniffer {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1774,6 +1808,8 @@ const { run } = __nccwpck_require__(575);
 const commandExists = __nccwpck_require__(265);
 const { initLintResult } = __nccwpck_require__(149);
 const { getNpmBinCommand } = __nccwpck_require__(838);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://prettier.io
@@ -1828,7 +1864,7 @@ class Prettier {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1862,6 +1898,8 @@ const { run } = __nccwpck_require__(575);
 const commandExists = __nccwpck_require__(265);
 const { initLintResult } = __nccwpck_require__(149);
 const { removeTrailingPeriod } = __nccwpck_require__(321);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 // Mapping of RuboCop severities to severities used for GitHub commit annotations
 const severityMap = {
@@ -1924,7 +1962,7 @@ class RuboCop {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -1971,6 +2009,8 @@ const { run } = __nccwpck_require__(575);
 const commandExists = __nccwpck_require__(265);
 const { initLintResult } = __nccwpck_require__(149);
 const { getNpmBinCommand } = __nccwpck_require__(838);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://stylelint.io
@@ -2028,7 +2068,7 @@ class Stylelint {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -2077,6 +2117,8 @@ const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: \w+: \((\w+)\) (.*)\.$/gm;
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * https://github.com/nicklockwood/SwiftFormat
  */
@@ -2123,7 +2165,7 @@ class SwiftFormatLockwood {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -2161,6 +2203,8 @@ const commandExists = __nccwpck_require__(265);
 const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://github.com/apple/swift-format
@@ -2208,7 +2252,7 @@ class SwiftFormatOfficial {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -2250,6 +2294,8 @@ const commandExists = __nccwpck_require__(265);
 const { initLintResult } = __nccwpck_require__(149);
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (warning|error): (.*)$/gm;
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://github.com/realm/SwiftLint
@@ -2297,7 +2343,7 @@ class SwiftLint {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
@@ -2539,8 +2585,11 @@ module.exports = {
 /***/ ((module) => {
 
 /**
- * GitHub Actions workflow's environment variables
- * @typedef {{isSuccess: boolean, warning: object[], error: object[]}} LintResult
+ * Lint result object.
+ * @typedef LintResult
+ * @property {boolean} isSuccess Whether the result is success.
+ * @property {object[]} warning Warnings.
+ * @property {object[]} error Errors.
  */
 
 /**
@@ -2710,7 +2759,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"lint-action","version":"1.10.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.3.0","command-exists":"^1.2.9","parse-diff":"^0.8.1"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.28.5","eslint":"7.27.0","eslint-config-airbnb-base":"14.2.1","eslint-config-prettier":"^8.3.0","eslint-plugin-import":"^2.23.4","eslint-plugin-jsdoc":"^35.0.0","fs-extra":"^10.0.0","jest":"^26.6.3","prettier":"^2.3.0"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"globalSetup":"./test/setup.js","globalTeardown":"./test/teardown.js"},"prettier":"@samuelmeuli/prettier-config"}');
+module.exports = JSON.parse('{"name":"lint-action","version":"1.10.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.3.0","command-exists":"^1.2.9","parse-diff":"^0.8.1"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.28.5","eslint":"7.27.0","eslint-config-airbnb-base":"14.2.1","eslint-config-prettier":"^8.3.0","eslint-plugin-import":"^2.23.4","eslint-plugin-jsdoc":"^35.1.1","fs-extra":"^10.0.0","jest":"^26.6.3","prettier":"^2.3.0"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"globalSetup":"./test/setup.js","globalTeardown":"./test/teardown.js"},"prettier":"@samuelmeuli/prettier-config"}');
 
 /***/ }),
 

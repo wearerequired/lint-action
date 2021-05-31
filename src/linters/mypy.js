@@ -9,6 +9,8 @@ const { initLintResult } = require("../utils/lint-result");
 
 const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * https://mypy.readthedocs.io/en/stable/
  */
@@ -74,7 +76,7 @@ class Mypy {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();

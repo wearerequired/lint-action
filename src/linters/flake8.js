@@ -9,6 +9,8 @@ const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.*):([0-9]+):[0-9]+: (\w*) (.*)$/gm;
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * http://flake8.pycqa.org
  */
@@ -62,7 +64,7 @@ class Flake8 {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {import('../utils/lint-result').LintResult} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();

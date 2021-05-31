@@ -2,9 +2,11 @@ const core = require("@actions/core");
 
 const { run } = require("./utils/action");
 
+/** @typedef {import('./github/context').GithubContext} GithubContext */
+
 /**
  * Fetches and checks out the remote Git branch (if it exists, the fork repository will be used)
- * @param {import('./github/context').GithubContext} context - Information about the GitHub
+ * @param {GithubContext} context - Information about the GitHub
  */
 function checkOutRemoteBranch(context) {
 	if (context.repository.hasFork) {

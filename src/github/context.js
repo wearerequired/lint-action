@@ -7,19 +7,32 @@ const { getEnv } = require("../utils/action");
 
 /**
  * GitHub Actions workflow's environment variables
- * @typedef {{actor: string, eventName: string, eventPath: string, token: string, workspace:
- * string}} ActionEnv
+ * @typedef ActionEnv
+ * @property {string} actor Event actor.
+ * @property {string} eventName Event name.
+ * @property {string} eventPath Event path.
+ * @property {string} token Token.
+ * @property {string} workspace Workspace path.
  */
 
 /**
  * Information about the GitHub repository and its fork (if it exists)
- * @typedef {{repoName: string, forkName: string, hasFork: boolean}} GithubRepository
+ * @typedef GithubRepository
+ * @property {string} repoName Repo name.
+ * @property {string} forkName Fork name.
+ * @property {boolean} hasFork Whether repo has a fork.
  */
 
 /**
  * Information about the GitHub repository and action trigger event
- * @typedef {{actor: string, branch: string, event: object, eventName: string, repository:
- * GithubRepository, token: string, workspace: string}} GithubContext
+ * @typedef GithubContext
+ * @property {string} actor Event actor.
+ * @property {string} branch Branch name.
+ * @property {object} event Event.
+ * @property {string} eventName Event name.
+ * @property {GithubRepository} repository Information about the GitHub repository
+ * @property {string} token Token.
+ * @property {string} workspace Workspace path.
  */
 
 /**
