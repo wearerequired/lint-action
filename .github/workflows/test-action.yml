@@ -50,7 +50,8 @@ jobs:
       - name: Run linters
         uses: ./
         with:
-          continue_on_error: true
+          continue_on_error: false
           eslint: true
           prettier: true
           prettier_extensions: "css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml"
+          neutral_check_on_warning: true
