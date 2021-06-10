@@ -23,7 +23,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          defautl: true
+          default: true
           override: true
           profile: minimal
           components: clippy
