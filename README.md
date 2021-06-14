@@ -48,7 +48,15 @@ Create a new GitHub Actions workflow in your project, e.g. at `.github/workflows
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
@@ -78,7 +86,15 @@ The action doesn't install the linters for you; you are responsible for installi
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
@@ -112,7 +128,15 @@ jobs:
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
@@ -143,7 +167,15 @@ If you prefer to use [Composer](https://getcomposer.org/) you can also use this:
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
@@ -163,7 +195,7 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
-          composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
+          composer install --prefer-dist --no-progress --no-ansi --no-interaction
           echo "${PWD}/vendor/bin" >> $GITHUB_PATH
 
       - name: Run linters
@@ -177,7 +209,15 @@ jobs:
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
