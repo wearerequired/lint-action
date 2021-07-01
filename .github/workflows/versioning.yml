@@ -1,0 +1,16 @@
+name: Keep the major version tag up-to-date
+
+on:
+  release:
+    types: [published, edited]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update-major-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: Actions-R-Us/actions-tagger@v2

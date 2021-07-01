@@ -1,8 +1,21 @@
 name: Test
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -10,6 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
@@ -31,16 +45,9 @@ jobs:
       # Go
 
       - name: Set up Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v2
         with:
           go-version: 1.13
-
-      # TODO: Remove step once actions/setup-go adds $GOPATH/bin to $PATH by default
-      # See https://github.com/actions/setup-go/issues/14
-      - name: Add Go to $PATH
-        run: |
-          echo "::set-env name=GOPATH::$(go env GOPATH)"
-          echo "::add-path::$(go env GOPATH)/bin"
 
       - name: Install Go dependencies
         run: |
@@ -50,9 +57,21 @@ jobs:
       # Node.js
 
       - name: Set up Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 12
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Set up yarn cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./test/linters/projects/**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install Node.js dependencies
         run: |
@@ -67,52 +86,91 @@ jobs:
           cd ../xo/
           yarn install
 
+      # PHP
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          coverage: none
+          tools: phpcs
+
       # Python
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: 3.8
+
+      - name: Get pip cache directory path
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Set up pip cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('./test/linters/projects/**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install Python dependencies
         run: |
           cd ./test/linters/projects/
-          pip install -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt
+          pip install -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt -r ./oitnb/requirements.txt
 
       # Ruby
 
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6
+          bundler: 2
+
+      - name: Set up bundle cache
+        uses: actions/cache@v2
+        with:
+          path: ./test/linters/projects/**/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
 
       - name: Install Ruby dependencies
         run: |
-          gem install bundler
           cd ./test/linters/projects/rubocop/
-          bundle install
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
 
       # Swift (only on Linux)
 
       - name: Install Swift dependencies (Linux)
         if: startsWith(matrix.os, 'ubuntu')
         run: |
-          git clone --branch 0.50200.0 --depth 1 git://github.com/apple/swift-format
+          git clone --branch 0.50300.0 --depth 1 git://github.com/apple/swift-format
           cd swift-format
           swift build -c release
-          echo "::add-path::${PWD}/.build/release"
+          echo "${PWD}/.build/release" >> $GITHUB_PATH
 
       # Swift (only on macOS)
+
+      - name: Set up mint cache
+        if: startsWith(matrix.os, 'macos')
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/lib/mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-
 
       - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
-          brew update
+          brew update >/dev/null
           brew install mint
           cd ./test/linters/projects/swift-format-lockwood/
-          mint bootstrap --link
+          mint bootstrap --link --overwrite=y
           cd ../swiftlint/
-          mint bootstrap --link
+          mint bootstrap --link --overwrite=y
 
       # Tests
 

@@ -1,6 +1,14 @@
 /**
+ * Lint result object.
+ * @typedef LintResult
+ * @property {boolean} isSuccess Whether the result is success.
+ * @property {object[]} warning Warnings.
+ * @property {object[]} error Errors.
+ */
+
+/**
  * Returns an object for storing linting results
- * @returns {{isSuccess: boolean, warning: [], error: []}} - Default object
+ * @returns {LintResult} - Default object
  */
 function initLintResult() {
 	return {
@@ -12,7 +20,7 @@ function initLintResult() {
 
 /**
  * Returns a text summary of the number of issues found when linting
- * @param {{isSuccess: boolean, warning: object[], error: object[]}} lintResult - Parsed linter
+ * @param {LintResult} lintResult - Parsed linter
  * output
  * @returns {string} - Text summary
  */

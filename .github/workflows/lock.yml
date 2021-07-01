@@ -1,0 +1,17 @@
+name: Lock closed issues and pull requests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 4 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: dessant/lock-threads@v2
+        with:
+          github-token: ${{ github.token }}
+          issue-lock-inactive-days: 10
+          pr-lock-inactive-days: 10

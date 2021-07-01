@@ -4,6 +4,8 @@ const { initLintResult } = require("../utils/lint-result");
 
 const PARSE_REGEX = /^(.*):([0-9]+):([0-9]+): (warning|error): (.*)$/gm;
 
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
 /**
  * https://github.com/apple/swift-format
  */
@@ -50,11 +52,10 @@ class SwiftFormatOfficial {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {{isSuccess: boolean, warning: [], error: []}} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
-		lintResult.isSuccess = output.status === 0;
 
 		const matches = output.stderr.matchAll(PARSE_REGEX);
 		for (const match of matches) {
@@ -70,6 +71,11 @@ class SwiftFormatOfficial {
 				message: `${message}`,
 			});
 		}
+
+		// Since 0.50300.0 swift-format exits with 0 even if there are formatting issues. Therefore,
+		// this function determines the success of the linting process based on the number of parsed
+		// errors.
+		lintResult.isSuccess = lintResult.error.length === 0;
 
 		return lintResult;
 	}

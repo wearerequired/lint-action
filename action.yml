@@ -4,12 +4,17 @@ description: GitHub Action for detecting and fixing linting errors
 
 inputs:
   github_token:
-    description: The GITHUB_TOKEN secret
-    required: true
+    description: The GitHub token used to authenticated with GitHub.
+    required: false
+    default: ${{ github.token }}
+  continue_on_error:
+    description: Whether the workflow run should also fail when linter failures are detected
+    required: false
+    default: "true"
   auto_fix:
     description: Whether linters should try to fix code style issues automatically
     required: false
-    default: false
+    default: "false"
   git_name:
     description: Username for auto-fix commits
     required: false
@@ -22,13 +27,21 @@ inputs:
     description: 'Template for auto-fix commit messages. The "${linter}" variable can be used to insert the name of the linter which has created the auto-fix'
     required: false
     default: "Fix code style issues with ${linter}"
+  check_name:
+    description: 'Template for the name of the check run. The "${linter}" and "${dir}" variables can be used to insert the name and directory of the linter.'
+    required: false
+    default: "${linter}"
+  neutral_check_on_warning:
+    description: Whether the check run should conclude with a neutral status instead of success when the linter finds only warnings
+    required: false
+    default: "false"
 
   # CSS
 
   stylelint:
     description: Enable or disable stylelint checks
     required: false
-    default: false
+    default: "false"
   stylelint_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -50,7 +63,7 @@ inputs:
   gofmt:
     description: Enable or disable gofmt checks
     required: false
-    default: false
+    default: "false"
   gofmt_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -70,7 +83,7 @@ inputs:
   golint:
     description: Enable or disable golint checks
     required: false
-    default: false
+    default: "false"
   golint_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -92,7 +105,7 @@ inputs:
   eslint:
     description: Enable or disable ESLint checks
     required: false
-    default: false
+    default: "false"
   eslint_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -112,7 +125,7 @@ inputs:
   prettier:
     description: Enable or disable Prettier checks
     required: false
-    default: false
+    default: "false"
   prettier_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -132,7 +145,7 @@ inputs:
   xo:
     description: Enable or disable XO checks
     required: false
-    default: false
+    default: "false"
   xo_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -149,12 +162,34 @@ inputs:
     required: false
     default: ""
 
+  # PHP
+
+  php_codesniffer:
+    description: Enable or disable PHP_CodeSniffer checks
+    required: false
+    default: "false"
+  php_codesniffer_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  php_codesniffer_dir:
+    description: Directory where the PHP_CodeSniffer command should be run
+    required: false
+  php_codesniffer_extensions:
+    description: Extensions of files to check with PHP_CodeSniffer
+    required: false
+    default: "php"
+  php_codesniffer_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   # Python
 
   black:
     description: Enable or disable Black checks
     required: false
-    default: false
+    default: "false"
   black_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -174,7 +209,7 @@ inputs:
   flake8:
     description: Enable or disable Flake8 checks
     required: false
-    default: false
+    default: "false"
   flake8_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -194,7 +229,7 @@ inputs:
   mypy:
     description: Enable or disable Mypy checks
     required: false
-    default: false
+    default: "false"
   mypy_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -211,12 +246,32 @@ inputs:
     required: false
     default: ""
 
+  oitnb:
+    description: Enable or disable oitnb checks
+    required: false
+    default: "false"
+  oitnb_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  oitnb_dir:
+    description: Directory where the oitnb command should be run
+    required: false
+  oitnb_extensions:
+    description: Extensions of files to check with oitnb
+    required: false
+    default: "py"
+  oitnb_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   # Ruby
 
   rubocop:
     description: Enable or disable RuboCop checks
     required: false
-    default: false
+    default: "false"
   rubocop_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -262,7 +317,7 @@ inputs:
   swiftformat:
     description: Enable or disable SwiftFormat checks
     required: false
-    default: false
+    default: "false"
   swiftformat_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -282,7 +337,7 @@ inputs:
   swift_format_lockwood:
     description: Enable or disable SwiftFormat checks
     required: false
-    default: false
+    default: "false"
   swift_format_lockwood_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -302,7 +357,7 @@ inputs:
   swift_format_official:
     description: Enable or disable swift-format checks
     required: false
-    default: false
+    default: "false"
   swift_format_official_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -322,7 +377,7 @@ inputs:
   swiftlint:
     description: Enable or disable SwiftLint checks
     required: false
-    default: false
+    default: "false"
   swiftlint_args:
     description: Additional arguments to pass to the linter
     required: false
@@ -341,7 +396,7 @@ inputs:
 
 runs:
   using: node12
-  main: ./src/index.js
+  main: ./dist/index.js
 
 branding:
   icon: check

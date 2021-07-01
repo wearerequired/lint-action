@@ -4,6 +4,7 @@ const SwiftFormatLockwood = require("../../../src/linters/swift-format-lockwood"
 
 const testName = "swift-format-lockwood";
 const linter = SwiftFormatLockwood;
+const commandPrefix = "";
 const extensions = ["swift"];
 
 // Linting without auto-fixing
@@ -70,4 +71,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];

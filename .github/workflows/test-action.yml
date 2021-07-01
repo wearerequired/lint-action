@@ -1,0 +1,57 @@
+name: Test Action
+
+on:
+  push:
+    branches:
+      - master
+  pull_request_target:
+    branches:
+      - master
+
+permissions:
+  checks: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run action
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Check out repository (push)
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/checkout@v2
+
+      - name: Check out repository (pull_request_target)
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build action
+        run: yarn build
+
+      - name: Run linters
+        uses: ./
+        with:
+          continue_on_error: false
+          eslint: true
+          prettier: true
+          prettier_extensions: "css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml"
+          neutral_check_on_warning: true

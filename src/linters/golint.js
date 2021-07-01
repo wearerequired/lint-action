@@ -1,9 +1,13 @@
-const { log, run } = require("../utils/action");
+const core = require("@actions/core");
+
+const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { capitalizeFirstLetter } = require("../utils/string");
 
 const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://github.com/golang/lint
@@ -39,7 +43,7 @@ class Golint {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		return run(`${prefix} golint -set_exit_status ${args} "."`, {
@@ -53,7 +57,7 @@ class Golint {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {{isSuccess: boolean, warning: [], error: []}} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();

@@ -2,6 +2,7 @@ const Prettier = require("../../../src/linters/prettier");
 
 const testName = "prettier";
 const linter = Prettier;
+const commandPrefix = "";
 const extensions = [
 	"css",
 	"html",
@@ -72,4 +73,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];

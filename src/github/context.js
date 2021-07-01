@@ -1,23 +1,38 @@
 const { readFileSync } = require("fs");
 
-const { name: actionName } = require("../../package");
-const { getEnv, getInput } = require("../utils/action");
+const core = require("@actions/core");
+
+const { name: actionName } = require("../../package.json");
+const { getEnv } = require("../utils/action");
 
 /**
  * GitHub Actions workflow's environment variables
- * @typedef {{actor: string, eventName: string, eventPath: string, token: string, workspace:
- * string}} ActionEnv
+ * @typedef ActionEnv
+ * @property {string} actor Event actor.
+ * @property {string} eventName Event name.
+ * @property {string} eventPath Event path.
+ * @property {string} token Token.
+ * @property {string} workspace Workspace path.
  */
 
 /**
  * Information about the GitHub repository and its fork (if it exists)
- * @typedef {{repoName: string, forkName: string, hasFork: boolean}} GithubRepository
+ * @typedef GithubRepository
+ * @property {string} repoName Repo name.
+ * @property {string} forkName Fork name.
+ * @property {boolean} hasFork Whether repo has a fork.
  */
 
 /**
  * Information about the GitHub repository and action trigger event
- * @typedef {{actor: string, branch: string, event: object, eventName: string, repository:
- * GithubRepository, token: string, workspace: string}} GithubContext
+ * @typedef GithubContext
+ * @property {string} actor Event actor.
+ * @property {string} branch Branch name.
+ * @property {object} event Event.
+ * @property {string} eventName Event name.
+ * @property {GithubRepository} repository Information about the GitHub repository
+ * @property {string} token Token.
+ * @property {string} workspace Workspace path.
  */
 
 /**
@@ -33,7 +48,7 @@ function parseActionEnv() {
 		workspace: getEnv("github_workspace", true),
 
 		// Information provided by action user
-		token: getInput("github_token", true),
+		token: core.getInput("github_token", { required: true }),
 	};
 }
 
@@ -55,10 +70,10 @@ function parseEnvFile(eventPath) {
  * @returns {string} - Branch name
  */
 function parseBranch(eventName, event) {
-	if (eventName === "push") {
+	if (eventName === "push" || eventName === "workflow_dispatch") {
 		return event.ref.substring(11); // Remove "refs/heads/" from start of string
 	}
-	if (eventName === "pull_request") {
+	if (eventName === "pull_request" || eventName === "pull_request_target") {
 		return event.pull_request.head.ref;
 	}
 	throw Error(`${actionName} does not support "${eventName}" GitHub events`);
@@ -74,7 +89,7 @@ function parseBranch(eventName, event) {
 function parseRepository(eventName, event) {
 	const repoName = event.repository.full_name;
 	let forkName;
-	if (eventName === "pull_request") {
+	if (eventName === "pull_request" || eventName === "pull_request_target") {
 		// "pull_request" events are triggered on the repository where the PR is made. The PR branch can
 		// be on the same repository (`forkRepository` is set to `null`) or on a fork (`forkRepository`
 		// is defined)

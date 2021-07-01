@@ -1,11 +1,15 @@
 const fs = require("fs");
 const { sep } = require("path");
 
-const { log, run } = require("../utils/action");
+const core = require("@actions/core");
+
+const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 
 const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * https://mypy.readthedocs.io/en/stable/
@@ -46,7 +50,7 @@ class Mypy {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 		if (fix) {
-			log(`${this.name} does not support auto-fixing`, "warning");
+			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
 		let specifiedPath = false;
@@ -72,7 +76,7 @@ class Mypy {
 	 * severity of the identified code style violations
 	 * @param {string} dir - Directory in which the linter has been run
 	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
-	 * @returns {{isSuccess: boolean, warning: [], error: []}} - Parsed lint result
+	 * @returns {LintResult} - Parsed lint result
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();

@@ -1,36 +1,42 @@
 {
 	"name": "lint-action",
-	"version": "1.5.3",
+	"version": "1.10.0",
 	"description": "GitHub Action for detecting and fixing linting errors",
 	"author": {
 		"name": "Samuel Meuli",
 		"email": "me@samuelmeuli.com",
 		"url": "https://samuelmeuli.com"
 	},
-	"repository": "github:samuelmeuli/lint-action",
+	"repository": "github:wearerequired/lint-action",
 	"license": "MIT",
 	"private": true,
-	"main": "./src/index.js",
+	"main": "./dist/index.js",
 	"scripts": {
 		"test": "jest",
 		"lint": "eslint --max-warnings 0 \"**/*.js\"",
 		"lint:fix": "yarn lint --fix",
 		"format": "prettier --list-different \"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\"",
-		"format:fix": "yarn format --write"
+		"format:fix": "yarn format --write",
+		"build": "ncc build ./src/index.js"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"@actions/core": "^1.4.0",
+		"command-exists": "^1.2.9",
+		"parse-diff": "^0.8.1"
+	},
 	"peerDependencies": {},
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
-		"eslint": "6.8.0",
-		"eslint-config-airbnb-base": "14.1.0",
-		"eslint-config-prettier": "^6.11.0",
-		"eslint-plugin-import": "^2.20.2",
-		"eslint-plugin-jsdoc": "^25.4.0",
-		"fs-extra": "^9.0.0",
-		"jest": "^26.0.1",
-		"prettier": "^2.0.5"
+		"@vercel/ncc": "^0.28.6",
+		"eslint": "7.29.0",
+		"eslint-config-airbnb-base": "14.2.1",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.23.4",
+		"eslint-plugin-jsdoc": "^35.4.0",
+		"fs-extra": "^10.0.0",
+		"jest": "^27.0.4",
+		"prettier": "^2.3.2"
 	},
 	"eslintConfig": {
 		"root": true,
@@ -41,6 +47,11 @@
 		"env": {
 			"node": true,
 			"jest": true
+		},
+		"settings": {
+			"jsdoc": {
+				"mode": "typescript"
+			}
 		},
 		"rules": {
 			"no-await-in-loop": "off",
@@ -66,7 +77,7 @@
 		"node_modules/",
 		"test/linters/projects/",
 		"test/tmp/",
-		"vendor/"
+		"dist/"
 	],
 	"jest": {
 		"globalSetup": "./test/setup.js",

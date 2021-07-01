@@ -27,10 +27,13 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [ESLint](https://eslint.org)
   - [Prettier](https://prettier.io)
   - [XO](https://github.com/xojs/xo)
+- **PHP:**
+  - [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)
 - **Python:**
   - [Black](https://black.readthedocs.io)
   - [Flake8](http://flake8.pycqa.org)
   - [Mypy](https://mypy.readthedocs.io/)
+  - [oitnb](https://pypi.org/project/oitnb/)
 - **Ruby:**
   - [RuboCop](https://rubocop.readthedocs.io)
 - **Swift:**
@@ -45,7 +48,15 @@ Create a new GitHub Actions workflow in your project, e.g. at `.github/workflows
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
@@ -59,9 +70,8 @@ jobs:
       # Install your linters here
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v1
+        uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
           # Enable your linters here
 ```
 
@@ -76,7 +86,15 @@ The action doesn't install the linters for you; you are responsible for installi
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
@@ -94,15 +112,96 @@ jobs:
 
       # ESLint and Prettier must be in `package.json`
       - name: Install Node.js dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v1
+        uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
-          # Enable linters
           eslint: true
           prettier: true
+```
+
+**Important:** Make sure to exclude the `.github` directory in your ESLint and Prettier configs as the default `GITHUB_TOKEN` **cannot** be used to update workflow files due to the missing `workflow` permission. See [Limitations](#limitations).
+
+### PHP example (PHP_CodeSniffer)
+
+```yml
+name: Lint
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          coverage: none
+          tools: phpcs
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          php_codesniffer: true
+          # Optional: Ignore warnings
+          php_codesniffer_args: "-n"
+```
+
+If you prefer to use [Composer](https://getcomposer.org/) you can also use this:
+
+```yml
+name: Lint
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          coverage: none
+          tools: composer
+
+      - name: Install PHP dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-ansi --no-interaction
+          echo "${PWD}/vendor/bin" >> $GITHUB_PATH
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          php_codesniffer: true
 ```
 
 ### Python example (Flake8 and Black)
@@ -110,7 +209,15 @@ jobs:
 ```yml
 name: Lint
 
-on: push
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   run-linters:
@@ -130,10 +237,8 @@ jobs:
         run: pip install black flake8
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v1
+        uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
-          # Enable linters
           black: true
           flake8: true
 ```
@@ -142,7 +247,7 @@ jobs:
 
 ### Linter-specific options
 
-`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
+`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
@@ -151,6 +256,10 @@ jobs:
 - **`[linter]_command_prefix`:** Command prefix to be run before the linter command. Default: `""`.
 
 ### General options
+
+- **`github_token`:** The `GITHUB_TOKEN` to [authenticate on behalf of GitHub Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow#using-the-github_token-in-a-workflow). Defaults to the GitHub token.
+
+- **`continue_on_error`:** Whether the workflow run should also fail when linter failures are detected. Default: `true`
 
 - **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch. Default: `false`
 
@@ -164,35 +273,49 @@ jobs:
 
 - **`commit_message`**: Template for auto-fix commit messages. The `${linter}` variable can be used to insert the name of the linter. Default: `"Fix code style issues with ${linter}"`
 
+- **`check_name`**: Template for the [name of the check run](https://docs.github.com/en/rest/reference/checks#create-a-check-run). Use this to ensure unique names when the action is used more than once in a workflow. The `${linter}` and `${dir}` variables can be used to insert the name and directory of the linter. Default: `"${linter}"`
+
+- **`neutral_check_on_warning`:** Whether the check run should conclude with a neutral status instead of success when the linter finds only warnings. Default: `false`
+
+### Linter support
+
+Some options are not be available for specific linters:
+
+| Linter                | auto-fixing | extensions |
+| --------------------- | :---------: | :--------: |
+| black                 |     ✅      |     ✅     |
+| eslint                |     ✅      |     ✅     |
+| flake8                |     ❌      |     ✅     |
+| gofmt                 |     ✅      |  ❌ (go)   |
+| golint                |     ❌      |  ❌ (go)   |
+| mypy                  |     ✅      |     ✅     |
+| oitnb                 |     ✅      |     ✅     |
+| php_codesniffer       |     ❌      |     ✅     |
+| prettier              |     ✅      |     ✅     |
+| rubocop               |     ✅      |  ❌ (rb)   |
+| stylelint             |     ✅      |     ✅     |
+| swift_format_official |     ✅      |     ✅     |
+| swift_format_lockwood |     ✅      | ❌ (swift) |
+| swiftlint             |     ✅      | ❌ (swift) |
+| xo                    |     ✅      |     ✅     |
+
 ## Limitations
+
+### Pull requests
 
 There are currently some limitations as to how this action (or any other action) can be used in the context of `pull_request` events from forks:
 
 - The action doesn't have permission to push auto-fix changes to the fork. This is because the `pull_request` event runs on the upstream repo, where the `github_token` is lacking permissions for the fork. [Source](https://github.community/t5/GitHub-Actions/Can-t-push-to-forked-repository-on-the-original-repository-s/m-p/35916/highlight/true#M2372)
 - The action doesn't have permission to create annotations for commits on forks and can therefore not display linting errors. [Source 1](https://github.community/t5/GitHub-Actions/Token-permissions-for-forks-once-again/m-p/33839), [source 2](https://github.com/actions/labeler/issues/12)
 
-For details and comments, please refer to [#13](https://github.com/samuelmeuli/lint-action/issues/13).
+For details and comments, please refer to [#13](https://github.com/wearerequired/lint-action/issues/13).
 
-## Development
+### Auto-fixing workflow files
 
-### Contributing
+If `auto_fix` is enabled and the default `GITHUB_TOKEN` is used, none of the linters should be allowed to change files in `.github/workflows` as the token doesn't have the necessary `workflow` permission. This can be achieved by adding the directory to the ignore config of the used linter. [Source](https://github.community/t/github-linting-remote-rejected/121365)
 
-Suggestions and contributions are always welcome! Please discuss larger changes via issue before submitting a pull request.
+For details and comments, please refer to [#65](https://github.com/wearerequired/lint-action/issues/65) and [#74](https://github.com/wearerequired/lint-action/issues/74).
 
-### Adding a new linter
+<br>
 
-If you want to add support for an additional linter, please open an issue to discuss its inclusion in the project. Afterwards, you can follow these steps to add support for your linter:
-
-- Clone the repository and install its dependencies with `yarn install`.
-- Create a new class for the linter, e.g. `src/linters/my-linter.js`. Have a look at the other files in that directory to see what functions the class needs to implement.
-- Import your class in the [`src/linters/index.js`](./src/linters/index.js) file.
-- Provide a sample project for the linter under `test/linters/projects/my-linter/`. It should be simple and contain a few linting errors which your tests will detect.
-- Provide the expected linting output for your sample project in a `test/linters/params/my-linter.js` file. Import this file in [`test/linters/linters.test.js`](./test/linters/linters.test.js). You can run the tests with `yarn test`.
-- Update the [`action.yml`](./action.yml) file with the options provided by the new linter.
-- Mention your linter in the [`README.md`](./README.md) file.
-- Update the [test workflow file](./.github/workflows/test.yml).
-
-## Related
-
-- [Electron Builder Action](https://github.com/samuelmeuli/action-electron-builder) – GitHub Action for building and releasing Electron apps
-- [Maven Publish Action](https://github.com/samuelmeuli/action-maven-publish) – GitHub Action for automatically publishing Maven packages
+[![a required open source product - let's get in touch](https://media.required.com/images/open-source-banner.png)](https://required.com/en/lets-get-in-touch/)

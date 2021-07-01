@@ -1,18 +1,24 @@
-const { name: actionName } = require("../../package");
-const { log } = require("../utils/action");
+const core = require("@actions/core");
+
+const { name: actionName } = require("../../package.json");
 const request = require("../utils/request");
 const { capitalizeFirstLetter } = require("../utils/string");
+
+/** @typedef {import('./context').GithubContext} GithubContext */
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
  * Creates a new check on GitHub which annotates the relevant commit with linting errors
  * @param {string} linterName - Name of the linter for which a check should be created
  * @param {string} sha - SHA of the commit which should be annotated
- * @param {import('./context').GithubContext} context - Information about the GitHub repository and
+ * @param {GithubContext} context - Information about the GitHub repository and
  * action trigger event
- * @param {{isSuccess: boolean, warning: [], error: []}} lintResult - Parsed lint result
+ * @param {LintResult} lintResult - Parsed lint result
+ * @param {boolean} neutralCheckOnWarning - Whether the check run should conclude as neutral if
+ * there are only warnings
  * @param {string} summary - Summary for the GitHub check
  */
-async function createCheck(linterName, sha, context, lintResult, summary) {
+async function createCheck(linterName, sha, context, lintResult, neutralCheckOnWarning, summary) {
 	let annotations = [];
 	for (const level of ["warning", "error"]) {
 		annotations = [
@@ -29,16 +35,27 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 
 	// Only use the first 50 annotations (limit for a single API request)
 	if (annotations.length > 50) {
-		log(
+		core.info(
 			`There are more than 50 errors/warnings from ${linterName}. Annotations are created for the first 50 issues only.`,
 		);
 		annotations = annotations.slice(0, 50);
 	}
 
+	let conclusion;
+	if (lintResult.isSuccess) {
+		if (annotations.length > 0 && neutralCheckOnWarning) {
+			conclusion = "neutral";
+		} else {
+			conclusion = "success";
+		}
+	} else {
+		conclusion = "failure";
+	}
+
 	const body = {
 		name: linterName,
 		head_sha: sha,
-		conclusion: lintResult.isSuccess ? "success" : "failure",
+		conclusion,
 		output: {
 			title: capitalizeFirstLetter(summary),
 			summary: `${linterName} found ${summary}`,
@@ -46,7 +63,9 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 		},
 	};
 	try {
-		log(`Creating GitHub check with ${annotations.length} annotations for ${linterName}…`);
+		core.info(
+			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
+		);
 		await request(`https://api.github.com/repos/${context.repository.repoName}/check-runs`, {
 			method: "POST",
 			headers: {
@@ -58,9 +77,9 @@ async function createCheck(linterName, sha, context, lintResult, summary) {
 			},
 			body,
 		});
-		log(`${linterName} check created successfully`);
+		core.info(`${linterName} check created successfully`);
 	} catch (err) {
-		log(err, "error");
+		core.error(err);
 		throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}`);
 	}
 }
