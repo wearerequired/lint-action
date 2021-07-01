@@ -233,6 +233,28 @@ inputs:
     required: false
     default: ""
 
+  # Rust
+
+  clippy:
+    description: Enable or disable Clippy checks
+    required: false
+    default: false
+  clippy_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  clippy_dir:
+    description: Directory where the Clippy command should be run
+    required: false
+  clippy_extensions:
+    description: Extensions of files to check with Clippy
+    required: false
+    default: "rs"
+  clippy_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   # Swift
 
   # Alias of `swift_format_lockwood` (for backward compatibility)
