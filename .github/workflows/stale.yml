@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/stale@v3
+      - uses: actions/stale@v4
         with:
           stale-issue-message: |
             A stale label has been added to this issue because it has been open 15 days with no activity. To keep this issue open, add a comment within 5 days.
