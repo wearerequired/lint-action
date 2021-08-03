@@ -1,8 +1,9 @@
-const { execSync } = require("child_process");
+const { execSync, spawnSync } = require("child_process");
 
 const core = require("@actions/core");
 
 const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
+const EXECUTE_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false };
 
 /**
  * Returns the value for an environment variable. If the variable is required but doesn't have a
@@ -72,7 +73,44 @@ function run(cmd, options) {
 	}
 }
 
+/**
+ * Executes the provided binary with the given arguments.
+ * @param {string} command - binary to execute
+ * @param {{dir: string, ignoreErrors: boolean}} [options] - {@see EXECUTE_OPTIONS_DEFAULTS}
+ * @returns {{status: number, stdout: string, stderr: string}} - Output of the command
+ */
+function execute(command, args, options) {
+	const optionsWithDefaults = {
+		...EXECUTE_OPTIONS_DEFAULTS,
+		...options,
+	};
+
+	core.debug(`${command} ${args.filter(e => e).join(" ")}`);
+
+	const process = spawnSync(command, args.filter(e => e), {
+		cwd: optionsWithDefaults.dir,
+		encoding: "utf-8",
+		maxBuffer: 20 * 1024 * 1024,
+	});
+
+	const output = {
+		status: process.status,
+		stdout: process.stdout.trim(),
+		stderr: process.stderr.trim(),
+	};
+
+	core.debug(`Exit code: ${output.status}`);
+	core.debug(`Stdout: ${output.stdout}`);
+	core.debug(`Stderr: ${output.stderr}`);
+
+	if (!optionsWithDefaults.ignoreErrors && child.status != 0) {
+		throw child.error;
+	}
+	return output;
+}
+
 module.exports = {
+	execute,
 	getEnv,
 	run,
 };
