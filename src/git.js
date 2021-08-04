@@ -39,9 +39,9 @@ function checkOutRemoteBranch(context) {
  * Stages and commits all changes using Git
  * @param {string} message - Git commit message
  */
-function commitChanges(message) {
+function commitChanges(message, skipVerification) {
 	core.info(`Committing changes`);
-	run(`git commit -am "${message}"`);
+	run(`git commit -am "${message}"${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**
@@ -68,9 +68,9 @@ function hasChanges() {
 /**
  * Pushes all changes to the remote repository
  */
-function pushChanges() {
+function pushChanges(skipVerification) {
 	core.info("Pushing changes with Git");
-	run("git push");
+	run(`git push${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**

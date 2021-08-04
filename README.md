@@ -267,6 +267,8 @@ jobs:
     <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="80%" />
   </p>
 
+- **`skip_verification`:** Appends --no-verify to commit and push actions. Default: `false`
+
 - **`git_name`**: Username for auto-fix commits. Default: `"Lint Action"`
 
 - **`git_email`**: Email address for auto-fix commits. Default: `"lint-action@samuelmeuli.com"`
