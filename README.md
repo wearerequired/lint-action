@@ -267,7 +267,7 @@ jobs:
     <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="80%" />
   </p>
 
-- **`skip_verification`:** Appends --no-verify to commit and push actions. Default: `false`
+- **`git_no_verify`:** Bypass the pre-commit and pre-push git hooks. Default: `false`
 
 - **`git_name`**: Username for auto-fix commits. Default: `"Lint Action"`
 
