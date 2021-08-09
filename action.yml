@@ -15,8 +15,8 @@ inputs:
     description: Whether linters should try to fix code style issues automatically
     required: false
     default: "false"
-  skip_verification:
-    description: 'Appends --no-verify to commit and push actions'
+  git_no_verify:
+    description: Bypass the pre-commit and pre-push git hooks
     required: false
     default: "false"
   git_name:
