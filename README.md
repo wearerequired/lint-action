@@ -267,11 +267,11 @@ jobs:
     <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="80%" />
   </p>
 
-- **`git_no_verify`:** Bypass the pre-commit and pre-push git hooks. Default: `false`
-
 - **`git_name`**: Username for auto-fix commits. Default: `"Lint Action"`
 
 - **`git_email`**: Email address for auto-fix commits. Default: `"lint-action@samuelmeuli.com"`
+
+- **`git_no_verify`**: Bypass the pre-commit and pre-push git hooks. Default: `false`
 
 - **`commit_message`**: Template for auto-fix commit messages. The `${linter}` variable can be used to insert the name of the linter. Default: `"Fix code style issues with ${linter}"`
 
