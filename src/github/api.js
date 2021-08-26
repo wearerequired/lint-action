@@ -66,7 +66,7 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		core.info(
 			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
 		);
-		await request(`https://api.github.com/repos/${context.repository.repoName}/check-runs`, {
+		await request(`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
