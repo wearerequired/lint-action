@@ -674,18 +674,18 @@ const { run } = __nccwpck_require__(575);
  * @param {GithubContext} context - Information about the GitHub
  */
 function checkOutRemoteBranch(context) {
-	github_hostname = process.env.GITHUB_SERVER_URL.replace('https://','');
+	const githubHostname = process.env.GITHUB_SERVER_URL.replace('https://','');
 	if (context.repository.hasFork) {
 		// Fork: Add fork repo as remote
 		core.info(`Adding "${context.repository.forkName}" fork as remote with Git`);
 		run(
-			`git remote add fork https://${context.actor}:${context.token}@${github_hostname}/${context.repository.forkName}.git`,
+			`git remote add fork https://${context.actor}:${context.token}@${githubHostname}/${context.repository.forkName}.git`,
 		);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
 		core.info(`Adding auth information to Git remote URL`);
 		run(
-			`git remote set-url origin https://${context.actor}:${context.token}@${github_hostname}/${context.repository.repoName}.git`,
+			`git remote set-url origin https://${context.actor}:${context.token}@${githubHostname}/${context.repository.repoName}.git`,
 		);
 	}
 
