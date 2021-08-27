@@ -9,7 +9,7 @@ const { run } = require("./utils/action");
  * @param {GithubContext} context - Information about the GitHub
  */
 function checkOutRemoteBranch(context) {
-	const githubHostname = process.env.GITHUB_SERVER_URL.replace('https://','');
+	const githubHostname = process.env.GITHUB_SERVER_URL.replace("https://", "");
 	if (context.repository.hasFork) {
 		// Fork: Add fork repo as remote
 		core.info(`Adding "${context.repository.forkName}" fork as remote with Git`);
