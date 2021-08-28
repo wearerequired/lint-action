@@ -271,6 +271,8 @@ jobs:
 
 - **`git_email`**: Email address for auto-fix commits. Default: `"lint-action@samuelmeuli.com"`
 
+- **`git_no_verify`**: Bypass the pre-commit and pre-push git hooks. Default: `false`
+
 - **`commit_message`**: Template for auto-fix commit messages. The `${linter}` variable can be used to insert the name of the linter. Default: `"Fix code style issues with ${linter}"`
 
 - **`check_name`**: Template for the [name of the check run](https://docs.github.com/en/rest/reference/checks#create-a-check-run). Use this to ensure unique names when the action is used more than once in a workflow. The `${linter}` and `${dir}` variables can be used to insert the name and directory of the linter. Default: `"${linter}"`
