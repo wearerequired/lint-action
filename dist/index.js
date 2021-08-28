@@ -134,7 +134,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
+exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
 const command_1 = __nccwpck_require__(241);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(278);
@@ -312,19 +312,30 @@ exports.debug = debug;
 /**
  * Adds an error issue
  * @param message error issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function error(message) {
-    command_1.issue('error', message instanceof Error ? message.toString() : message);
+function error(message, properties = {}) {
+    command_1.issueCommand('error', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.error = error;
 /**
- * Adds an warning issue
+ * Adds a warning issue
  * @param message warning issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function warning(message) {
-    command_1.issue('warning', message instanceof Error ? message.toString() : message);
+function warning(message, properties = {}) {
+    command_1.issueCommand('warning', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.warning = warning;
+/**
+ * Adds a notice issue
+ * @param message notice issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
+ */
+function notice(message, properties = {}) {
+    command_1.issueCommand('notice', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+}
+exports.notice = notice;
 /**
  * Writes info to log with console.log.
  * @param message info message
@@ -458,7 +469,7 @@ exports.issueCommand = issueCommand;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toCommandValue = void 0;
+exports.toCommandProperties = exports.toCommandValue = void 0;
 /**
  * Sanitizes an input into a string so it can be passed into issueCommand safely
  * @param input input to sanitize into a string
@@ -473,6 +484,25 @@ function toCommandValue(input) {
     return JSON.stringify(input);
 }
 exports.toCommandValue = toCommandValue;
+/**
+ *
+ * @param annotationProperties
+ * @returns The command properties to send with the actual annotation command
+ * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646
+ */
+function toCommandProperties(annotationProperties) {
+    if (!Object.keys(annotationProperties).length) {
+        return {};
+    }
+    return {
+        title: annotationProperties.title,
+        line: annotationProperties.startLine,
+        endLine: annotationProperties.endLine,
+        col: annotationProperties.startColumn,
+        endColumn: annotationProperties.endColumn
+    };
+}
+exports.toCommandProperties = toCommandProperties;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
@@ -703,10 +733,11 @@ function checkOutRemoteBranch(context) {
 /**
  * Stages and commits all changes using Git
  * @param {string} message - Git commit message
+ * @param {boolean} skipVerification - Skip Git verification
  */
-function commitChanges(message) {
+function commitChanges(message, skipVerification) {
 	core.info(`Committing changes`);
-	run(`git commit -am "${message}"`);
+	run(`git commit -am "${message}"${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**
@@ -732,10 +763,11 @@ function hasChanges() {
 
 /**
  * Pushes all changes to the remote repository
+ * @param {boolean} skipVerification - Skip Git verification
  */
-function pushChanges() {
+function pushChanges(skipVerification) {
 	core.info("Pushing changes with Git");
-	run("git push");
+	run(`git push${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**
@@ -2776,7 +2808,7 @@ module.exports = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"lint-action","version":"1.10.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.4.0","command-exists":"^1.2.9","parse-diff":"^0.8.1"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.29.0","eslint":"7.32.0","eslint-config-airbnb-base":"14.2.1","eslint-config-prettier":"^8.3.0","eslint-plugin-import":"^2.24.0","eslint-plugin-jsdoc":"^36.0.6","fs-extra":"^10.0.0","jest":"^27.0.6","prettier":"^2.3.2"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"globalSetup":"./test/setup.js","globalTeardown":"./test/teardown.js"},"prettier":"@samuelmeuli/prettier-config"}');
+module.exports = JSON.parse('{"name":"lint-action","version":"1.10.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.5.0","command-exists":"^1.2.9","parse-diff":"^0.8.1"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.29.0","eslint":"7.32.0","eslint-config-airbnb-base":"14.2.1","eslint-config-prettier":"^8.3.0","eslint-plugin-import":"^2.24.1","eslint-plugin-jsdoc":"^36.0.6","fs-extra":"^10.0.0","jest":"^27.0.6","prettier":"^2.3.2"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"globalSetup":"./test/setup.js","globalTeardown":"./test/teardown.js"},"prettier":"@samuelmeuli/prettier-config"}');
 
 /***/ }),
 
@@ -2877,6 +2909,7 @@ const { getSummary } = __nccwpck_require__(149);
 async function runAction() {
 	const context = getContext();
 	const autoFix = core.getInput("auto_fix") === "true";
+	const skipVerification = core.getInput("git_no_verify") === "true";
 	const continueOnError = core.getInput("continue_on_error") === "true";
 	const gitName = core.getInput("git_name", { required: true });
 	const gitEmail = core.getInput("git_email", { required: true });
@@ -2961,8 +2994,8 @@ async function runAction() {
 			if (autoFix) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
-					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name));
-					git.pushChanges();
+					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name), skipVerification);
+					git.pushChanges(skipVerification);
 				}
 			}
 
