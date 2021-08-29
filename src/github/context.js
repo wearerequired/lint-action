@@ -99,7 +99,8 @@ function parseRepository(eventName, event) {
 		// is defined)
 		const headRepoName = event.pull_request.head.repo.full_name;
 		forkName = repoName === headRepoName ? undefined : headRepoName;
-		forkCloneUrl = event.pull_request.head.repo.clone_url;
+		const headForkCloneUrl = event.pull_request.head.repo.clone_url;
+		forkCloneUrl = cloneUrl === headForkCloneUrl ? undefined : headForkCloneUrl;
 	}
 	return {
 		repoName,
