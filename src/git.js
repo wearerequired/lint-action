@@ -9,19 +9,20 @@ const { run } = require("./utils/action");
  * @param {GithubContext} context - Information about the GitHub
  */
 function checkOutRemoteBranch(context) {
-	const githubHostname = process.env.GITHUB_SERVER_URL.replace("https://", "");
 	if (context.repository.hasFork) {
 		// Fork: Add fork repo as remote
 		core.info(`Adding "${context.repository.forkName}" fork as remote with Git`);
-		run(
-			`git remote add fork https://${context.actor}:${context.token}@${githubHostname}/${context.repository.forkName}.git`,
-		);
+		const cloneURl = new URL(context.repository.forkCloneUrl);
+		cloneURl.username = context.actor;
+		cloneURl.username = context.token;
+		run(`git remote add fork ${cloneURl.toString()}`);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
 		core.info(`Adding auth information to Git remote URL`);
-		run(
-			`git remote set-url origin https://${context.actor}:${context.token}@${githubHostname}/${context.repository.repoName}.git`,
-		);
+		const cloneURl = new URL(context.repository.cloneUrl);
+		cloneURl.username = context.actor;
+		cloneURl.username = context.token;
+		run(`git remote set-url origin ${cloneURl.toString()}`);
 	}
 
 	const remote = context.repository.hasFork ? "fork" : "origin";
