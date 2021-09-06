@@ -707,15 +707,17 @@ function checkOutRemoteBranch(context) {
 	if (context.repository.hasFork) {
 		// Fork: Add fork repo as remote
 		core.info(`Adding "${context.repository.forkName}" fork as remote with Git`);
-		run(
-			`git remote add fork https://${context.actor}:${context.token}@github.com/${context.repository.forkName}.git`,
-		);
+		const cloneURl = new URL(context.repository.forkCloneUrl);
+		cloneURl.username = context.actor;
+		cloneURl.username = context.token;
+		run(`git remote add fork ${cloneURl.toString()}`);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
 		core.info(`Adding auth information to Git remote URL`);
-		run(
-			`git remote set-url origin https://${context.actor}:${context.token}@github.com/${context.repository.repoName}.git`,
-		);
+		const cloneURl = new URL(context.repository.cloneUrl);
+		cloneURl.username = context.actor;
+		cloneURl.username = context.token;
+		run(`git remote set-url origin ${cloneURl.toString()}`);
 	}
 
 	const remote = context.repository.hasFork ? "fork" : "origin";
@@ -864,7 +866,7 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		core.info(
 			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
 		);
-		await request(`https://api.github.com/repos/${context.repository.repoName}/check-runs`, {
+		await request(`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -911,7 +913,9 @@ const { getEnv } = __nccwpck_require__(575);
  * Information about the GitHub repository and its fork (if it exists)
  * @typedef GithubRepository
  * @property {string} repoName Repo name.
+ * @property {string} cloneUrl Repo clone URL.
  * @property {string} forkName Fork name.
+ * @property {string} forkCloneUrl Fork repo clone URL.
  * @property {boolean} hasFork Whether repo has a fork.
  */
 
@@ -980,17 +984,22 @@ function parseBranch(eventName, event) {
  */
 function parseRepository(eventName, event) {
 	const repoName = event.repository.full_name;
+	const cloneUrl = event.repository.clone_url;
 	let forkName;
+	let forkCloneUrl;
 	if (eventName === "pull_request" || eventName === "pull_request_target") {
 		// "pull_request" events are triggered on the repository where the PR is made. The PR branch can
 		// be on the same repository (`forkRepository` is set to `null`) or on a fork (`forkRepository`
 		// is defined)
 		const headRepoName = event.pull_request.head.repo.full_name;
 		forkName = repoName === headRepoName ? undefined : headRepoName;
+		forkCloneUrl = event.pull_request.head.repo.clone_url;
 	}
 	return {
 		repoName,
+		cloneUrl,
 		forkName,
+		forkCloneUrl,
 		hasFork: forkName != null && forkName !== repoName,
 	};
 }
