@@ -1,3 +1,5 @@
+const { existsSync } = require('fs');
+
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { parseErrorsFromDiff } = require("../utils/diff");
@@ -22,6 +24,11 @@ class Black {
 		// Verify that Python is installed (required to execute Black)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
+		}
+
+		// Check if black_dir exists
+		if (dir && !existsSync(dir)) {
+			throw new Error(`${this.name}_dir doesn't exist.`);
 		}
 
 		// Verify that Black is installed

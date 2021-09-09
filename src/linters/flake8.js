@@ -1,3 +1,4 @@
+const { existsSync } = require('fs');
 const { sep } = require("path");
 
 const core = require("@actions/core");
@@ -28,6 +29,11 @@ class Flake8 {
 		// Verify that Python is installed (required to execute Flake8)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
+		}
+
+		// Check if flake8_dir exists
+		if (dir && !existsSync(dir)) {
+			throw new Error(`${this.name}_dir doesn't exist.`);
 		}
 
 		// Verify that Flake8 is installed
