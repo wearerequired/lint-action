@@ -383,3 +383,7 @@ runs:
 branding:
   icon: check
   color: green
+
+outputs:
+  result:
+    description: 'JSON of linter result'

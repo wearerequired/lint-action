@@ -95,6 +95,7 @@ async function runAction() {
 			if (!lintResult.isSuccess) {
 				hasFailures = true;
 			}
+			core.setOutput("result", JSON.stringify(lintResult));
 
 			if (autoFix) {
 				// Commit and push auto-fix changes
