@@ -39,7 +39,7 @@ if (process.platform === "linux") {
 	// linterParams.push(swiftFormatOfficial);
 }
 if (process.platform === "darwin") {
-	linterParams.push(swiftFormatLockwood/* , swiftlintParams */);
+	linterParams.push(swiftFormatLockwood, swiftlintParams);
 }
 
 const tmpDir = createTmpDir();
