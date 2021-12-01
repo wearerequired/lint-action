@@ -12,7 +12,7 @@ function getLintParams(dir) {
 	const warning1 = `${join(
 		dir,
 		"file1.swift",
-	)}:3:1: warning: (consecutiveBlankLines) Replace consecutive blank lines with a single blank line.`;
+	)}:5:1: warning: (consecutiveBlankLines) Replace consecutive blank lines with a single blank line.`;
 	const warning2 = `${join(
 		dir,
 		"file1.swift",
@@ -32,8 +32,8 @@ function getLintParams(dir) {
 			error: [
 				{
 					path: "file1.swift",
-					firstLine: 3,
-					lastLine: 3,
+					firstLine: 5,
+					lastLine: 5,
 					message:
 						"Replace consecutive blank lines with a single blank line (consecutiveBlankLines)",
 				},

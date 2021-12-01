@@ -154,6 +154,7 @@ jobs:
       - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
+          export HOMEBREW_NO_INSTALL_CLEANUP=1
           brew update >/dev/null
           brew install mint
           cd ./test/linters/projects/swift-format-lockwood/
