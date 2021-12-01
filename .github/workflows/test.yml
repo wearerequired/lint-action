@@ -146,7 +146,7 @@ jobs:
         if: startsWith(matrix.os, 'macos')
         uses: actions/cache@v2
         with:
-          path: /usr/local/lib/mint
+          path: ~/.mint
           key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile') }}
           restore-keys: |
             ${{ runner.os }}-mint-
