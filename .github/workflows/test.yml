@@ -142,7 +142,7 @@ jobs:
 
       # Swift (only on macOS)
 
-      - name: Set up mint cache
+      - name: Set up Mint cache (macOS)
         if: startsWith(matrix.os, 'macos')
         uses: actions/cache@v2
         with:
