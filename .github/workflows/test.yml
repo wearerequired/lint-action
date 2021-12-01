@@ -135,7 +135,7 @@ jobs:
       - name: Install Swift dependencies (Linux)
         if: startsWith(matrix.os, 'ubuntu')
         run: |
-          git clone --branch 0.50300.0 --depth 1 git://github.com/apple/swift-format
+          git clone --branch 0.50500.0 --depth 1 git://github.com/apple/swift-format
           cd swift-format
           swift build -c release
           echo "${PWD}/.build/release" >> $GITHUB_PATH
@@ -154,6 +154,7 @@ jobs:
       - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
         run: |
+          export HOMEBREW_NO_INSTALL_CLEANUP=1
           brew update >/dev/null
           brew install mint
           cd ./test/linters/projects/swift-format-lockwood/
