@@ -1928,6 +1928,9 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		core.info(`${linterName} check created successfully`);
 	} catch (err) {
 		core.error(err);
+		if (err.data) {
+			throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}: ${err.data}`);
+		}
 		throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}`);
 	}
 }
