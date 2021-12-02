@@ -132,13 +132,26 @@ jobs:
 
       # Swift (only on Linux)
 
-      - name: Install Swift dependencies (Linux)
+      - name: Set up Swift cache (Linux)
+        id: cache-swift
         if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/cache@v2
+        with:
+          path: ./swift-format/.build/release
+          key: ${{ runner.os }}-swift-0.50500.0
+
+      - name: Install Swift dependencies (Linux, uncached)
+        if: steps.cache-swift.outputs.cache-hit != 'true' && startsWith(matrix.os, 'ubuntu')
         run: |
           git clone --branch 0.50500.0 --depth 1 git://github.com/apple/swift-format
           cd swift-format
           swift build -c release
           echo "${PWD}/.build/release" >> $GITHUB_PATH
+
+      - name: Install Swift dependencies (Linux, cached)
+        if: steps.cache-swift.outputs.cache-hit == 'true' && startsWith(matrix.os, 'ubuntu')
+        run: |
+          echo "${PWD}/swift-format/.build/release" >> $GITHUB_PATH
 
       # Swift (only on macOS)
 
