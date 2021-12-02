@@ -155,7 +155,7 @@ jobs:
         if: startsWith(matrix.os, 'macos')
         run: |
           export HOMEBREW_NO_INSTALL_CLEANUP=1
-          brew update >/dev/null
+          export HOMEBREW_NO_AUTO_UPDATE=1
           brew install mint
           cd ./test/linters/projects/swift-format-lockwood/
           mint bootstrap --link --overwrite=y
