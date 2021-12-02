@@ -137,7 +137,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         uses: actions/cache@v2
         with:
-          path: ./swift-format/.build/release
+          path: ./swift-format/.build
           key: ${{ runner.os }}-swift-0.50500.0
 
       - name: Install Swift dependencies (Linux, uncached)
