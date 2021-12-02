@@ -27,7 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(2087));
+const os = __importStar(__nccwpck_require__(2037));
 const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
@@ -138,8 +138,8 @@ exports.getIDToken = exports.getState = exports.saveState = exports.group = expo
 const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
-const os = __importStar(__nccwpck_require__(2087));
-const path = __importStar(__nccwpck_require__(5622));
+const os = __importStar(__nccwpck_require__(2037));
+const path = __importStar(__nccwpck_require__(1017));
 const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
@@ -448,8 +448,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(5747));
-const os = __importStar(__nccwpck_require__(2087));
+const fs = __importStar(__nccwpck_require__(7147));
+const os = __importStar(__nccwpck_require__(2037));
 const utils_1 = __nccwpck_require__(5278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
@@ -671,8 +671,8 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(8605);
-const https = __nccwpck_require__(7211);
+const http = __nccwpck_require__(3685);
+const https = __nccwpck_require__(5687);
 const pm = __nccwpck_require__(6443);
 let tunnel;
 var HttpCodes;
@@ -1289,10 +1289,10 @@ module.exports = __nccwpck_require__(4325);
 "use strict";
 
 
-var exec = __nccwpck_require__(3129).exec;
-var execSync = __nccwpck_require__(3129).execSync;
-var fs = __nccwpck_require__(5747);
-var path = __nccwpck_require__(5622);
+var exec = (__nccwpck_require__(2081).exec);
+var execSync = (__nccwpck_require__(2081).execSync);
+var fs = __nccwpck_require__(7147);
+var path = __nccwpck_require__(1017);
 var access = fs.access;
 var accessSync = fs.accessSync;
 var constants = fs.constants || fs;
@@ -1472,13 +1472,13 @@ module.exports = __nccwpck_require__(4219);
 "use strict";
 
 
-var net = __nccwpck_require__(1631);
-var tls = __nccwpck_require__(4016);
-var http = __nccwpck_require__(8605);
-var https = __nccwpck_require__(7211);
-var events = __nccwpck_require__(8614);
-var assert = __nccwpck_require__(2357);
-var util = __nccwpck_require__(1669);
+var net = __nccwpck_require__(1808);
+var tls = __nccwpck_require__(4404);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var events = __nccwpck_require__(2361);
+var assert = __nccwpck_require__(9491);
+var util = __nccwpck_require__(3837);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -1848,7 +1848,7 @@ module.exports = {
 
 const core = __nccwpck_require__(2186);
 
-const { name: actionName } = __nccwpck_require__(306);
+const { name: actionName } = __nccwpck_require__(4147);
 const request = __nccwpck_require__(4408);
 const { capitalizeFirstLetter } = __nccwpck_require__(9321);
 
@@ -1940,11 +1940,11 @@ module.exports = { createCheck };
 /***/ 6476:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { readFileSync } = __nccwpck_require__(5747);
+const { readFileSync } = __nccwpck_require__(7147);
 
 const core = __nccwpck_require__(2186);
 
-const { name: actionName } = __nccwpck_require__(306);
+const { name: actionName } = __nccwpck_require__(4147);
 const { getEnv } = __nccwpck_require__(9575);
 
 /**
@@ -2277,7 +2277,7 @@ module.exports = ESLint;
 /***/ 3636:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { sep } = __nccwpck_require__(5622);
+const { sep } = __nccwpck_require__(1017);
 
 const core = __nccwpck_require__(2186);
 
@@ -2609,8 +2609,8 @@ module.exports = linters;
 /***/ 8510:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const fs = __nccwpck_require__(5747);
-const { sep } = __nccwpck_require__(5622);
+const fs = __nccwpck_require__(7147);
+const { sep } = __nccwpck_require__(1017);
 
 const core = __nccwpck_require__(2186);
 
@@ -3543,7 +3543,7 @@ module.exports = XO;
 /***/ 9575:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { execSync } = __nccwpck_require__(3129);
+const { execSync } = __nccwpck_require__(2081);
 
 const core = __nccwpck_require__(2186);
 
@@ -3766,8 +3766,8 @@ module.exports = { getNpmBinCommand };
 /***/ 1753:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { existsSync } = __nccwpck_require__(5747);
-const { join } = __nccwpck_require__(5622);
+const { existsSync } = __nccwpck_require__(7147);
+const { join } = __nccwpck_require__(1017);
 
 const YARN_LOCK_NAME = "yarn.lock";
 
@@ -3792,7 +3792,7 @@ module.exports = { useYarn };
 /***/ 4408:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const https = __nccwpck_require__(7211);
+const https = __nccwpck_require__(5687);
 
 /**
  * Helper function for making HTTP requests
@@ -3862,15 +3862,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 306:
-/***/ ((module) => {
-
-"use strict";
-module.exports = JSON.parse('{"name":"lint-action","version":"1.10.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.6.0","command-exists":"^1.2.9","parse-diff":"^0.8.1"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.30.0","eslint":"7.32.0","eslint-config-airbnb-base":"14.2.1","eslint-config-prettier":"^8.3.0","eslint-plugin-import":"^2.25.3","eslint-plugin-jsdoc":"^36.0.8","fs-extra":"^10.0.0","jest":"^27.4.3","prettier":"^2.5.0"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"globalSetup":"./test/setup.js","globalTeardown":"./test/teardown.js"},"prettier":"@samuelmeuli/prettier-config"}');
-
-/***/ }),
-
-/***/ 2357:
+/***/ 9491:
 /***/ ((module) => {
 
 "use strict";
@@ -3878,7 +3870,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 3129:
+/***/ 2081:
 /***/ ((module) => {
 
 "use strict";
@@ -3886,7 +3878,7 @@ module.exports = require("child_process");
 
 /***/ }),
 
-/***/ 8614:
+/***/ 2361:
 /***/ ((module) => {
 
 "use strict";
@@ -3894,7 +3886,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 5747:
+/***/ 7147:
 /***/ ((module) => {
 
 "use strict";
@@ -3902,7 +3894,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 8605:
+/***/ 3685:
 /***/ ((module) => {
 
 "use strict";
@@ -3910,7 +3902,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 7211:
+/***/ 5687:
 /***/ ((module) => {
 
 "use strict";
@@ -3918,7 +3910,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 1631:
+/***/ 1808:
 /***/ ((module) => {
 
 "use strict";
@@ -3926,7 +3918,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 2087:
+/***/ 2037:
 /***/ ((module) => {
 
 "use strict";
@@ -3934,7 +3926,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 5622:
+/***/ 1017:
 /***/ ((module) => {
 
 "use strict";
@@ -3942,7 +3934,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 4016:
+/***/ 4404:
 /***/ ((module) => {
 
 "use strict";
@@ -3950,11 +3942,19 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 1669:
+/***/ 3837:
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("util");
+
+/***/ }),
+
+/***/ 4147:
+/***/ ((module) => {
+
+"use strict";
+module.exports = JSON.parse('{"name":"lint-action","version":"1.10.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.6.0","command-exists":"^1.2.9","parse-diff":"^0.8.1"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.32.0","eslint":"7.32.0","eslint-config-airbnb-base":"14.2.1","eslint-config-prettier":"^8.3.0","eslint-plugin-import":"^2.25.3","eslint-plugin-jsdoc":"^37.1.0","fs-extra":"^10.0.0","jest":"^27.4.3","prettier":"^2.5.0"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"globalSetup":"./test/setup.js","globalTeardown":"./test/teardown.js"},"prettier":"@samuelmeuli/prettier-config"}');
 
 /***/ })
 
@@ -3999,7 +3999,7 @@ module.exports = require("util");
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const { join } = __nccwpck_require__(5622);
+const { join } = __nccwpck_require__(1017);
 
 const core = __nccwpck_require__(2186);
 
