@@ -28,7 +28,7 @@
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
-		"@vercel/ncc": "^0.30.0",
+		"@vercel/ncc": "^0.32.0",
 		"eslint": "7.32.0",
 		"eslint-config-airbnb-base": "14.2.1",
 		"eslint-config-prettier": "^8.3.0",
