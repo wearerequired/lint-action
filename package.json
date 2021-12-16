@@ -35,7 +35,7 @@
 		"eslint-plugin-import": "^2.25.3",
 		"eslint-plugin-jsdoc": "^37.2.0",
 		"fs-extra": "^10.0.0",
-		"jest": "^27.4.3",
+		"jest": "^27.4.5",
 		"prettier": "^2.5.1"
 	},
 	"eslintConfig": {
