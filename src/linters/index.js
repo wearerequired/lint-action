@@ -8,6 +8,7 @@ const Oitnb = require("./oitnb");
 const PHPCodeSniffer = require("./php-codesniffer");
 const Prettier = require("./prettier");
 const RuboCop = require("./rubocop");
+const Erblint = require("./erblint");
 const Stylelint = require("./stylelint");
 const SwiftFormatLockwood = require("./swift-format-lockwood");
 const SwiftFormatOfficial = require("./swift-format-official");
@@ -22,6 +23,7 @@ const linters = {
 	mypy: Mypy,
 	php_codesniffer: PHPCodeSniffer,
 	rubocop: RuboCop,
+	erblint: Erblint,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
 	xo: XO,
