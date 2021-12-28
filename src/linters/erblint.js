@@ -5,15 +5,6 @@ const { removeTrailingPeriod } = require("../utils/string");
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
-// Mapping of severities to severities used for GitHub commit annotations
-const severityMap = {
-	convention: "warning",
-	refactor: "warning",
-	warning: "warning",
-	error: "error",
-	fatal: "error",
-};
-
 /**
  * https://https://github.com/Shopify/erb-lint
  */
@@ -83,14 +74,14 @@ class Erblint {
 		for (const file of outputJson.files) {
 			const { path, offenses } = file;
 			for (const offense of offenses) {
-				const { severity, message, cop_name: rule, corrected, location } = offense;
+				const { severity, message, linter, corrected, location } = offense;
 				if (!corrected) {
-					const mappedSeverity = severityMap[severity] || "error";
+					const mappedSeverity = "warning";
 					lintResult[mappedSeverity].push({
 						path,
 						firstLine: location.start_line,
 						lastLine: location.last_line,
-						message: `${removeTrailingPeriod(message)} (${rule})`,
+						message: `${removeTrailingPeriod(message)} (${linter})`,
 					});
 				}
 			}
