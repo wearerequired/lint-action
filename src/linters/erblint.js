@@ -28,11 +28,11 @@ class Erblint {
 	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
-		// Verify that Ruby is installed (required to execute RuboCop)
+		// Verify that Ruby is installed (required to execute erblint)
 		if (!(await commandExists("ruby"))) {
 			throw new Error("Ruby is not installed");
 		}
-		// Verify that RuboCop is installed
+		// Verify that erblint is installed
 		try {
 			run(`${prefix} erblint -v`, { dir });
 		} catch (err) {
