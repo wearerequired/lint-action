@@ -4,6 +4,7 @@ const { copy, remove } = require("fs-extra");
 
 const { normalizeDates, normalizePaths, createTmpDir } = require("../test-utils");
 const blackParams = require("./params/black");
+const erblintParams = require("./params/erblint");
 const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
 const flake8Params = require("./params/flake8");
@@ -20,18 +21,19 @@ const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
 
 const linterParams = [
-	blackParams,
-	eslintParams,
-	eslintTypescriptParams,
-	flake8Params,
-	gofmtParams,
-	golintParams,
-	mypyParams,
-	phpCodeSnifferParams,
-	prettierParams,
-	ruboCopParams,
-	stylelintParams,
-	xoParams,
+	// blackParams,
+	// eslintParams,
+	erblintParams,
+	// eslintTypescriptParams,
+	// flake8Params,
+	// gofmtParams,
+	// golintParams,
+	// mypyParams,
+	// phpCodeSnifferParams,
+	// prettierParams,
+	// ruboCopParams,
+	// stylelintParams,
+	// xoParams,
 ];
 if (process.platform === "linux") {
 	// Temporarily disabled because swift-format 0.50300.0 no longer returns a proper exit code, yet
@@ -39,7 +41,7 @@ if (process.platform === "linux") {
 	// linterParams.push(swiftFormatOfficial);
 }
 if (process.platform === "darwin") {
-	linterParams.push(swiftFormatLockwood, swiftlintParams);
+	// linterParams.push(swiftFormatLockwood, swiftlintParams);
 }
 
 const tmpDir = createTmpDir();
@@ -57,7 +59,7 @@ afterAll(async () => {
 // Test all linters
 describe.each(linterParams)(
 	"%s",
-	(projectName, linter, commandPrefix, extensions, getLintParams, getFixParams) => {
+	(projectName, linter, commandPrefix, extensions, getLintParams, getFixParams, commandArgs = "") => {
 		const projectTmpDir = join(tmpDir, projectName);
 		beforeAll(async () => {
 			await expect(linter.verifySetup(projectTmpDir, commandPrefix)).resolves.toEqual(undefined);
@@ -72,7 +74,7 @@ describe.each(linterParams)(
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
-				const cmdOutput = linter.lint(projectTmpDir, extensions, "", autoFix, commandPrefix);
+				const cmdOutput = linter.lint(projectTmpDir, extensions, commandArgs, autoFix, commandPrefix);
 
 				// Exit code
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);

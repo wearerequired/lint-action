@@ -36,6 +36,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [oitnb](https://pypi.org/project/oitnb/)
 - **Ruby:**
   - [RuboCop](https://rubocop.readthedocs.io)
+  - [erb-lint](https://github.com/Shopify/erb-lint)
 - **Swift:**
   - [swift-format](https://github.com/apple/swift-format) (official)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
