@@ -50,7 +50,7 @@ class Erblint {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
-		return run(`${prefix} erblint --format json --lint-all ${args}`, {
+		return run(`${prefix} erblint --format json ${args} -lint-all`, {
 			dir,
 			ignoreErrors: true,
 		});
