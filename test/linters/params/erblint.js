@@ -4,7 +4,6 @@ const testName = "erblint";
 const linter = Erblint;
 const commandPrefix = "bundle exec";
 const extensions = ["erb"];
-const args = "file1.erb file2.erb";
 
 // Linting without auto-fixing
 function getLintParams(dir) {
@@ -49,4 +48,4 @@ function getLintParams(dir) {
 
 const getFixParams = getLintParams; // Does not support auto-fixing -> option has no effect
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams, args];
+module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
