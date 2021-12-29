@@ -21,19 +21,19 @@ const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
 
 const linterParams = [
-	// blackParams,
-	// eslintParams,
+	blackParams,
+	eslintParams,
 	erblintParams,
-	// eslintTypescriptParams,
-	// flake8Params,
-	// gofmtParams,
-	// golintParams,
-	// mypyParams,
-	// phpCodeSnifferParams,
-	// prettierParams,
-	// ruboCopParams,
-	// stylelintParams,
-	// xoParams,
+	eslintTypescriptParams,
+	flake8Params,
+	gofmtParams,
+	golintParams,
+	mypyParams,
+	phpCodeSnifferParams,
+	prettierParams,
+	ruboCopParams,
+	stylelintParams,
+	xoParams,
 ];
 if (process.platform === "linux") {
 	// Temporarily disabled because swift-format 0.50300.0 no longer returns a proper exit code, yet
@@ -41,7 +41,7 @@ if (process.platform === "linux") {
 	// linterParams.push(swiftFormatOfficial);
 }
 if (process.platform === "darwin") {
-	// linterParams.push(swiftFormatLockwood, swiftlintParams);
+	linterParams.push(swiftFormatLockwood, swiftlintParams);
 }
 
 const tmpDir = createTmpDir();
