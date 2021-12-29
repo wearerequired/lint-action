@@ -2237,7 +2237,7 @@ class Erblint {
 		for (const file of outputJson.files) {
 			const { path, offenses } = file;
 			for (const offense of offenses) {
-				const { severity, message, linter, corrected, location } = offense;
+				const { message, linter, corrected, location } = offense;
 				if (!corrected) {
 					const mappedSeverity = "warning";
 					lintResult[mappedSeverity].push({
@@ -2662,6 +2662,7 @@ module.exports = Golint;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const Black = __nccwpck_require__(9844);
+const Erblint = __nccwpck_require__(9674);
 const ESLint = __nccwpck_require__(7169);
 const Flake8 = __nccwpck_require__(3636);
 const Gofmt = __nccwpck_require__(7796);
@@ -2671,7 +2672,6 @@ const Oitnb = __nccwpck_require__(1187);
 const PHPCodeSniffer = __nccwpck_require__(5405);
 const Prettier = __nccwpck_require__(3460);
 const RuboCop = __nccwpck_require__(1399);
-const Erblint = __nccwpck_require__(9674);
 const Stylelint = __nccwpck_require__(194);
 const SwiftFormatLockwood = __nccwpck_require__(8983);
 const SwiftFormatOfficial = __nccwpck_require__(1828);
@@ -2680,13 +2680,13 @@ const XO = __nccwpck_require__(728);
 
 const linters = {
 	// Linters
+	erblint: Erblint,
 	eslint: ESLint,
 	flake8: Flake8,
 	golint: Golint,
 	mypy: Mypy,
 	php_codesniffer: PHPCodeSniffer,
 	rubocop: RuboCop,
-	erblint: Erblint,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
 	xo: XO,
@@ -4185,7 +4185,9 @@ async function runAction() {
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			core.info(
-				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name} and args ${args}…`,
+				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name} ${
+					args ? `and args ${args}` : ""
+				}…`,
 			);
 			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
 
