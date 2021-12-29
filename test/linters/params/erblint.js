@@ -22,7 +22,7 @@ function getLintParams(dir) {
 		// Expected output of the parsing function
 		lintResult: {
 			isSuccess: false,
-			warning: [
+			error: [
 				{
 					path: "file1.erb",
 					firstLine: 3,
@@ -42,7 +42,7 @@ function getLintParams(dir) {
 					message: "Tag `br` is a void element, it must end with `>` and not `/>` (SelfClosingTag)",
 				},
 			],
-			error: [],
+			warning: [],
 		},
 	};
 }
