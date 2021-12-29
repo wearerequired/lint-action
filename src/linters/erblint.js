@@ -1,3 +1,5 @@
+const core = require("@actions/core");
+
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
@@ -47,7 +49,7 @@ class Erblint {
 		if (fix) {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
-		
+
 		return run(`${prefix} erblint --format json ${args}`, {
 			dir,
 			ignoreErrors: true,
