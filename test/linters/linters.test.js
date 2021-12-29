@@ -59,7 +59,15 @@ afterAll(async () => {
 // Test all linters
 describe.each(linterParams)(
 	"%s",
-	(projectName, linter, commandPrefix, extensions, getLintParams, getFixParams, commandArgs = "") => {
+	(
+		projectName,
+		linter,
+		commandPrefix,
+		extensions,
+		getLintParams,
+		getFixParams,
+		commandArgs = "",
+	) => {
 		const projectTmpDir = join(tmpDir, projectName);
 		beforeAll(async () => {
 			await expect(linter.verifySetup(projectTmpDir, commandPrefix)).resolves.toEqual(undefined);
@@ -74,7 +82,13 @@ describe.each(linterParams)(
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
-				const cmdOutput = linter.lint(projectTmpDir, extensions, commandArgs, autoFix, commandPrefix);
+				const cmdOutput = linter.lint(
+					projectTmpDir,
+					extensions,
+					commandArgs,
+					autoFix,
+					commandPrefix,
+				);
 
 				// Exit code
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);
