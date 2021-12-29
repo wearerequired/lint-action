@@ -35,8 +35,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [Mypy](https://mypy.readthedocs.io/)
   - [oitnb](https://pypi.org/project/oitnb/)
 - **Ruby:**
+  - [ERB Lint](https://github.com/Shopify/erb-lint)
   - [RuboCop](https://rubocop.readthedocs.io)
-  - [erb-lint](https://github.com/Shopify/erb-lint)
 - **Swift:**
   - [swift-format](https://github.com/apple/swift-format) (official)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
@@ -248,7 +248,7 @@ jobs:
 
 ### Linter-specific options
 
-`[linter]` can be one of `black`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
+`[linter]` can be one of `black`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
@@ -287,6 +287,7 @@ Some options are not be available for specific linters:
 | Linter                | auto-fixing | extensions |
 | --------------------- | :---------: | :--------: |
 | black                 |     ✅      |     ✅     |
+| erblint               |     ❌      |  ❌ (erb)  |
 | eslint                |     ✅      |     ✅     |
 | flake8                |     ❌      |     ✅     |
 | gofmt                 |     ✅      |  ❌ (go)   |

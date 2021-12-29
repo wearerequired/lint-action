@@ -131,7 +131,7 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
 
-      - name: Install Ruby dependencies (erb-lint)
+      - name: Install Ruby dependencies (ERB Lint)
         run: |
           cd ./test/linters/projects/erblint/
           bundle config path vendor/bundle

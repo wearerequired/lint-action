@@ -22,8 +22,8 @@ const xoParams = require("./params/xo");
 
 const linterParams = [
 	blackParams,
-	eslintParams,
 	erblintParams,
+	eslintParams,
 	eslintTypescriptParams,
 	flake8Params,
 	gofmtParams,

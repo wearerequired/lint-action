@@ -10,7 +10,7 @@ const { removeTrailingPeriod } = require("../utils/string");
  */
 class Erblint {
 	static get name() {
-		return "erb-lint";
+		return "ERB Lint";
 	}
 
 	/**
@@ -44,7 +44,10 @@ class Erblint {
 		if (extensions.length !== 1 || extensions[0] !== "erb") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
-
+		if (fix) {
+			core.warning(`${this.name} does not support auto-fixing`);
+		}
+		
 		return run(`${prefix} erblint --format json ${args}`, {
 			dir,
 			ignoreErrors: true,
@@ -76,8 +79,8 @@ class Erblint {
 			for (const offense of offenses) {
 				const { message, linter, corrected, location } = offense;
 				if (!corrected) {
-					const mappedSeverity = "warning";
-					lintResult[mappedSeverity].push({
+					// ERB Lint does not provide severities in its JSON output
+					lintResult.error.push({
 						path,
 						firstLine: location.start_line,
 						lastLine: location.last_line,

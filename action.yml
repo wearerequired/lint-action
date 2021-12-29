@@ -293,7 +293,7 @@ inputs:
     default: ""
 
   erblint:
-    description: Enable or disable erb-lint checks
+    description: Enable or disable ERB Lint checks
     required: false
     default: "false"
   erblint_args:
@@ -301,10 +301,10 @@ inputs:
     required: false
     default: ""
   erblint_dir:
-    description: Directory where the erb-lint command should be run
+    description: Directory where the ERB Lint command should be run
     required: false
   erblint_extensions:
-    description: Extensions of files to check with erb-lint
+    description: Extensions of files to check with ERB Lint
     required: false
     default: "erb"
   erblint_command_prefix:
