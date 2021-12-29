@@ -74,7 +74,7 @@ class Erblint {
 		for (const file of outputJson.files) {
 			const { path, offenses } = file;
 			for (const offense of offenses) {
-				const { severity, message, linter, corrected, location } = offense;
+				const { message, linter, corrected, location } = offense;
 				if (!corrected) {
 					const mappedSeverity = "warning";
 					lintResult[mappedSeverity].push({

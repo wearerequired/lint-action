@@ -1,4 +1,5 @@
 const Black = require("./black");
+const Erblint = require("./erblint");
 const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
@@ -8,7 +9,6 @@ const Oitnb = require("./oitnb");
 const PHPCodeSniffer = require("./php-codesniffer");
 const Prettier = require("./prettier");
 const RuboCop = require("./rubocop");
-const Erblint = require("./erblint");
 const Stylelint = require("./stylelint");
 const SwiftFormatLockwood = require("./swift-format-lockwood");
 const SwiftFormatOfficial = require("./swift-format-official");
@@ -17,13 +17,13 @@ const XO = require("./xo");
 
 const linters = {
 	// Linters
+	erblint: Erblint,
 	eslint: ESLint,
 	flake8: Flake8,
 	golint: Golint,
 	mypy: Mypy,
 	php_codesniffer: PHPCodeSniffer,
 	rubocop: RuboCop,
-	erblint: Erblint,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
 	xo: XO,

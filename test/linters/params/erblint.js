@@ -16,7 +16,7 @@ function getLintParams(dir) {
 		cmdOutput: {
 			status: 1,
 			stdoutParts: [],
-			stdout: `{\"metadata\":{\"erb_lint_version\":\"0.1.1\",\"ruby_engine\":\"ruby\",\"ruby_version\":\"2.6.8\",\"ruby_patchlevel\":\"205\",\"ruby_platform\":\"x86_64-darwin20\"},\"files\":[${stdout1}, ${stdout2}],\"summary\":{\"offenses\":3,\"inspected_files\":2,\"corrected\":0}}`
+			stdout: `{"metadata":{"erb_lint_version":"0.1.1","ruby_engine":"ruby","ruby_version":"2.6.8","ruby_patchlevel":"205","ruby_platform":"x86_64-darwin20"},"files":[${stdout1}, ${stdout2}],"summary":{"offenses":3,"inspected_files":2,"corrected":0}}`
 		},
 		// Expected output of the parsing function
 		lintResult: {
