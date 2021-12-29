@@ -2161,6 +2161,8 @@ module.exports = Black;
 /***/ 9674:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const core = __nccwpck_require__(2186);
+
 const { run } = __nccwpck_require__(9575);
 const commandExists = __nccwpck_require__(5265);
 const { initLintResult } = __nccwpck_require__(9149);
@@ -2210,7 +2212,7 @@ class Erblint {
 		if (fix) {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
-		
+
 		return run(`${prefix} erblint --format json ${args}`, {
 			dir,
 			ignoreErrors: true,
