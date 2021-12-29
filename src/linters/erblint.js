@@ -42,7 +42,7 @@ class Erblint {
 	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint(dir, extensions, args = "--lint-all", fix = false, prefix = "") {
 		if (extensions.length !== 1 || extensions[0] !== "erb") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -50,7 +50,7 @@ class Erblint {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
-		return run(`${prefix} erblint --format json ${args} -lint-all`, {
+		return run(`${prefix} erblint --format json ${args}`, {
 			dir,
 			ignoreErrors: true,
 		});
