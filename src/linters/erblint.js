@@ -45,7 +45,7 @@ class Erblint {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		return run(`${prefix} erblint --format json ${args == "" ? "--lint-all" : args}`, {
+		return run(`${prefix} erblint --format json ${args}`, {
 			dir,
 			ignoreErrors: true,
 		});
