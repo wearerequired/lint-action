@@ -31,7 +31,7 @@ class Mypy {
 		}
 
 		// Verify that Mypy is installed
-		if (!(await commandExists("mypy"))) {
+		if (!(await commandExists("${prefix} mypy"))) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
