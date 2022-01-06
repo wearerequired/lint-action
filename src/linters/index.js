@@ -1,4 +1,5 @@
 const Black = require("./black");
+const Erblint = require("./erblint");
 const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
@@ -16,6 +17,7 @@ const XO = require("./xo");
 
 const linters = {
 	// Linters
+	erblint: Erblint,
 	eslint: ESLint,
 	flake8: Flake8,
 	golint: Golint,

@@ -292,6 +292,26 @@ inputs:
     required: false
     default: ""
 
+  erblint:
+    description: Enable or disable ERB Lint checks
+    required: false
+    default: "false"
+  erblint_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  erblint_dir:
+    description: Directory where the ERB Lint command should be run
+    required: false
+  erblint_extensions:
+    description: Extensions of files to check with ERB Lint
+    required: false
+    default: "erb"
+  erblint_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   # Swift
 
   # Alias of `swift_format_lockwood` (for backward compatibility)
