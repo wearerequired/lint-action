@@ -124,12 +124,21 @@ async function runAction() {
 	}
 
 	core.startGroup("Create check runs with commit annotations");
-	await Promise.all(
-		checks.map(({ lintCheckName, lintResult, summary }) =>
-			createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
-		),
-	);
-	core.endGroup();
+	let groupClosed = false;
+	try {
+		await Promise.all(
+			checks.map(({ lintCheckName, lintResult, summary }) =>
+				createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
+			),
+		);
+	} catch (err) {
+		core.endGroup();
+		groupClosed = true;
+		core.warning("Some check runs could not be created.");
+	}
+	if (!groupClosed) {
+		core.endGroup();
+	}
 
 	if (hasFailures && !continueOnError) {
 		core.setFailed("Linting failures detected. See check runs with annotations for details.");

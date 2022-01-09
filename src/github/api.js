@@ -79,8 +79,23 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		});
 		core.info(`${linterName} check created successfully`);
 	} catch (err) {
-		core.error(err);
-		throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}`);
+		let errorMessage = err.message;
+		if (err.data) {
+			try {
+				const errorData = JSON.parse(err.data);
+				if (errorData.message) {
+					errorMessage += `. ${errorData.message}`;
+				}
+				if (errorData.documentation_url) {
+					errorMessage += ` ${errorData.documentation_url}`;
+				}
+			} catch (e) {
+				// Ignore
+			}
+		}
+		core.error(errorMessage);
+
+		throw new Error(`Error trying to create GitHub check for ${linterName}: ${errorMessage}`);
 	}
 }
 
