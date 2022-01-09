@@ -3,6 +3,6 @@
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {
-		"xo": "^0.38.2"
+		"xo": "^0.47.0"
 	}
 }

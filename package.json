@@ -80,8 +80,9 @@
 		"dist/"
 	],
 	"jest": {
-		"globalSetup": "./test/setup.js",
-		"globalTeardown": "./test/teardown.js"
+		"setupFiles": [
+			"./test/mock-actions-core.js"
+		]
 	},
 	"prettier": "@samuelmeuli/prettier-config"
 }
