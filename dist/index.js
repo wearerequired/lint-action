@@ -1926,8 +1926,23 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		});
 		core.info(`${linterName} check created successfully`);
 	} catch (err) {
-		core.error(err);
-		throw new Error(`Error trying to create GitHub check for ${linterName}: ${err.message}`);
+		let errorMessage = err.message;
+		if (err.data) {
+			try {
+				const errorData = JSON.parse(err.data);
+				if (errorData.message) {
+					errorMessage += `. ${errorData.message}`;
+				}
+				if (errorData.documentation_url) {
+					errorMessage += ` ${errorData.documentation_url}`;
+				}
+			} catch (e) {
+				// Ignore
+			}
+		}
+		core.error(errorMessage);
+
+		throw new Error(`Error trying to create GitHub check for ${linterName}: ${errorMessage}`);
 	}
 }
 
@@ -4234,12 +4249,21 @@ async function runAction() {
 	}
 
 	core.startGroup("Create check runs with commit annotations");
-	await Promise.all(
-		checks.map(({ lintCheckName, lintResult, summary }) =>
-			createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
-		),
-	);
-	core.endGroup();
+	let groupClosed = false;
+	try {
+		await Promise.all(
+			checks.map(({ lintCheckName, lintResult, summary }) =>
+				createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
+			),
+		);
+	} catch (err) {
+		core.endGroup();
+		groupClosed = true;
+		core.warning("Some check runs could not be created.");
+	}
+	if (!groupClosed) {
+		core.endGroup();
+	}
 
 	if (hasFailures && !continueOnError) {
 		core.setFailed("Linting failures detected. See check runs with annotations for details.");
