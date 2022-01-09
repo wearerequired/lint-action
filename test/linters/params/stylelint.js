@@ -11,7 +11,7 @@ function getLintParams(dir) {
 	const stdoutFile1 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file1.css",
-	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[{"line":2,"column":13,"rule":"no-extra-semicolons","severity":"warning","text":"Unexpected extra semicolon (no-extra-semicolons)"}]}`;
+	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[{"line":2,"column":14,"rule":"no-extra-semicolons","severity":"warning","text":"Unexpected extra semicolon (no-extra-semicolons)"}]}`;
 	const stdoutFile2 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file2.scss",
