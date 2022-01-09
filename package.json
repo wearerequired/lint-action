@@ -80,7 +80,9 @@
 		"dist/"
 	],
 	"jest": {
-		"setupFiles": [ "./test/mock-actions-core.js" ]
+		"setupFiles": [
+			"./test/mock-actions-core.js"
+		]
 	},
 	"prettier": "@samuelmeuli/prettier-config"
 }
