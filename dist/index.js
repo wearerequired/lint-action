@@ -4150,15 +4150,15 @@ async function runAction() {
 		context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
 	// If on a PR from fork: Display messages regarding action limitations
-	if (isPullRequest && context.repository.hasFork) {
+	if (context.eventName === "pull_request" && context.repository.hasFork) {
 		core.error(
-			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
+			"This action does not have permission to create annotations on forks. You may want to run it only on `pull_request_target` events with checks permissions set to write. See https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions for details.",
 		);
-		if (autoFix) {
-			core.error(
-				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
-			);
-		}
+	}
+	if (isPullRequest && context.repository.hasFork && autoFix) {
+		core.error(
+			"This action does not have permission to push to forks. You may want to run it only on `push` events.",
+		);
 	}
 
 	if (autoFix) {
