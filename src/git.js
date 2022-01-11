@@ -14,14 +14,14 @@ function checkOutRemoteBranch(context) {
 		core.info(`Adding "${context.repository.forkName}" fork as remote with Git`);
 		const cloneURl = new URL(context.repository.forkCloneUrl);
 		cloneURl.username = context.actor;
-		cloneURl.username = context.token;
+		cloneURl.password = context.token;
 		run(`git remote add fork ${cloneURl.toString()}`);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
 		core.info(`Adding auth information to Git remote URL`);
 		const cloneURl = new URL(context.repository.cloneUrl);
 		cloneURl.username = context.actor;
-		cloneURl.username = context.token;
+		cloneURl.password = context.token;
 		run(`git remote set-url origin ${cloneURl.toString()}`);
 	}
 
