@@ -396,6 +396,26 @@ inputs:
     required: false
     default: ""
 
+  dotnet_format:
+    description: Enable or disable dotnet-format checks
+    required: false
+    default: "false"
+  dotnet_format_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  dotnet_format_dir:
+    description: Directory where the dotnet-format command should be run
+    required: false
+  dotnet_format_extensions:
+    description: Extensions of files to check with dotnet-format
+    required: false
+    default: "cs"
+  dotnet_format_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
 runs:
   using: node12
   main: ./dist/index.js

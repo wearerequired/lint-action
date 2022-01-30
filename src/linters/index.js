@@ -1,4 +1,5 @@
 const Black = require("./black");
+const DotnetFormat = require("./dotnet-format");
 const Erblint = require("./erblint");
 const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
@@ -30,6 +31,7 @@ const linters = {
 
 	// Formatters (should be run after linters)
 	black: Black,
+	dotnet_format: DotnetFormat,
 	gofmt: Gofmt,
 	oitnb: Oitnb,
 	prettier: Prettier,
