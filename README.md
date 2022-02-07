@@ -18,6 +18,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
 
 ## Supported tools
 
+- **C#:**
+  - [dotnet-format](https://github.com/dotnet/format)
 - **CSS:**
   - [stylelint](https://stylelint.io)
 - **Go:**
@@ -41,6 +43,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [swift-format](https://github.com/apple/swift-format) (official)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
   - [SwiftLint](https://github.com/realm/SwiftLint)
+- **VB.NET:**
+  - [dotnet-format](https://github.com/dotnet/format)
 
 ## Usage
 
@@ -251,11 +255,49 @@ jobs:
           flake8: true
 ```
 
+### C# and VB.NET example (dotnet_format)
+
+```yml
+name: Lint
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          dotnet_format: true
+```
+
 ## Configuration
 
 ### Linter-specific options
 
-`[linter]` can be one of `black`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
+`[linter]` can be one of `black`, `dotnet_format`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
@@ -294,6 +336,7 @@ Some options are not be available for specific linters:
 | Linter                | auto-fixing | extensions |
 | --------------------- | :---------: | :--------: |
 | black                 |     ✅      |     ✅     |
+| dotnet_format         |     ✅      |     ✅     |
 | erblint               |     ❌      |  ❌ (erb)  |
 | eslint                |     ✅      |     ✅     |
 | flake8                |     ❌      |     ✅     |

@@ -4,6 +4,7 @@ const { copy, remove } = require("fs-extra");
 
 const { normalizeDates, normalizePaths, createTmpDir } = require("../test-utils");
 const blackParams = require("./params/black");
+const dotnetFormatParams = require("./params/dotnet-format");
 const erblintParams = require("./params/erblint");
 const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
@@ -22,6 +23,7 @@ const xoParams = require("./params/xo");
 
 const linterParams = [
 	blackParams,
+	dotnetFormatParams,
 	erblintParams,
 	eslintParams,
 	eslintTypescriptParams,
