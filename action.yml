@@ -61,6 +61,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  stylelint_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   # Go
 
@@ -83,6 +87,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  gofmt_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   golint:
     description: Enable or disable golint checks
@@ -103,6 +111,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  golint_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   # JavaScript
 
@@ -125,6 +137,10 @@ inputs:
     description: Shell command to prepend to the linter command. Will default to `npx --no-install` for NPM and `yarn run --silent` for Yarn.
     required: false
     default: ""
+  eslint_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   prettier:
     description: Enable or disable Prettier checks
@@ -145,6 +161,10 @@ inputs:
     description: Shell command to prepend to the linter command. Will default to `npx --no-install` for NPM and `yarn run --silent` for Yarn.
     required: false
     default: ""
+  prettier_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   xo:
     description: Enable or disable XO checks
@@ -165,6 +185,10 @@ inputs:
     description: Shell command to prepend to the linter command. Will default to `npx --no-install` for NPM and `yarn run --silent` for Yarn.
     required: false
     default: ""
+  xo_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   # PHP
 
@@ -187,6 +211,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  php_codesniffer_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   # Python
 
@@ -209,6 +237,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  black_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   flake8:
     description: Enable or disable Flake8 checks
@@ -229,6 +261,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  flake8_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   mypy:
     description: Enable or disable Mypy checks
@@ -249,6 +285,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  mypy_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   oitnb:
     description: Enable or disable oitnb checks
@@ -269,6 +309,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  oitnb_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   # Ruby
 
@@ -291,6 +335,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  rubocop_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   erblint:
     description: Enable or disable ERB Lint checks
@@ -311,6 +359,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  erblint_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   # Swift
 
@@ -335,6 +387,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  swiftformat_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   swift_format_lockwood:
     description: Enable or disable SwiftFormat checks
@@ -355,6 +411,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  swift_format_lockwood_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   swift_format_official:
     description: Enable or disable swift-format checks
@@ -375,6 +435,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  swift_format_official_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   swiftlint:
     description: Enable or disable SwiftLint checks
@@ -395,6 +459,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  swiftlint_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   dotnet_format:
     description: Enable or disable dotnet-format checks
@@ -415,6 +483,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  dotnet_format_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
 runs:
   using: node12
