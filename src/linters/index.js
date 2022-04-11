@@ -1,3 +1,4 @@
+const Autopep8 = require("./autopep8");
 const Black = require("./black");
 const DotnetFormat = require("./dotnet-format");
 const Erblint = require("./erblint");
@@ -30,6 +31,7 @@ const linters = {
 	xo: XO,
 
 	// Formatters (should be run after linters)
+	autopep8: Autopep8,
 	black: Black,
 	dotnet_format: DotnetFormat,
 	gofmt: Gofmt,
