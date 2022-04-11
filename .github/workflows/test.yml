@@ -34,7 +34,7 @@ jobs:
       # Go
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: 1.13
 
@@ -107,7 +107,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           cd ./test/linters/projects/
-          pip install -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt -r ./oitnb/requirements.txt
+          pip install -r ./autopep8/requirements.txt -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt -r ./oitnb/requirements.txt
 
       # Ruby
 
@@ -150,7 +150,7 @@ jobs:
       - name: Install Swift dependencies (Linux, uncached)
         if: steps.cache-swift.outputs.cache-hit != 'true' && startsWith(matrix.os, 'ubuntu')
         run: |
-          git clone --branch 0.50500.0 --depth 1 git://github.com/apple/swift-format
+          git clone --branch 0.50500.0 --depth 1 https://github.com/apple/swift-format
           cd swift-format
           swift build -c release
           echo "${PWD}/.build/release" >> $GITHUB_PATH

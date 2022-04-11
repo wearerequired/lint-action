@@ -218,6 +218,26 @@ inputs:
 
   # Python
 
+  autopep8:
+    description: Enable or disable autopep8 checks
+    required: false
+    default: "false"
+  autopep8_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  autopep8_dir:
+    description: Directory where the autopep8 command should be run
+    required: false
+  autopep8_extensions:
+    description: Extensions of files to check with autopep8
+    required: false
+    default: "py"
+  autopep8_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   black:
     description: Enable or disable Black checks
     required: false
