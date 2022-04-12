@@ -6,7 +6,7 @@ const git = require("./git");
 const { createCheck } = require("./github/api");
 const { getContext } = require("./github/context");
 const linters = require("./linters");
-const { getSummary } = require("./utils/lint-result")
+const { getSummary } = require("./utils/lint-result");
 
 /**
  * Parses the action configuration and runs all enabled linters on matching files
@@ -20,7 +20,7 @@ async function runAction() {
 	const gitEmail = core.getInput("git_email", { required: true });
 	const commitMessage = core.getInput("commit_message", { required: true });
 	const checkName = core.getInput("check_name", { required: true });
-	const neutralCheckOnWarning = core.getInput("neutral_check_on_warning") === 'true'
+	const neutralCheckOnWarning = core.getInput("neutral_check_on_warning") === "true";
 	const isPullRequest =
 		context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
