@@ -32,6 +32,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
 - **PHP:**
   - [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)
 - **Python:**
+  - [Autopep8](https://github.com/hhatto/autopep8)
   - [Black](https://black.readthedocs.io)
   - [Flake8](http://flake8.pycqa.org)
   - [Mypy](https://mypy.readthedocs.io/)
@@ -297,7 +298,7 @@ jobs:
 
 ### Linter-specific options
 
-`[linter]` can be one of `black`, `dotnet_format`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
+`[linter]` can be one of `autopep8`, `black`, `dotnet_format`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
@@ -335,6 +336,7 @@ Some options are not be available for specific linters:
 
 | Linter                | auto-fixing | extensions |
 | --------------------- | :---------: | :--------: |
+| autopep8              |     ✅      |  ❌ (py)   |
 | black                 |     ✅      |     ✅     |
 | dotnet_format         |     ✅      |     ✅     |
 | erblint               |     ❌      |  ❌ (erb)  |
@@ -342,7 +344,7 @@ Some options are not be available for specific linters:
 | flake8                |     ❌      |     ✅     |
 | gofmt                 |     ✅      |  ❌ (go)   |
 | golint                |     ❌      |  ❌ (go)   |
-| mypy                  |     ✅      |     ✅     |
+| mypy                  |     ❌      |  ❌ (py)   |
 | oitnb                 |     ✅      |     ✅     |
 | php_codesniffer       |     ❌      |     ✅     |
 | prettier              |     ✅      |     ✅     |

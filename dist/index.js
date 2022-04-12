@@ -2097,6 +2097,88 @@ module.exports = {
 
 /***/ }),
 
+/***/ 3569:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { run } = __nccwpck_require__(9575);
+const commandExists = __nccwpck_require__(5265);
+const { parseErrorsFromDiff } = __nccwpck_require__(4388);
+const { initLintResult } = __nccwpck_require__(9149);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+/**
+ * https://github.com/hhatto/autopep8
+ */
+class Autopep8 {
+	static get name() {
+		return "Autopep8";
+	}
+
+	/**
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
+	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
+	 */
+	static async verifySetup(dir, prefix = "") {
+		// Verify that Python is installed (required to execute Autopep8)
+		if (!(await commandExists("python"))) {
+			throw new Error("Python is not installed");
+		}
+
+		// Verify that Autopep8 is installed
+		try {
+			run(`${prefix} autopep8 --version`, { dir });
+		} catch (err) {
+			throw new Error(`${this.name} is not installed`);
+		}
+	}
+
+	/**
+	 * Runs the linting program and returns the command output
+	 * @param {string} dir - Directory to run the linter in
+	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
+	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
+	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
+	 */
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+		if (extensions.length !== 1 || extensions[0] !== "py") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
+		const fixArg = fix ? "-i" : "-d --exit-code";
+		const output = run(`${prefix} autopep8 ${fixArg} ${args} -r "."`, {
+			dir,
+			ignoreErrors: true,
+		});
+
+		// Slashes can be different depending on OS
+		output.stdout = output.stdout.replace(/^(---|\+\+\+) (original|fixed)\/\.[\\/]/gm, "$1 ");
+
+		return output;
+	}
+
+	/**
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir - Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
+	 * @returns {LintResult} - Parsed lint result
+	 */
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+		lintResult.error = parseErrorsFromDiff(output.stdout);
+		lintResult.isSuccess = output.status === 0;
+		return lintResult;
+	}
+}
+
+module.exports = Autopep8;
+
+
+/***/ }),
+
 /***/ 9844:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -2772,6 +2854,7 @@ module.exports = Golint;
 /***/ 8565:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const Autopep8 = __nccwpck_require__(3569);
 const Black = __nccwpck_require__(9844);
 const DotnetFormat = __nccwpck_require__(6216);
 const Erblint = __nccwpck_require__(9674);
@@ -2804,6 +2887,7 @@ const linters = {
 	xo: XO,
 
 	// Formatters (should be run after linters)
+	autopep8: Autopep8,
 	black: Black,
 	dotnet_format: DotnetFormat,
 	gofmt: Gofmt,
@@ -4172,7 +4256,7 @@ module.exports = require("util");
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"lint-action","version":"1.12.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.6.0","command-exists":"^1.2.9","parse-diff":"^0.9.0"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.33.3","eslint":"8.12.0","eslint-config-airbnb-base":"15.0.0","eslint-config-prettier":"^8.5.0","eslint-plugin-import":"^2.25.4","eslint-plugin-jsdoc":"^38.1.3","fs-extra":"^10.0.1","jest":"^27.5.1","prettier":"^2.6.1"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"setupFiles":["./test/mock-actions-core.js"]},"prettier":"@samuelmeuli/prettier-config"}');
+module.exports = JSON.parse('{"name":"lint-action","version":"1.12.0","description":"GitHub Action for detecting and fixing linting errors","author":{"name":"Samuel Meuli","email":"me@samuelmeuli.com","url":"https://samuelmeuli.com"},"repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.6.0","command-exists":"^1.2.9","parse-diff":"^0.9.0"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.33.3","eslint":"8.12.0","eslint-config-airbnb-base":"15.0.0","eslint-config-prettier":"^8.5.0","eslint-plugin-import":"^2.25.4","eslint-plugin-jsdoc":"^38.1.6","fs-extra":"^10.0.1","jest":"^27.5.1","prettier":"^2.6.2"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"setupFiles":["./test/mock-actions-core.js"]},"prettier":"@samuelmeuli/prettier-config"}');
 
 /***/ })
 
