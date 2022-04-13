@@ -15,8 +15,8 @@ inputs:
     description: Whether linters should try to fix code style issues automatically
     required: false
     default: "false"
-  auto_commit:
-    description: Whether linters should try to fix code style issues automatically
+  commit:
+    description: Whether to commit and push the changes made by auto_fix
     required: false
     default: "true"
   git_no_verify:

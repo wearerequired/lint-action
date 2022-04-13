@@ -318,7 +318,7 @@ jobs:
     <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="80%" />
   </p>
 
-- **`auto_commit`:** Whether to commit and push the changes made by `auto_fix`. Default: `false`
+- **`commit`:** Whether to commit and push the changes made by `auto_fix`. Default: `true`
 
 - **`git_name`**: Username for auto-fix commits. Default: `"Lint Action"`
 
