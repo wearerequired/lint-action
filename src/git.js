@@ -81,7 +81,8 @@ function pushChanges(skipVerification) {
  * Restore changes made to files locally
  */
 function restoreFiles() {
-	if (hasChanges()) {
+	const output = run("git diff --name-only");
+	if (output.stdout.length > 0) {
 		core.info("Restoring changes with Git");
 		run("git restore $(git diff --name-only)");
 	}
