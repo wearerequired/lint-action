@@ -78,6 +78,14 @@ function pushChanges(skipVerification) {
 }
 
 /**
+ * Restore changes made to files locally
+ */
+function restoreFiles() {
+	core.info("Restoring changes with Git");
+	run("git restore $(git diff --name-only)");
+}
+
+/**
  * Updates the global Git configuration with the provided information
  * @param {string} name - Git username
  * @param {string} email - Git email address
@@ -94,5 +102,6 @@ module.exports = {
 	getHeadSha,
 	hasChanges,
 	pushChanges,
+	restoreFiles,
 	setUserInfo,
 };
