@@ -71,6 +71,11 @@ async function runAction() {
 			const lintDirAbs = join(context.workspace, lintDirRel);
 			const linterAutoFix = core.getInput(`${linterId}_auto_fix`) === "true";
 
+			// Restore files to previous commit to avoid pushing changes made from previous linter
+			if (autoFix && linterAutoFix) {
+				git.restoreFiles();
+			}
+
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
 			await linter.verifySetup(lintDirAbs, prefix);
@@ -98,7 +103,7 @@ async function runAction() {
 				hasFailures = true;
 			}
 
-			if (autoFix) {
+			if (autoFix && linterAutoFix) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
 					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name), skipVerification);
