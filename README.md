@@ -312,11 +312,13 @@ jobs:
 
 - **`continue_on_error`:** Whether the workflow run should also fail when linter failures are detected. Default: `true`
 
-- **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will commit and push the changes to the corresponding branch. Default: `false`
+- **`auto_fix`:** Whether linters should try to fix code style issues automatically. If some issues can be fixed, the action will apply the needed changes. Default: `false`
 
   <p align="center">
     <img src="./.github/screenshots/auto-fix.png" alt="Screenshot of auto-fix commit" width="80%" />
   </p>
+
+- **`auto_commit`:** Whether to commit and push the changes made by `auto_fix`. Default: `false`
 
 - **`git_name`**: Username for auto-fix commits. Default: `"Lint Action"`
 
