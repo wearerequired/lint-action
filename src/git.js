@@ -84,7 +84,7 @@ function restoreFiles() {
 	const output = run("git diff --name-only");
 	if (output.stdout.length > 0) {
 		core.info("Restoring changes with Git");
-		run("git restore $(git diff --name-only)");
+		run(`git restore --staged ${output.stdout.split("\n").join(" ")}`);
 	}
 }
 
