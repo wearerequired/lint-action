@@ -75,6 +75,9 @@ async function runAction() {
 			if (autoFix && linterAutoFix) {
 				git.restoreFiles();
 			}
+			core.info(
+				`Starting with ${linter.name}, auto_fix set to ${autoFix} and linter auto fix set to ${linterAutoFix}`,
+			);
 
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
