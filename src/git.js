@@ -81,8 +81,10 @@ function pushChanges(skipVerification) {
  * Restore changes made to files locally
  */
 function restoreFiles() {
-	core.info("Restoring changes with Git");
-	run("git restore $(git diff --name-only)");
+	if (hasChanges()) {
+		core.info("Restoring changes with Git");
+		run("git restore $(git diff --name-only)");
+	}
 }
 
 /**
