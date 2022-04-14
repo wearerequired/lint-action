@@ -94,6 +94,5 @@ module.exports = {
 	getHeadSha,
 	hasChanges,
 	pushChanges,
-	restoreFiles,
 	setUserInfo,
 };
