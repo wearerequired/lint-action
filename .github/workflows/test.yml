@@ -114,14 +114,14 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6
+          ruby-version: 2.6.10
           bundler: 2
 
       - name: Set up bundle cache
         uses: actions/cache@v3
         with:
           path: ./test/linters/projects/**/vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock') }}
+          key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock', '.github/workflows/test.yml') }}
           restore-keys: |
             ${{ runner.os }}-gems-
 
