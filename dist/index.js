@@ -1820,6 +1820,17 @@ function pushChanges(skipVerification) {
 }
 
 /**
+ * Restore changes made to files locally
+ */
+function restoreFiles() {
+	const output = run("git diff --name-only");
+	if (output.stdout.length > 0) {
+		core.info("Restoring changes with Git");
+		run(`git restore ${output.stdout.split("\n").join(" ")}`);
+	}
+}
+
+/**
  * Updates the global Git configuration with the provided information
  * @param {string} name - Git username
  * @param {string} email - Git email address
@@ -1836,6 +1847,7 @@ module.exports = {
 	getHeadSha,
 	hasChanges,
 	pushChanges,
+	restoreFiles,
 	setUserInfo,
 };
 
@@ -4372,6 +4384,15 @@ async function runAction() {
 			const lintDirRel = core.getInput(`${linterId}_dir`) || ".";
 			const prefix = core.getInput(`${linterId}_command_prefix`);
 			const lintDirAbs = join(context.workspace, lintDirRel);
+			const linterAutoFix = core.getInput(`${linterId}_auto_fix`) === "true";
+
+			// Restore files to previous commit to avoid pushing changes made from previous linter
+			if (autoFix && linterAutoFix) {
+				git.restoreFiles();
+			}
+			core.info(
+				`Starting with ${linter.name}, auto_fix set to ${autoFix} and linter auto fix set to ${linterAutoFix}`,
+			);
 
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
@@ -4400,7 +4421,7 @@ async function runAction() {
 				hasFailures = true;
 			}
 
-			if (autoFix) {
+			if (autoFix && linterAutoFix) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
 					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name), skipVerification);
