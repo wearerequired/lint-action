@@ -114,7 +114,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6.10
+          ruby-version: 2.6.9
           bundler: 2
 
       - name: Set up bundle cache
@@ -122,8 +122,6 @@ jobs:
         with:
           path: ./test/linters/projects/**/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock', '.github/workflows/test.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
 
       - name: Install Ruby dependencies (Rubocop)
         run: |
