@@ -114,7 +114,7 @@ inputs:
   golint_auto_fix:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
-    default: "true"
+    default: "false"
 
   # JavaScript
 
@@ -214,7 +214,7 @@ inputs:
   php_codesniffer_auto_fix:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
-    default: "true"
+    default: "false"
 
   # Python
 
@@ -284,7 +284,7 @@ inputs:
   flake8_auto_fix:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
-    default: "true"
+    default: "false"
 
   mypy:
     description: Enable or disable Mypy checks
@@ -308,7 +308,7 @@ inputs:
   mypy_auto_fix:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
-    default: "true"
+    default: "false"
 
   oitnb:
     description: Enable or disable oitnb checks
@@ -382,7 +382,7 @@ inputs:
   erblint_auto_fix:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
-    default: "true"
+    default: "false"
 
   # Swift
 
