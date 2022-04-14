@@ -71,14 +71,6 @@ async function runAction() {
 			const lintDirAbs = join(context.workspace, lintDirRel);
 			const linterAutoFix = core.getInput(`${linterId}_auto_fix`) === "true";
 
-			// Restore files to previous commit to avoid pushing changes made from previous linter
-			if (autoFix && linterAutoFix) {
-				git.restoreFiles();
-			}
-			core.info(
-				`Starting with ${linter.name}, auto_fix set to ${autoFix} and linter auto fix set to ${linterAutoFix}`,
-			);
-
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
 			await linter.verifySetup(lintDirAbs, prefix);
@@ -90,10 +82,16 @@ async function runAction() {
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			core.info(
-				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} ` +
+				`Linting ${autoFix && linterAutoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} ` +
 					`with ${linter.name} ${args ? `and args: ${args}` : ""}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
+			const lintOutput = linter.lint(
+				lintDirAbs,
+				fileExtList,
+				args,
+				autoFix && linterAutoFix,
+				prefix,
+			);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);

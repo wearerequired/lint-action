@@ -78,17 +78,6 @@ function pushChanges(skipVerification) {
 }
 
 /**
- * Restore changes made to files locally
- */
-function restoreFiles() {
-	const output = run("git diff --name-only");
-	if (output.stdout.length > 0) {
-		core.info("Restoring changes with Git");
-		run(`git restore ${output.stdout.split("\n").join(" ")}`);
-	}
-}
-
-/**
  * Updates the global Git configuration with the provided information
  * @param {string} name - Git username
  * @param {string} email - Git email address
