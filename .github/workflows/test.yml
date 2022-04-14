@@ -114,7 +114,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6.9
+          ruby-version: 2.6
           bundler: 2
 
       - name: Set up bundle cache
