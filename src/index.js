@@ -69,7 +69,7 @@ async function runAction() {
 			const lintDirRel = core.getInput(`${linterId}_dir`) || ".";
 			const prefix = core.getInput(`${linterId}_command_prefix`);
 			const lintDirAbs = join(context.workspace, lintDirRel);
-			const linterAutoFix = false === autoFix ?  false : core.getInput(`${linterId}_auto_fix`) === "true";
+			const linterAutoFix = autoFix && core.getInput(`${linterId}_auto_fix`) === "true";
 
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
