@@ -4388,13 +4388,7 @@ async function runAction() {
 				`Linting ${linterAutoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} ` +
 					`with ${linter.name} ${args ? `and args: ${args}` : ""}…`,
 			);
-			const lintOutput = linter.lint(
-				lintDirAbs,
-				fileExtList,
-				args,
-				linterAutoFix,
-				prefix,
-			);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
