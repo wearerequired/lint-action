@@ -60,7 +60,7 @@ inputs:
   stylelint_extensions:
     description: Extensions of files to check with stylelint
     required: false
-    default: "css,sass,scss"
+    default: "css"
   stylelint_command_prefix:
     description: Shell command to prepend to the linter command
     required: false
