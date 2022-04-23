@@ -106,7 +106,9 @@ describe("parseRepository()", () => {
 		// Fork detection is not supported for "push" events
 		expect(parseRepository("push", pushEvent)).toEqual({
 			repoName: REPOSITORY,
+			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: undefined,
+			forkCloneUrl: undefined,
 			hasFork: false,
 		});
 	});
@@ -114,13 +116,17 @@ describe("parseRepository()", () => {
 	test('works with "pull_request" event on repository without fork', () => {
 		expect(parseRepository("pull_request", prOpenEvent)).toEqual({
 			repoName: REPOSITORY,
+			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: undefined,
+			forkCloneUrl: undefined,
 			hasFork: false,
 		});
 
 		expect(parseRepository("pull_request", prSyncEvent)).toEqual({
 			repoName: REPOSITORY,
+			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: undefined,
+			forkCloneUrl: undefined,
 			hasFork: false,
 		});
 	});
@@ -128,17 +134,23 @@ describe("parseRepository()", () => {
 	test('works with "pull_request" event on repository with fork', () => {
 		const prOpenEventMod = { ...prOpenEvent };
 		prOpenEventMod.pull_request.head.repo.full_name = FORK_REPOSITORY;
+		prOpenEventMod.pull_request.head.repo.clone_url = `https://github.com/${FORK_REPOSITORY}.git`;
 		expect(parseRepository("pull_request", prOpenEventMod)).toEqual({
 			repoName: REPOSITORY,
+			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: FORK_REPOSITORY,
+			forkCloneUrl: `https://github.com/${FORK_REPOSITORY}.git`,
 			hasFork: true,
 		});
 
 		const prSyncEventMod = { ...prSyncEvent };
 		prSyncEventMod.pull_request.head.repo.full_name = FORK_REPOSITORY;
+		prSyncEventMod.pull_request.head.repo.clone_url = `https://github.com/${FORK_REPOSITORY}.git`;
 		expect(parseRepository("pull_request", prSyncEventMod)).toEqual({
 			repoName: REPOSITORY,
+			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: FORK_REPOSITORY,
+			forkCloneUrl: `https://github.com/${FORK_REPOSITORY}.git`,
 			hasFork: true,
 		});
 	});

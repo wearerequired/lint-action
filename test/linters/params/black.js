@@ -32,7 +32,7 @@ function getLintParams(dir) {
 					path: "file1.py",
 					firstLine: 19,
 					lastLine: 27,
-					message: ` \n \n def divide(num_1, num_2):\n     return num_1 / num_2\n \n+\n # Blank lines error\n \n main()\n `,
+					message: ` \n \n def divide(num_1, num_2):\n     return num_1 / num_2\n \n+\n # Blank lines error\n \n main()`,
 				},
 				{
 					path: "file2.py",

@@ -19,7 +19,9 @@ const { getEnv } = require("../utils/action");
  * Information about the GitHub repository and its fork (if it exists)
  * @typedef GithubRepository
  * @property {string} repoName Repo name.
+ * @property {string} cloneUrl Repo clone URL.
  * @property {string} forkName Fork name.
+ * @property {string} forkCloneUrl Fork repo clone URL.
  * @property {boolean} hasFork Whether repo has a fork.
  */
 
@@ -88,17 +90,23 @@ function parseBranch(eventName, event) {
  */
 function parseRepository(eventName, event) {
 	const repoName = event.repository.full_name;
+	const cloneUrl = event.repository.clone_url;
 	let forkName;
+	let forkCloneUrl;
 	if (eventName === "pull_request" || eventName === "pull_request_target") {
 		// "pull_request" events are triggered on the repository where the PR is made. The PR branch can
 		// be on the same repository (`forkRepository` is set to `null`) or on a fork (`forkRepository`
 		// is defined)
 		const headRepoName = event.pull_request.head.repo.full_name;
 		forkName = repoName === headRepoName ? undefined : headRepoName;
+		const headForkCloneUrl = event.pull_request.head.repo.clone_url;
+		forkCloneUrl = cloneUrl === headForkCloneUrl ? undefined : headForkCloneUrl;
 	}
 	return {
 		repoName,
+		cloneUrl,
 		forkName,
+		forkCloneUrl,
 		hasFork: forkName != null && forkName !== repoName,
 	};
 }

@@ -1,3 +1,4 @@
+const { existsSync } = require("fs");
 const { join } = require("path");
 
 const core = require("@actions/core");
@@ -14,6 +15,8 @@ const { getSummary } = require("./utils/lint-result");
 async function runAction() {
 	const context = getContext();
 	const autoFix = core.getInput("auto_fix") === "true";
+	const commit = core.getInput("commit") === "true";
+	const skipVerification = core.getInput("git_no_verify") === "true";
 	const continueOnError = core.getInput("continue_on_error") === "true";
 	const gitName = core.getInput("git_name", { required: true });
 	const gitEmail = core.getInput("git_email", { required: true });
@@ -24,15 +27,15 @@ async function runAction() {
 		context.eventName === "pull_request" || context.eventName === "pull_request_target";
 
 	// If on a PR from fork: Display messages regarding action limitations
-	if (isPullRequest && context.repository.hasFork) {
+	if (context.eventName === "pull_request" && context.repository.hasFork) {
 		core.error(
-			"This action does not have permission to create annotations on forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
+			"This action does not have permission to create annotations on forks. You may want to run it only on `pull_request_target` events with checks permissions set to write. See https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions for details.",
 		);
-		if (autoFix) {
-			core.error(
-				"This action does not have permission to push to forks. You may want to run it only on `push` events. See https://github.com/wearerequired/lint-action/issues/13 for details",
-			);
-		}
+	}
+	if (isPullRequest && context.repository.hasFork && autoFix) {
+		core.error(
+			"This action does not have permission to push to forks. You may want to run it only on `push` events.",
+		);
 	}
 
 	if (autoFix) {
@@ -68,6 +71,11 @@ async function runAction() {
 			const lintDirRel = core.getInput(`${linterId}_dir`) || ".";
 			const prefix = core.getInput(`${linterId}_command_prefix`);
 			const lintDirAbs = join(context.workspace, lintDirRel);
+			const linterAutoFix = autoFix && core.getInput(`${linterId}_auto_fix`) === "true";
+
+			if (!existsSync(lintDirAbs)) {
+				throw new Error(`Directory ${lintDirAbs} for ${linter.name} doesn't exist`);
+			}
 
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
@@ -80,9 +88,10 @@ async function runAction() {
 
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			core.info(
-				`Linting ${autoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} with ${linter.name}…`,
+				`Linting ${linterAutoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} ` +
+					`with ${linter.name} ${args ? `and args: ${args}` : ""}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, autoFix, prefix);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
@@ -95,11 +104,11 @@ async function runAction() {
 				hasFailures = true;
 			}
 
-			if (autoFix) {
+			if (linterAutoFix && commit) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
-					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name));
-					git.pushChanges();
+					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name), skipVerification);
+					git.pushChanges(skipVerification);
 				}
 			}
 
@@ -122,12 +131,21 @@ async function runAction() {
 	}
 
 	core.startGroup("Create check runs with commit annotations");
-	await Promise.all(
-		checks.map(({ lintCheckName, lintResult, summary }) =>
-			createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
-		),
-	);
-	core.endGroup();
+	let groupClosed = false;
+	try {
+		await Promise.all(
+			checks.map(({ lintCheckName, lintResult, summary }) =>
+				createCheck(lintCheckName, headSha, context, lintResult, neutralCheckOnWarning, summary),
+			),
+		);
+	} catch (err) {
+		core.endGroup();
+		groupClosed = true;
+		core.warning("Some check runs could not be created.");
+	}
+	if (!groupClosed) {
+		core.endGroup();
+	}
 
 	if (hasFailures && !continueOnError) {
 		core.setFailed("Linting failures detected. See check runs with annotations for details.");

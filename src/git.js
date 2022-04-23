@@ -12,15 +12,17 @@ function checkOutRemoteBranch(context) {
 	if (context.repository.hasFork) {
 		// Fork: Add fork repo as remote
 		core.info(`Adding "${context.repository.forkName}" fork as remote with Git`);
-		run(
-			`git remote add fork https://${context.actor}:${context.token}@github.com/${context.repository.forkName}.git`,
-		);
+		const cloneURl = new URL(context.repository.forkCloneUrl);
+		cloneURl.username = context.actor;
+		cloneURl.password = context.token;
+		run(`git remote add fork ${cloneURl.toString()}`);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
 		core.info(`Adding auth information to Git remote URL`);
-		run(
-			`git remote set-url origin https://${context.actor}:${context.token}@github.com/${context.repository.repoName}.git`,
-		);
+		const cloneURl = new URL(context.repository.cloneUrl);
+		cloneURl.username = context.actor;
+		cloneURl.password = context.token;
+		run(`git remote set-url origin ${cloneURl.toString()}`);
 	}
 
 	const remote = context.repository.hasFork ? "fork" : "origin";
@@ -38,10 +40,11 @@ function checkOutRemoteBranch(context) {
 /**
  * Stages and commits all changes using Git
  * @param {string} message - Git commit message
+ * @param {boolean} skipVerification - Skip Git verification
  */
-function commitChanges(message) {
+function commitChanges(message, skipVerification) {
 	core.info(`Committing changes`);
-	run(`git commit -am "${message}"`);
+	run(`git commit -am "${message}"${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**
@@ -67,10 +70,11 @@ function hasChanges() {
 
 /**
  * Pushes all changes to the remote repository
+ * @param {boolean} skipVerification - Skip Git verification
  */
-function pushChanges() {
+function pushChanges(skipVerification) {
 	core.info("Pushing changes with Git");
-	run("git push");
+	run(`git push${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**

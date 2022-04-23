@@ -3,8 +3,11 @@ const { join } = require("path");
 const { copy, remove } = require("fs-extra");
 
 const { normalizeDates, normalizePaths, createTmpDir } = require("../test-utils");
+const autopep8Params = require("./params/autopep8");
 const blackParams = require("./params/black");
 const clippyParams = require("./params/clippy");
+const dotnetFormatParams = require("./params/dotnet-format");
+const erblintParams = require("./params/erblint");
 const eslintParams = require("./params/eslint");
 const eslintTypescriptParams = require("./params/eslint-typescript");
 const flake8Params = require("./params/flake8");
@@ -21,8 +24,11 @@ const swiftlintParams = require("./params/swiftlint");
 const xoParams = require("./params/xo");
 
 const linterParams = [
+	autopep8Params,
 	blackParams,
 	clippyParams,
+	dotnetFormatParams,
+	erblintParams,
 	eslintParams,
 	eslintTypescriptParams,
 	flake8Params,
@@ -45,7 +51,7 @@ if (process.platform === "darwin") {
 }
 
 const tmpDir = createTmpDir();
-jest.setTimeout(70000);
+jest.setTimeout(300000);
 
 // Copy linter test projects into temporary directory
 beforeAll(async () => {

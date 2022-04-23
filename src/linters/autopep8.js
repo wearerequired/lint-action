@@ -1,22 +1,16 @@
-const fs = require("fs");
-const { sep } = require("path");
-
-const core = require("@actions/core");
-
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
+const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
-
-const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
- * https://mypy.readthedocs.io/en/stable/
+ * https://github.com/hhatto/autopep8
  */
-class Mypy {
+class Autopep8 {
 	static get name() {
-		return "Mypy";
+		return "Autopep8";
 	}
 
 	/**
@@ -25,14 +19,14 @@ class Mypy {
 	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
-		// Verify that Python is installed (required to execute Mypy)
+		// Verify that Python is installed (required to execute Autopep8)
 		if (!(await commandExists("python"))) {
 			throw new Error("Python is not installed");
 		}
 
-		// Verify that Mypy is installed
+		// Verify that Autopep8 is installed
 		try {
-			run(`${prefix} mypy --version`, { dir });
+			run(`${prefix} autopep8 --version`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -51,26 +45,16 @@ class Mypy {
 		if (extensions.length !== 1 || extensions[0] !== "py") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
-		if (fix) {
-			core.warning(`${this.name} does not support auto-fixing`);
-		}
-
-		let specifiedPath = false;
-		// Check if they passed a directory as an arg
-		for (const arg of args.split(" ")) {
-			if (fs.existsSync(arg)) {
-				specifiedPath = true;
-				break;
-			}
-		}
-		let extraArgs = "";
-		if (!specifiedPath) {
-			extraArgs = ` ${dir}`;
-		}
-		return run(`${prefix} mypy ${args}${extraArgs}`, {
+		const fixArg = fix ? "-i" : "-d --exit-code";
+		const output = run(`${prefix} autopep8 ${fixArg} ${args} -r "."`, {
 			dir,
 			ignoreErrors: true,
 		});
+
+		// Slashes can be different depending on OS
+		output.stdout = output.stdout.replace(/^(---|\+\+\+) (original|fixed)\/\.[\\/]/gm, "$1 ");
+
+		return output;
 	}
 
 	/**
@@ -82,32 +66,10 @@ class Mypy {
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
+		lintResult.error = parseErrorsFromDiff(output.stdout);
 		lintResult.isSuccess = output.status === 0;
-
-		const matches = output.stdout.matchAll(PARSE_REGEX);
-		for (const match of matches) {
-			const [_, pathFull, line, level, text] = match;
-			const leadingSep = `.${sep}`;
-			let path = pathFull;
-			if (path.startsWith(leadingSep)) {
-				path = path.substring(2); // Remove "./" or ".\" from start of path
-			}
-			const lineNr = parseInt(line, 10);
-			const result = {
-				path,
-				firstLine: lineNr,
-				lastLine: lineNr,
-				message: text,
-			};
-			if (level === "error") {
-				lintResult.error.push(result);
-			} else if (level === "warning") {
-				lintResult.warning.push(result);
-			}
-		}
-
 		return lintResult;
 	}
 }
 
-module.exports = Mypy;
+module.exports = Autopep8;

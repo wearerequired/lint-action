@@ -1,22 +1,17 @@
-const fs = require("fs");
-const { sep } = require("path");
-
-const core = require("@actions/core");
-
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 
-const PARSE_REGEX = /^(.*):([0-9]+): (\w*): (.*)$/gm;
+const PARSE_REGEX = /^(.*)\(([0-9]+),([0-9]+)\): (warning|error) (.*) \[.*$/gm;
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
- * https://mypy.readthedocs.io/en/stable/
+ * https://github.com/dotnet/format
  */
-class Mypy {
+class DotnetFormat {
 	static get name() {
-		return "Mypy";
+		return "dotnet_format";
 	}
 
 	/**
@@ -25,14 +20,14 @@ class Mypy {
 	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
-		// Verify that Python is installed (required to execute Mypy)
-		if (!(await commandExists("python"))) {
-			throw new Error("Python is not installed");
+		// Verify that dotnet is installed (required to execute dotnet format)
+		if (!(await commandExists("dotnet"))) {
+			throw new Error(".NET SDK is not installed");
 		}
 
-		// Verify that Mypy is installed
+		// Verify that dotnet-format is installed
 		try {
-			run(`${prefix} mypy --version`, { dir });
+			run(`${prefix} dotnet format --version`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -48,26 +43,12 @@ class Mypy {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		if (extensions.length !== 1 || extensions[0] !== "py") {
+		if (extensions.length !== 1 || extensions[0] !== "cs") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
-		if (fix) {
-			core.warning(`${this.name} does not support auto-fixing`);
-		}
 
-		let specifiedPath = false;
-		// Check if they passed a directory as an arg
-		for (const arg of args.split(" ")) {
-			if (fs.existsSync(arg)) {
-				specifiedPath = true;
-				break;
-			}
-		}
-		let extraArgs = "";
-		if (!specifiedPath) {
-			extraArgs = ` ${dir}`;
-		}
-		return run(`${prefix} mypy ${args}${extraArgs}`, {
+		const fixArg = fix ? "" : "--verify-no-changes";
+		return run(`${prefix} dotnet format ${fixArg} ${args}`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -84,30 +65,21 @@ class Mypy {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = output.status === 0;
 
-		const matches = output.stdout.matchAll(PARSE_REGEX);
+		const matches = output.stderr.matchAll(PARSE_REGEX);
 		for (const match of matches) {
-			const [_, pathFull, line, level, text] = match;
-			const leadingSep = `.${sep}`;
-			let path = pathFull;
-			if (path.startsWith(leadingSep)) {
-				path = path.substring(2); // Remove "./" or ".\" from start of path
-			}
+			const [_line, pathFull, line, _column, level, message] = match;
+			const path = pathFull.substring(dir.length + 1);
 			const lineNr = parseInt(line, 10);
-			const result = {
+			lintResult[level].push({
 				path,
 				firstLine: lineNr,
 				lastLine: lineNr,
-				message: text,
-			};
-			if (level === "error") {
-				lintResult.error.push(result);
-			} else if (level === "warning") {
-				lintResult.warning.push(result);
-			}
+				message: `${message}`,
+			});
 		}
 
 		return lintResult;
 	}
 }
 
-module.exports = Mypy;
+module.exports = DotnetFormat;

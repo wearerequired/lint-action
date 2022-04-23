@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'rubocop', '~> 1.12.0'
+gem 'erb_lint', '~> 0.1.1', require: false
