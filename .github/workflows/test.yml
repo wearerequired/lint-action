@@ -58,7 +58,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('./test/linters/projects/**/yarn.lock', '.github/workflows/test.yml') }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock', './test/linters/projects/**/yarn.lock', '.github/workflows/test.yml') }}
 
       - name: Install Node.js dependencies
         run: |
@@ -184,7 +184,8 @@ jobs:
 
       # Tests
 
+      - name: Install test dependencies
+        run: yarn install
+
       - name: Run tests
-        run: |
-          yarn
-          yarn test
+        run: yarn test
