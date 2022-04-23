@@ -20,7 +20,7 @@ const { capitalizeFirstLetter } = require("../utils/string");
  */
 async function createCheck(linterName, sha, context, lintResult, neutralCheckOnWarning, summary) {
 	let annotations = [];
-	for (const level of ["warning", "error"]) {
+	for (const level of ["error", "warning"]) {
 		annotations = [
 			...annotations,
 			...lintResult[level].map((result) => ({
