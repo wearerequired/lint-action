@@ -33,7 +33,7 @@
 		"eslint-config-airbnb-base": "15.0.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-jsdoc": "^38.1.6",
+		"eslint-plugin-jsdoc": "^39.2.7",
 		"fs-extra": "^10.1.0",
 		"jest": "^27.5.1",
 		"prettier": "^2.6.2"
