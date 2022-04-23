@@ -4301,6 +4301,7 @@ module.exports = JSON.parse('{"name":"lint-action","version":"1.12.0","descripti
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
+const { existsSync } = __nccwpck_require__(7147);
 const { join } = __nccwpck_require__(1017);
 
 const core = __nccwpck_require__(2186);
@@ -4374,6 +4375,10 @@ async function runAction() {
 			const prefix = core.getInput(`${linterId}_command_prefix`);
 			const lintDirAbs = join(context.workspace, lintDirRel);
 			const linterAutoFix = autoFix && core.getInput(`${linterId}_auto_fix`) === "true";
+
+			if (!existsSync(lintDirAbs)) {
+				throw new Error(`Directory ${lintDirAbs} for ${linter.name} doesn't exist`);
+			}
 
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
