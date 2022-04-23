@@ -14,6 +14,7 @@ const { getSummary } = require("./utils/lint-result");
 async function runAction() {
 	const context = getContext();
 	const autoFix = core.getInput("auto_fix") === "true";
+	const commit = core.getInput("commit") === "true";
 	const skipVerification = core.getInput("git_no_verify") === "true";
 	const continueOnError = core.getInput("continue_on_error") === "true";
 	const gitName = core.getInput("git_name", { required: true });
@@ -98,7 +99,7 @@ async function runAction() {
 				hasFailures = true;
 			}
 
-			if (linterAutoFix) {
+			if (linterAutoFix && commit) {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
 					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name), skipVerification);

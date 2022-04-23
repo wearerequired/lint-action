@@ -58,9 +58,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('./test/linters/projects/**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-yarn-${{ hashFiles('./test/linters/projects/**/yarn.lock', '.github/workflows/test.yml') }}
 
       - name: Install Node.js dependencies
         run: |
@@ -100,9 +98,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('./test/linters/projects/**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          key: ${{ runner.os }}-pip-${{ hashFiles('./test/linters/projects/**/requirements.txt', '.github/workflows/test.yml') }}
 
       - name: Install Python dependencies
         run: |
@@ -121,9 +117,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./test/linters/projects/**/vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
+          key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock', '.github/workflows/test.yml') }}
 
       - name: Install Ruby dependencies (Rubocop)
         run: |
@@ -167,9 +161,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.mint
-          key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile') }}
-          restore-keys: |
-            ${{ runner.os }}-mint-
+          key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile', '.github/workflows/test.yml') }}
 
       - name: Install Swift dependencies (macOS)
         if: startsWith(matrix.os, 'macos')
