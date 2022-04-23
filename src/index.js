@@ -1,3 +1,4 @@
+const { existsSync } = require("fs");
 const { join } = require("path");
 
 const core = require("@actions/core");
@@ -71,6 +72,10 @@ async function runAction() {
 			const prefix = core.getInput(`${linterId}_command_prefix`);
 			const lintDirAbs = join(context.workspace, lintDirRel);
 			const linterAutoFix = autoFix && core.getInput(`${linterId}_auto_fix`) === "true";
+
+			if (!existsSync(lintDirAbs)) {
+				throw new Error(`Directory ${lintDirAbs} for ${linter.name} doesn't exist`);
+			}
 
 			// Check that the linter and its dependencies are installed
 			core.info(`Verifying setup for ${linter.name}…`);
