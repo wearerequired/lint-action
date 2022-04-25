@@ -83,7 +83,7 @@ jobs:
       # Install your linters here
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@v2
         with:
           # Enable your linters here
 ```
@@ -128,7 +128,7 @@ jobs:
         run: npm ci
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@v2
         with:
           eslint: true
           prettier: true
@@ -168,7 +168,7 @@ jobs:
           tools: phpcs
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@v2
         with:
           php_codesniffer: true
           # Optional: Ignore warnings
@@ -212,7 +212,7 @@ jobs:
           echo "${PWD}/vendor/bin" >> $GITHUB_PATH
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@v2
         with:
           php_codesniffer: true
 ```
@@ -250,7 +250,7 @@ jobs:
         run: pip install black flake8
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@v2
         with:
           black: true
           flake8: true
@@ -289,7 +289,7 @@ jobs:
         run: dotnet tool install -g dotnet-format
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@v2
         with:
           dotnet_format: true
 ```
@@ -327,7 +327,7 @@ jobs:
         run: pip install black flake8
 
       - name: Run linters
-        uses: wearerequired/lint-action@v1
+        uses: wearerequired/lint-action@v2
         with:
           auto_fix: true
           black: true
