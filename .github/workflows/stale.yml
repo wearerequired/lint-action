@@ -13,7 +13,7 @@ jobs:
       - uses: actions/stale@v5
         with:
           stale-issue-message: |
-            A stale label has been added to this issue because it has been open 15 days with no activity. To keep this issue open, add a comment within 5 days.
+            This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.
           stale-issue-label: "stale"
           exempt-issue-labels: "bug,blocked,in progress,never-stale"
           days-before-issue-stale: 15
@@ -21,7 +21,7 @@ jobs:
           stale-pr-message: |
             Thank you for your contribution to this project!
 
-            A stale label has been added to this pull request because it has been open 45 days with no activity. To keep this PR open, add a comment or push a commit within 10 days.
+            This pull request has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs.
           stale-pr-label: "stale"
           exempt-pr-labels: "waiting for review,never-stale"
           days-before-pr-stale: 45
