@@ -285,9 +285,6 @@ jobs:
         with:
           dotnet-version: "6.0.x"
 
-      - name: Install dotnet-format
-        run: dotnet tool install -g dotnet-format
-
       - name: Run linters
         uses: wearerequired/lint-action@v2
         with:
@@ -385,7 +382,7 @@ Some options are not be available for specific linters:
 | --------------------- | :---------: | :--------: |
 | autopep8              |     ✅      |  ❌ (py)   |
 | black                 |     ✅      |     ✅     |
-| dotnet_format         |     ✅      |     ✅     |
+| dotnet_format         |     ✅      |  ❌ (cs)   |
 | erblint               |     ❌      |  ❌ (erb)  |
 | eslint                |     ✅      |     ✅     |
 | flake8                |     ❌      |     ✅     |
