@@ -1,4 +1,5 @@
 const Black = require("./black");
+const isort = require("./isort");
 const Erblint = require("./erblint");
 const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
@@ -30,6 +31,7 @@ const linters = {
 
 	// Formatters (should be run after linters)
 	black: Black,
+	isort: isort,
 	gofmt: Gofmt,
 	oitnb: Oitnb,
 	prettier: Prettier,
