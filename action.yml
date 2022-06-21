@@ -241,6 +241,10 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
+  autopep8_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
 
   black:
     description: Enable or disable Black checks
