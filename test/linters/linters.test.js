@@ -15,6 +15,7 @@ const golintParams = require("./params/golint");
 const mypyParams = require("./params/mypy");
 const phpCodeSnifferParams = require("./params/php-codesniffer");
 const prettierParams = require("./params/prettier");
+const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
@@ -35,6 +36,7 @@ const linterParams = [
 	mypyParams,
 	phpCodeSnifferParams,
 	prettierParams,
+	pylintParams,
 	ruboCopParams,
 	stylelintParams,
 	xoParams,
