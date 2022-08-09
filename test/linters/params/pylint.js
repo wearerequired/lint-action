@@ -1,5 +1,4 @@
 const { EOL } = require("os");
-const { sep } = require("path");
 
 const Pylint = require("../../../src/linters/pylint");
 
