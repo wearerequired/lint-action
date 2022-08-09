@@ -74,7 +74,7 @@ class Pylint {
 
 		const matches = output.stdout.matchAll(PARSE_REGEX);
 		for (const match of matches) {
-			const [_, pathFull, line, rule_id, text, rule] = match;
+			const [_, pathFull, line, ruleId, text, rule] = match;
 			const leadingSep = `.${sep}`;
 			let path = pathFull;
 			if (path.startsWith(leadingSep)) {
@@ -85,7 +85,7 @@ class Pylint {
 				path,
 				firstLine: lineNr,
 				lastLine: lineNr,
-				message: `${capitalizeFirstLetter(text)} (${rule.replace(/[)(]/g, "")}, ${rule_id})`,
+				message: `${capitalizeFirstLetter(text)} (${rule.replace(/[)(]/g, "")}, ${ruleId})`,
 			});
 		}
 
