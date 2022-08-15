@@ -10,6 +10,7 @@ const Mypy = require("./mypy");
 const Oitnb = require("./oitnb");
 const PHPCodeSniffer = require("./php-codesniffer");
 const Prettier = require("./prettier");
+const Pylint = require("./pylint");
 const RuboCop = require("./rubocop");
 const Stylelint = require("./stylelint");
 const SwiftFormatLockwood = require("./swift-format-lockwood");
@@ -25,6 +26,7 @@ const linters = {
 	golint: Golint,
 	mypy: Mypy,
 	php_codesniffer: PHPCodeSniffer,
+	pylint: Pylint,
 	rubocop: RuboCop,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
