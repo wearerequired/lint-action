@@ -393,7 +393,7 @@ Some options are not be available for specific linters:
 | oitnb                 |     ✅      |     ✅     |
 | php_codesniffer       |     ❌      |     ✅     |
 | prettier              |     ✅      |     ✅     |
-| autopep8              |     ❌      |  ❌ (py)   |
+| pylint                |     ❌      |  ❌ (py)   |
 | rubocop               |     ✅      |  ❌ (rb)   |
 | stylelint             |     ✅      |     ✅     |
 | swift_format_official |     ✅      |     ✅     |
