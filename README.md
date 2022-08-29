@@ -377,7 +377,7 @@ With `auto_fix` set to `true`, by default the action will try and fix code issue
 
 ### Linter support
 
-Some options are not be available for specific linters:
+Some options are not available for specific linters:
 
 | Linter                | auto-fixing | extensions |
 | --------------------- | :---------: | :--------: |
