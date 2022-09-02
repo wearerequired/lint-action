@@ -220,6 +220,13 @@ inputs:
     required: false
     default: "false"
 
+  # phpstan
+
+  php_stan:
+    description: Enable or disable PHP_Stan checks
+    required: false
+    default: "false"
+
   # Python
 
   autopep8:
