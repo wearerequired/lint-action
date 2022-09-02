@@ -14,6 +14,7 @@ const gofmtParams = require("./params/gofmt");
 const golintParams = require("./params/golint");
 const mypyParams = require("./params/mypy");
 const phpCodeSnifferParams = require("./params/php-codesniffer");
+const phpStanParams = require("./params/php-stan");
 const prettierParams = require("./params/prettier");
 const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
@@ -35,6 +36,7 @@ const linterParams = [
 	golintParams,
 	mypyParams,
 	phpCodeSnifferParams,
+	phpStanParams,
 	prettierParams,
 	pylintParams,
 	ruboCopParams,
