@@ -49,7 +49,7 @@ class PHPStan {
 			core.warning(`${this.name} does not support auto-fixing ${extensionsArg}`);
 		}
 
-		return run(`${prefix} phpstan analyse ${args} `, {
+		return run(`${prefix} phpstan analyse ${args} --no-progress --error-format=json`, {
 			dir,
 			ignoreErrors: true,
 		});

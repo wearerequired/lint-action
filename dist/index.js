@@ -4277,7 +4277,7 @@ class PHPCodeSniffer {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
-		return run(`${prefix} phpcs --extensions=${extensionsArg} --report=json -q ${args} "."`, {
+		return run(`${prefix} phpcs --extensions=${extensionsArg} --report=json -q ${args} `, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -4381,12 +4381,12 @@ class PHPStan {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		// const extensionsArg = extensions.join(",");
+		const extensionsArg = extensions.join(",");
 		if (fix) {
-			core.warning(`${this.name} does not support auto-fixing`);
+			core.warning(`${this.name} does not support auto-fixing ${extensionsArg}`);
 		}
 
-		return run(`${prefix} phpstan analyse ${args} `, {
+		return run(`${prefix} phpstan analyse ${args} --no-progress --error-format=json`, {
 			dir,
 			ignoreErrors: true,
 		});

@@ -49,7 +49,7 @@ class PHPCodeSniffer {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
-		return run(`${prefix} phpcs --extensions=${extensionsArg} --report=json -q ${args} "."`, {
+		return run(`${prefix} phpcs --extensions=${extensionsArg} --report=json -q ${args} `, {
 			dir,
 			ignoreErrors: true,
 		});
