@@ -4416,17 +4416,15 @@ class PHPStan {
 			const path = file.indexOf(dir) === 0 ? file.substring(dir.length + 1) : file;
 
 			for (const msg of violations.messages) {
-				const { line, message, source, type } = msg;
+				const { line, message, ignorable,  } = msg;
 
 				const entry = {
 					path,
 					firstLine: line,
 					lastLine: line,
-					message: `${removeTrailingPeriod(message)} (${source})`,
+					message: `${removeTrailingPeriod(message)} `,
 				};
-				if (type === "WARNING") {
-					lintResult.warning.push(entry);
-				} else if (type === "ERROR") {
+				if (ignorable !== false) {
 					lintResult.error.push(entry);
 				}
 			}
