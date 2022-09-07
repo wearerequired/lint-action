@@ -42,7 +42,7 @@ class Isort {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		const fileExtensions = extensions.map((ext) => `"--supported-extension ${ext}"`).join(" ")
+		const fileExtensions = extensions.map((ext) => `"--supported-extension ${ext}"`).join(" ");
 		const fixArg = fix ? "" : "--check-only --diff";
 		return run(`${prefix} isort ${fixArg} ${fileExtensions} ${args} "."`, {
 			dir,
