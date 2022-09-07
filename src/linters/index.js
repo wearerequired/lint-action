@@ -6,6 +6,7 @@ const ESLint = require("./eslint");
 const Flake8 = require("./flake8");
 const Gofmt = require("./gofmt");
 const Golint = require("./golint");
+const Isort = require("./isort");
 const Mypy = require("./mypy");
 const Oitnb = require("./oitnb");
 const PHPCodeSniffer = require("./php-codesniffer");
@@ -37,6 +38,7 @@ const linters = {
 	black: Black,
 	dotnet_format: DotnetFormat,
 	gofmt: Gofmt,
+	isort: Isort,
 	oitnb: Oitnb,
 	prettier: Prettier,
 	swift_format_lockwood: SwiftFormatLockwood,

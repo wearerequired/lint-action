@@ -103,7 +103,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           cd ./test/linters/projects/
-          pip install -r ./autopep8/requirements.txt -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt -r ./oitnb/requirements.txt -r ./pylint/requirements.txt
+          pip install -r ./autopep8/requirements.txt -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./isort/requirements.txt -r ./mypy/requirements.txt -r ./oitnb/requirements.txt -r ./pylint/requirements.txt
 
       # Ruby
 

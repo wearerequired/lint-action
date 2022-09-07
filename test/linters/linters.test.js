@@ -12,6 +12,7 @@ const eslintTypescriptParams = require("./params/eslint-typescript");
 const flake8Params = require("./params/flake8");
 const gofmtParams = require("./params/gofmt");
 const golintParams = require("./params/golint");
+const isortParams = require("./params/isort");
 const mypyParams = require("./params/mypy");
 const phpCodeSnifferParams = require("./params/php-codesniffer");
 const prettierParams = require("./params/prettier");
@@ -33,6 +34,7 @@ const linterParams = [
 	flake8Params,
 	gofmtParams,
 	golintParams,
+	isortParams,
 	mypyParams,
 	phpCodeSnifferParams,
 	prettierParams,
