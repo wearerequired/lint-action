@@ -18,12 +18,15 @@ function getLintParams(dir) {
 		dir,
 		"file2.py",
 	)}:after\t${TEST_DATE}\n@@ -1,6 +1,6 @@\n-from copy import deepcopy # Sort error\n-from math import pi # Sort error\n-from argparse import ArgumentParser # Sort error\n+from argparse import ArgumentParser  # Sort error\n+from copy import deepcopy  # Sort error\n+from math import pi  # Sort error\n \n \n def main ():\n`;
+
+	const stdout = process.platform === "darwin" ? `${stdoutFile1}\n \n${stdoutFile2}` : `${stdoutFile2}\n \n${stdoutFile1}`
+
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
 			status: 1,
 			stdoutParts: [stdoutFile1, stdoutFile2],
-			stdout: `${stdoutFile1}\n \n${stdoutFile2}`,
+			stdout,
 		},
 		// Expected output of the parsing function
 		lintResult: {
