@@ -38,7 +38,7 @@ class ClangFormat {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		const pattern =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
-		const files = shellescape(glob.sync(pattern, {cwd: dir, nodir: true}));
+		const files = shellescape(glob.sync(pattern, { cwd: dir, nodir: true }));
 		const fixArg = fix ? "-i" : "--dry-run";
 		return run(`${prefix} clang-format ${fixArg} -Werror ${args} ${files}`, {
 			dir,

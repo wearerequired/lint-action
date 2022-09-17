@@ -3,10 +3,7 @@ const ClangFormat = require("../../../src/linters/clang-format");
 const testName = "clang-format";
 const linter = ClangFormat;
 const commandPrefix = "";
-const extensions = [
-	"c",
-	"mm",
-]
+const extensions = ["c", "mm"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
@@ -32,15 +29,13 @@ function getLintParams(dir) {
 					path: "file1.c",
 					firstLine: 1,
 					lastLine: 1,
-					message:
-						"code should be clang-formatted [-Wclang-format-violations]",
+					message: "code should be clang-formatted [-Wclang-format-violations]",
 				},
 				{
 					path: "file2.mm",
 					firstLine: 1,
 					lastLine: 1,
-					message:
-						"code should be clang-formatted [-Wclang-format-violations]",
+					message: "code should be clang-formatted [-Wclang-format-violations]",
 				},
 			],
 		},
