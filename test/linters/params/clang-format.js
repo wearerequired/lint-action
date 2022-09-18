@@ -1,3 +1,5 @@
+const { EOL } = require("os");
+
 const ClangFormat = require("../../../src/linters/clang-format");
 
 const testName = "clang-format";
@@ -7,12 +9,16 @@ const extensions = ["c", "mm"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
-	const stderrFile1 = `file1.c:1:1: error: code should be clang-formatted [-Wclang-format-violations]
-        #include <stdio.h>
-^^^^^^^^`;
-	const stderrFile2 = `file2.mm:1:26: error: code should be clang-formatted [-Wclang-format-violations]
-@interface Foo : NSObject @end
-                         ^`;
+	const stderrFile1 = [
+		"file1.c:1:1: error: code should be clang-formatted [-Wclang-format-violations]",
+		"        #include <stdio.h>",
+		"^^^^^^^^",
+	].join(EOL);
+	const stderrFile2 = [
+		"file2.mm:1:26: error: code should be clang-formatted [-Wclang-format-violations]",
+		"@interface Foo : NSObject @end",
+		"                         ^",
+	].join(EOL);
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
