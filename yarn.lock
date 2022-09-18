@@ -3004,6 +3004,13 @@ shell-escape@^0.2.0:
   resolved "https://registry.yarnpkg.com/shell-escape/-/shell-escape-0.2.0.tgz#68fd025eb0490b4f567a027f0bf22480b5f84133"
   integrity sha512-uRRBT2MfEOyxuECseCZd28jC1AJ8hmqqneWQ4VWUTgCAFvb3wKU1jLqj6egC4Exrr88ogg3dp+zroH4wJuaXzw==
 
+shescape@^1.5.10:
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/shescape/-/shescape-1.5.10.tgz#f5d264ceb1d70d119a77f553b0730a35038a1464"
+  integrity sha512-0TS8VUloULl9WqinOI7Mhcujl9PnRmfqHFVV+9pWcOUUrzRt5PeH4AG5uXIsFwns7Vba2goGsD1SEjdV+Y8DTg==
+  dependencies:
+    which "^2.0.0"
+
 side-channel@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/side-channel/-/side-channel-1.0.4.tgz#efce5c8fdc104ee751b25c58d4290011fa5ea2cf"
@@ -3300,7 +3307,7 @@ which-boxed-primitive@^1.0.2:
     is-string "^1.0.5"
     is-symbol "^1.0.3"
 
-which@^2.0.1:
+which@^2.0.0, which@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
