@@ -293,7 +293,7 @@ jobs:
         run: sudo apt-get install -y clang-format
 
       - name: Run linters
-        uses: wearerequired/lint-action@v3
+        uses: wearerequired/lint-action@v2
         with:
           clang_format: true
 ```
