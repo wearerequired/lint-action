@@ -5,6 +5,7 @@ const { copy, remove } = require("fs-extra");
 const { normalizeDates, normalizePaths, createTmpDir } = require("../test-utils");
 const autopep8Params = require("./params/autopep8");
 const blackParams = require("./params/black");
+const clangFormatParams = require("./params/clang-format");
 const dotnetFormatParams = require("./params/dotnet-format");
 const erblintParams = require("./params/erblint");
 const eslintParams = require("./params/eslint");
@@ -26,6 +27,7 @@ const xoParams = require("./params/xo");
 const linterParams = [
 	autopep8Params,
 	blackParams,
+	clangFormatParams,
 	dotnetFormatParams,
 	erblintParams,
 	eslintParams,

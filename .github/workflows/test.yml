@@ -31,6 +31,16 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
+      # ClangFormat
+
+      - name: Install ClangFormat (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt-get install -y clang-format
+
+      - name: Install ClangFormat (macOS)
+        if: startsWith(matrix.os, 'macos')
+        run: brew install clang-format
+
       # Go
 
       - name: Set up Go

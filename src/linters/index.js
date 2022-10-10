@@ -1,5 +1,6 @@
 const Autopep8 = require("./autopep8");
 const Black = require("./black");
+const ClangFormat = require("./clang-format");
 const DotnetFormat = require("./dotnet-format");
 const Erblint = require("./erblint");
 const ESLint = require("./eslint");
@@ -35,6 +36,7 @@ const linters = {
 	// Formatters (should be run after linters)
 	autopep8: Autopep8,
 	black: Black,
+	clang_format: ClangFormat,
 	dotnet_format: DotnetFormat,
 	gofmt: Gofmt,
 	oitnb: Oitnb,
