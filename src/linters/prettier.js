@@ -35,23 +35,38 @@ class Prettier {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
-	 * @param {string} files - Files to lint
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "", files = undefined) {
-		const filesStr = files ||
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = undefined,
+		linterPrefix = "",
+	}) {
+		const exts =
 			extensions.length === 1 ? `"**/*.${extensions[0]}"` : `"**/*.{${extensions.join(",")}}"`;
 		const fixArg = fix ? "--write" : "--list-different";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
-		return run(`${commandPrefix} prettier ${fixArg} --no-color ${args} ${filesStr}`, {
-			dir,
-			ignoreErrors: true,
-		});
+		return run(
+			`${linterPrefix}${commandPrefix} prettier ${fixArg} --no-color ${args} ${
+				files === undefined ? exts : files
+			}`,
+			{
+				dir,
+				ignoreErrors: true,
+			},
+		);
 	}
 
 	/**

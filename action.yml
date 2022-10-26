@@ -43,6 +43,10 @@ inputs:
     description: Whether the check run should conclude with a neutral status instead of success when the linter finds only warnings
     required: false
     default: "false"
+  only_changes_from:
+    description: If defined, only lints changed files, eg. "github.base_ref || github.event.push.before"
+    required: false
+    default: "false"
 
   # CSS
 
@@ -146,9 +150,8 @@ inputs:
     required: false
     default: "true"
   eslint_files:
-    description: A string to override the target files, useful for linting only changed files
+    description: A string to override the target files, useful for linting only changed files, defaults to '"."'
     required: false
-    default: '"."'
 
   prettier:
     description: Enable or disable Prettier checks
@@ -174,9 +177,8 @@ inputs:
     required: false
     default: "true"
   prettier_files:
-    description: A string to override the target files, useful for linting only changed files
+    description: A string to override the target files, useful for linting only changed files, defaults to '**/*.{prettier_extensions.join(",")}'
     required: false
-    default: '"**/*.{${extensions.join(",")}}"'
 
   xo:
     description: Enable or disable XO checks

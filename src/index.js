@@ -25,6 +25,7 @@ async function runAction() {
 	const neutralCheckOnWarning = core.getInput("neutral_check_on_warning") === "true";
 	const isPullRequest =
 		context.eventName === "pull_request" || context.eventName === "pull_request_target";
+	const onlyChangesFrom = core.getInput("only_changes_from");
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {
@@ -87,12 +88,26 @@ async function runAction() {
 			const fileExtList = fileExtensions.split(",");
 			core.info(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
 
+			const linterPrefix = onlyChangesFrom
+				? `git diff -z --relative --diff-filter=ACMR --name-only ${onlyChangesFrom} -- ${fileExtList
+						.map((ext) => `'***.${ext}'`)
+						.join(" ")} | sed 's/(["\\x27 ])/\\$1/g' | xargs -0 `
+				: "";
+
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			core.info(
 				`Linting ${linterAutoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} ` +
 					`with ${linter.name} ${args ? `and args: ${args}` : ""}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix, files);
+			const lintOutput = linter.lint({
+				dir: lintDirAbs,
+				extensions: fileExtList,
+				args,
+				fix: linterAutoFix,
+				prefix,
+				files,
+				linterPrefix,
+			});
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);

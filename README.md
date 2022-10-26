@@ -417,6 +417,8 @@ With `auto_fix` set to `true`, by default the action will try and fix code issue
 
 - **`neutral_check_on_warning`:** Whether the check run should conclude with a neutral status instead of success when the linter finds only warnings. Default: `false`
 
+- **`only_changes_from`:** If defined, only lints changed files, eg. `${{ github.base_ref || github.event.push.before }}` Default: `false`
+
 ### Linter support
 
 Some options are not available for specific linters:
