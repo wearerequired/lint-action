@@ -40,14 +40,15 @@ class Prettier {
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @param {string} prefix - Prefix to the lint command
+	 * @param {string} files - Files to lint
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		const files =
-			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
+	static lint(dir, extensions, args = "", fix = false, prefix = "", files = undefined) {
+		const filesStr = files ||
+			extensions.length === 1 ? `"**/*.${extensions[0]}"` : `"**/*.{${extensions.join(",")}}"`;
 		const fixArg = fix ? "--write" : "--list-different";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
-		return run(`${commandPrefix} prettier ${fixArg} --no-color ${args} "${files}"`, {
+		return run(`${commandPrefix} prettier ${fixArg} --no-color ${args} ${filesStr}`, {
 			dir,
 			ignoreErrors: true,
 		});

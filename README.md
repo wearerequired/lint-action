@@ -389,6 +389,7 @@ With `auto_fix` set to `true`, by default the action will try and fix code issue
 - **`[linter]_extensions`:** Extensions of files to check with the linter. Example: `eslint_extensions: js,ts` to lint JavaScript and TypeScript files with ESLint. Default: Varies by linter, see [`action.yml`](./action.yml)
 - **`[linter]_command_prefix`:** Command prefix to be run before the linter command. Default: `""`.
 - **`[linter]_auto_fix`:** Whether the linter should try to fix code style issues automatically. This option is useful to commit and push changes only for specific linters and not all of them when `auto_fix` option is set. Default: `true` if linter supports auto-fixing, `false` if not.
+- **`[linter]_files`:** Files to target the linter against. Default: `'"."'` (or similar, based on extensions).
 
 ### General options
 

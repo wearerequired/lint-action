@@ -145,6 +145,10 @@ inputs:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
     default: "true"
+  eslint_files:
+    description: A string to override the target files, useful for linting only changed files
+    required: false
+    default: '"."'
 
   prettier:
     description: Enable or disable Prettier checks
@@ -169,6 +173,10 @@ inputs:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
     default: "true"
+  prettier_files:
+    description: A string to override the target files, useful for linting only changed files
+    required: false
+    default: '"**/*.{${extensions.join(",")}}"'
 
   xo:
     description: Enable or disable XO checks
