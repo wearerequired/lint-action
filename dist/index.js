@@ -6886,14 +6886,25 @@ class Autopep8 {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "py") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -6968,17 +6979,28 @@ class Black {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		const files = `^.*\\.(${extensions.join("|")})$`;
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
+		const exts = `^.*\\.(${extensions.join("|")})$`;
 		const fixArg = fix ? "" : "--check --diff";
-		return run(`${prefix} black ${fixArg} --include "${files}" ${args} "."`, {
+		return run(`${prefix} black ${fixArg} --include "${exts}" ${args} "."`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -7037,18 +7059,29 @@ class ClangFormat {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		const pattern =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
-		const files = glob.sync(pattern, { cwd: dir, nodir: true });
-		const escapedFiles = quoteAll(files).join(" ");
+		const globFiles = glob.sync(pattern, { cwd: dir, nodir: true });
+		const escapedFiles = quoteAll(globFiles).join(" ");
 		const fixArg = fix ? "-i" : "--dry-run";
 		return run(`${prefix} clang-format ${fixArg} -Werror ${args} ${escapedFiles}`, {
 			dir,
@@ -7134,14 +7167,25 @@ class DotnetFormat {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "cs") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -7226,14 +7270,25 @@ class Erblint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "--lint-all", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "--lint-all",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "erb") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -7333,20 +7388,30 @@ class ESLint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
-	 * @param {string} files - Files to lint
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "", files = '"."') {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		const extensionsArg = extensions.map((ext) => `.${ext}`).join(",");
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(
-			`${commandPrefix} eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} ${files}`,
+			`${linterPrefix}${commandPrefix} eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} ${files}`,
 			{
 				dir,
 				ignoreErrors: true,
@@ -7369,6 +7434,10 @@ class ESLint {
 		try {
 			outputJson = JSON.parse(output.stdout);
 		} catch (err) {
+			if (err.message === "Unexpected end of JSON input" && lintResult.isSuccess) {
+				return lintResult;
+			}
+
 			throw Error(
 				`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`,
 			);
@@ -7454,20 +7523,31 @@ class Flake8 {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (fix) {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
-		const files = extensions.map((ext) => `"**${sep}*.${ext}"`).join(",");
-		return run(`${prefix} flake8 --filename ${files} ${args}`, {
+		const exts = extensions.map((ext) => `"**${sep}*.${ext}"`).join(",");
+		return run(`${prefix} flake8 --filename ${exts} ${args}`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -7542,14 +7622,25 @@ class Gofmt {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -7639,14 +7730,25 @@ class Golint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "go") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -7796,14 +7898,25 @@ class Mypy {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "py") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -7910,17 +8023,28 @@ class Oitnb {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		const files = `^.*\\.(${extensions.join("|")})$`;
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
+		const exts = `^.*\\.(${extensions.join("|")})$`;
 		const fixArg = fix ? "" : "--check --diff";
-		return run(`${prefix} oitnb ${fixArg} --include "${files}" ${args} "."`, {
+		return run(`${prefix} oitnb ${fixArg} --include "${exts}" ${args} "."`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -7987,14 +8111,25 @@ class PHPCodeSniffer {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		const extensionsArg = extensions.join(",");
 		if (fix) {
 			core.warning(`${this.name} does not support auto-fixing`);
@@ -8095,23 +8230,38 @@ class Prettier {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
-	 * @param {string} files - Files to lint
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "", files = undefined) {
-		const filesStr = files ||
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = undefined,
+		linterPrefix = "",
+	}) {
+		const exts =
 			extensions.length === 1 ? `"**/*.${extensions[0]}"` : `"**/*.{${extensions.join(",")}}"`;
 		const fixArg = fix ? "--write" : "--list-different";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
-		return run(`${commandPrefix} prettier ${fixArg} --no-color ${args} ${filesStr}`, {
-			dir,
-			ignoreErrors: true,
-		});
+		return run(
+			`${linterPrefix}${commandPrefix} prettier ${fixArg} --no-color ${args} ${
+				files === undefined ? exts : files
+			}`,
+			{
+				dir,
+				ignoreErrors: true,
+			},
+		);
 	}
 
 	/**
@@ -8191,14 +8341,25 @@ class Pylint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "py") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -8296,14 +8457,25 @@ class RuboCop {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "rb") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -8400,20 +8572,31 @@ class Stylelint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		const files =
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
+		const exts =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(
-			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${files}"`,
+			`${commandPrefix} stylelint --no-color --formatter json ${fixArg} ${args} "${exts}"`,
 			{
 				dir,
 				ignoreErrors: true,
@@ -8499,14 +8682,25 @@ class SwiftFormatLockwood {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -8586,14 +8780,25 @@ class SwiftFormatOfficial {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -8677,14 +8882,25 @@ class SwiftLint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		if (extensions.length !== 1 || extensions[0] !== "swift") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
@@ -8768,14 +8984,25 @@ class XO extends ESLint {
 
 	/**
 	 * Runs the linting program and returns the command output
-	 * @param {string} dir - Directory to run the linter in
-	 * @param {string[]} extensions - File extensions which should be linted
-	 * @param {string} args - Additional arguments to pass to the linter
-	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
-	 * @param {string} prefix - Prefix to the lint command
+	 * @param {object} props - Params
+	 * @param {string} props.dir - Directory to run the linter in
+	 * @param {string[]} props.extensions - File extensions which should be linted
+	 * @param {string} props.args - Additional arguments to pass to the linter
+	 * @param {boolean} props.fix - If linter should attempt to fix code style issues automatically
+	 * @param {string} props.prefix - Prefix to the lint binary
+	 * @param {string} props.files - Files to lint
+	 * @param {string} props.linterPrefix - Prefix to the entire lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint({
+		dir,
+		extensions,
+		args = "",
+		fix = false,
+		prefix = "",
+		files = '"."',
+		linterPrefix = "",
+	}) {
 		const extensionArgs = extensions.map((ext) => `--extension ${ext}`).join(" ");
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
@@ -10171,6 +10398,7 @@ async function runAction() {
 	const neutralCheckOnWarning = core.getInput("neutral_check_on_warning") === "true";
 	const isPullRequest =
 		context.eventName === "pull_request" || context.eventName === "pull_request_target";
+	const onlyChangesFrom = core.getInput("only_changes_from");
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {
@@ -10233,12 +10461,26 @@ async function runAction() {
 			const fileExtList = fileExtensions.split(",");
 			core.info(`Will use ${linter.name} to check the files with extensions ${fileExtList}`);
 
+			const linterPrefix = onlyChangesFrom
+				? `git diff -z --relative --diff-filter=ACMR --name-only ${onlyChangesFrom} -- ${fileExtList
+						.map((ext) => `'***.${ext}'`)
+						.join(" ")} | sed 's/(["\\x27 ])/\\$1/g' | xargs -0 `
+				: "";
+
 			// Lint and optionally auto-fix the matching files, parse code style violations
 			core.info(
 				`Linting ${linterAutoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} ` +
 					`with ${linter.name} ${args ? `and args: ${args}` : ""}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix, files);
+			const lintOutput = linter.lint({
+				dir: lintDirAbs,
+				extensions: fileExtList,
+				args,
+				fix: linterAutoFix,
+				prefix,
+				files,
+				linterPrefix,
+			});
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
