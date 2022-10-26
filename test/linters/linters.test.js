@@ -82,7 +82,13 @@ describe.each(linterParams)(
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
-				const cmdOutput = linter.lint(projectTmpDir, extensions, "", autoFix, commandPrefix);
+				const cmdOutput = linter.lint({
+					dir: projectTmpDir,
+					extensions,
+					args: "",
+					fix: autoFix,
+					prefix: commandPrefix,
+				});
 
 				// Exit code
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);
