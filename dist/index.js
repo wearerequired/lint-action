@@ -7338,14 +7338,15 @@ class ESLint {
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @param {string} prefix - Prefix to the lint command
+	 * @param {string} files - Files to lint
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint(dir, extensions, args = "", fix = false, prefix = "", files = '"."') {
 		const extensionsArg = extensions.map((ext) => `.${ext}`).join(",");
 		const fixArg = fix ? "--fix" : "";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(
-			`${commandPrefix} eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} "."`,
+			`${commandPrefix} eslint --ext ${extensionsArg} ${fixArg} --no-color --format json ${args} ${files}`,
 			{
 				dir,
 				ignoreErrors: true,
@@ -8099,14 +8100,15 @@ class Prettier {
 	 * @param {string} args - Additional arguments to pass to the linter
 	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
 	 * @param {string} prefix - Prefix to the lint command
+	 * @param {string} files - Files to lint
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		const files =
-			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
+	static lint(dir, extensions, args = "", fix = false, prefix = "", files = undefined) {
+		const filesStr = files ||
+			extensions.length === 1 ? `"**/*.${extensions[0]}"` : `"**/*.{${extensions.join(",")}}"`;
 		const fixArg = fix ? "--write" : "--list-different";
 		const commandPrefix = prefix || getNpmBinCommand(dir);
-		return run(`${commandPrefix} prettier ${fixArg} --no-color ${args} "${files}"`, {
+		return run(`${commandPrefix} prettier ${fixArg} --no-color ${args} ${filesStr}`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -10216,6 +10218,7 @@ async function runAction() {
 			const prefix = core.getInput(`${linterId}_command_prefix`);
 			const lintDirAbs = join(context.workspace, lintDirRel);
 			const linterAutoFix = autoFix && core.getInput(`${linterId}_auto_fix`) === "true";
+			const files = core.getInput(`${linterId}_files`);
 
 			if (!existsSync(lintDirAbs)) {
 				throw new Error(`Directory ${lintDirAbs} for ${linter.name} doesn't exist`);
@@ -10235,7 +10238,7 @@ async function runAction() {
 				`Linting ${linterAutoFix ? "and auto-fixing " : ""}files in ${lintDirAbs} ` +
 					`with ${linter.name} ${args ? `and args: ${args}` : ""}…`,
 			);
-			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix);
+			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix, files);
 
 			// Parse output of linting command
 			const lintResult = linter.parseOutput(context.workspace, lintOutput);
