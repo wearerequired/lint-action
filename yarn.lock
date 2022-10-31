@@ -2995,10 +2995,10 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shescape@^1.5.10:
-  version "1.5.10"
-  resolved "https://registry.yarnpkg.com/shescape/-/shescape-1.5.10.tgz#f5d264ceb1d70d119a77f553b0730a35038a1464"
-  integrity sha512-0TS8VUloULl9WqinOI7Mhcujl9PnRmfqHFVV+9pWcOUUrzRt5PeH4AG5uXIsFwns7Vba2goGsD1SEjdV+Y8DTg==
+shescape@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/shescape/-/shescape-1.6.1.tgz#367b6c34029275a41ee27b22f6b084d6f8322c94"
+  integrity sha512-P9fEf91yPuOpUGfE7QdzRubWbO81/O9jR81TVDbUGKyh4ppw0ArobMzX+iBx4S1Ag8eVRli81/dq0usNMTSWow==
   dependencies:
     which "^2.0.0"
 

@@ -19,7 +19,7 @@
 		"command-exists": "^1.2.9",
 		"glob": "^8.0.3",
 		"parse-diff": "^0.9.0",
-		"shescape": "^1.5.10"
+		"shescape": "^1.6.1"
 	},
 	"peerDependencies": {},
 	"devDependencies": {
