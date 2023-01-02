@@ -59,16 +59,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Set up yarn cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('./yarn.lock', './test/linters/projects/**/yarn.lock', '.github/workflows/test.yml') }}
+          cache: "yarn"
+          cache-dependency-path: |
+            yarn.lock
+            test/linters/projects/**/yarn.lock
+            .github/workflows/test.yml
 
       - name: Install Node.js dependencies
         run: |
