@@ -1,5 +1,4 @@
 const Gofmt = require("../../../src/linters/gofmt");
-const { TEST_DATE } = require("../../test-utils");
 
 const testName = "gofmt";
 const linter = Gofmt;
@@ -8,8 +7,8 @@ const extensions = ["go"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
-	const stdoutFile1 = `diff -u file1.go.orig file1.go\n--- file1.go.orig	${TEST_DATE}\n+++ file1.go	${TEST_DATE}\n@@ -4,7 +4,7 @@\n \n var str = "world"\n \n-func main () { // Whitespace error\n+func main() { // Whitespace error\n 	fmt.Println("hello " + str)\n }\n \n@@ -17,5 +17,5 @@\n }\n \n func multiply(num1 int, num2 int) int {\n-  return num1 * num2 // Indentation error\n+	return num1 * num2 // Indentation error\n }`;
-	const stdoutFile2 = `diff -u file2.go.orig file2.go\n--- file2.go.orig	${TEST_DATE}\n+++ file2.go	${TEST_DATE}\n@@ -1,5 +1,5 @@\n package main\n \n func divide(num1 int, num2 int) int {\n-	return num1 /  num2 // Whitespace error\n+	return num1 / num2 // Whitespace error\n }`;
+	const stdoutFile1 = `diff file1.go.orig file1.go\n--- file1.go.orig\n+++ file1.go\n@@ -4,7 +4,7 @@\n \n var str = "world"\n \n-func main () { // Whitespace error\n+func main() { // Whitespace error\n 	fmt.Println("hello " + str)\n }\n \n@@ -17,5 +17,5 @@\n }\n \n func multiply(num1 int, num2 int) int {\n-  return num1 * num2 // Indentation error\n+	return num1 * num2 // Indentation error\n }`;
+	const stdoutFile2 = `diff file2.go.orig file2.go\n--- file2.go.orig\n+++ file2.go\n@@ -1,5 +1,5 @@\n package main\n \n func divide(num1 int, num2 int) int {\n-	return num1 /  num2 // Whitespace error\n+	return num1 / num2 // Whitespace error\n }`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
