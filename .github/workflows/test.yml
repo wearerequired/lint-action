@@ -93,17 +93,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
-
-      - name: Get pip cache directory path
-        id: pip-cache
-        run: |
-          echo "::set-output name=dir::$(pip cache dir)"
-
-      - name: Set up pip cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('./test/linters/projects/**/requirements.txt', '.github/workflows/test.yml') }}
+          cache: 'pip'
+          cache-dependency-path: |
+            test/linters/projects/**/requirements.txt
+            .github/workflows/test.yml
 
       - name: Install Python dependencies
         run: |
