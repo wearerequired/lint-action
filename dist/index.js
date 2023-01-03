@@ -3815,7 +3815,9 @@ minimatch.match = (list, pattern, options = {}) => {
 
 // replace stuff like \* with *
 const globUnescape = s => s.replace(/\\(.)/g, '$1')
+const charUnescape = s => s.replace(/\\([^-\]])/g, '$1')
 const regExpEscape = s => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+const braExpEscape = s => s.replace(/[[\]\\]/g, '\\$&')
 
 class Minimatch {
   constructor (pattern, options) {
@@ -3901,7 +3903,7 @@ class Minimatch {
       negateOffset++
     }
 
-    if (negateOffset) this.pattern = pattern.substr(negateOffset)
+    if (negateOffset) this.pattern = pattern.slice(negateOffset)
     this.negate = negate
   }
 
@@ -4150,6 +4152,11 @@ class Minimatch {
         }
 
         case '\\':
+          if (inClass && pattern.charAt(i + 1) === '-') {
+            re += c
+            continue
+          }
+
           clearStateChar()
           escaping = true
         continue
@@ -4262,8 +4269,6 @@ class Minimatch {
             continue
           }
 
-          // handle the case where we left a class open.
-          // "[z-a]" is valid, equivalent to "\[z-a\]"
           // split where the last [ was, make sure we don't have
           // an invalid re. if so, re-walk the contents of the
           // would-be class to re-translate any characters that
@@ -4273,20 +4278,16 @@ class Minimatch {
           // to do safely.  For now, this is safe and works.
           cs = pattern.substring(classStart + 1, i)
           try {
-            RegExp('[' + cs + ']')
+            RegExp('[' + braExpEscape(charUnescape(cs)) + ']')
+            // looks good, finish up the class.
+            re += c
           } catch (er) {
-            // not a valid class!
-            sp = this.parse(cs, SUBPARSE)
-            re = re.substr(0, reClassStart) + '\\[' + sp[0] + '\\]'
-            hasMagic = hasMagic || sp[1]
-            inClass = false
-            continue
+            // out of order ranges in JS are errors, but in glob syntax,
+            // they're just a range that matches nothing.
+            re = re.substring(0, reClassStart) + '(?:$.)' // match nothing ever
           }
-
-          // finish up the class.
           hasMagic = true
           inClass = false
-          re += c
         continue
 
         default:
@@ -4310,9 +4311,9 @@ class Minimatch {
       // this is a huge pita.  We now have to re-walk
       // the contents of the would-be class to re-translate
       // any characters that were passed through as-is
-      cs = pattern.substr(classStart + 1)
+      cs = pattern.slice(classStart + 1)
       sp = this.parse(cs, SUBPARSE)
-      re = re.substr(0, reClassStart) + '\\[' + sp[0]
+      re = re.substring(0, reClassStart) + '\\[' + sp[0]
       hasMagic = hasMagic || sp[1]
     }
 
@@ -9221,18 +9222,13 @@ module.exports = require("util");
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
 var os = __nccwpck_require__(2037);
 var process = __nccwpck_require__(7282);
 var fs = __nccwpck_require__(7147);
 var path = __nccwpck_require__(1017);
 var which = __nccwpck_require__(4207);
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-function _interopNamespace(e) {
-  if (e && e.__esModule) return e;
+function _interopNamespaceDefault(e) {
   var n = Object.create(null);
   if (e) {
     Object.keys(e).forEach(function (k) {
@@ -9245,15 +9241,12 @@ function _interopNamespace(e) {
       }
     });
   }
-  n["default"] = e;
+  n.default = e;
   return Object.freeze(n);
 }
 
-var os__default = /*#__PURE__*/_interopDefaultLegacy(os);
-var process__default = /*#__PURE__*/_interopDefaultLegacy(process);
-var fs__namespace = /*#__PURE__*/_interopNamespace(fs);
-var path__namespace = /*#__PURE__*/_interopNamespace(path);
-var which__default = /*#__PURE__*/_interopDefaultLegacy(which);
+var fs__namespace = /*#__PURE__*/_interopNamespaceDefault(fs);
+var path__namespace = /*#__PURE__*/_interopNamespaceDefault(path);
 
 /**
  * @overview Provides functionality related to working with executables.
@@ -9268,13 +9261,14 @@ var which__default = /*#__PURE__*/_interopDefaultLegacy(which);
  * - Expands the provided string to a absolute path.
  * - Follows symbolic links.
  *
- * @param {Object} args The arguments for this function.
+ * @param {object} args The arguments for this function.
  * @param {string} args.executable A string representation of the executable.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.exists A function to check if a file exists.
  * @param {Function} deps.readlink A function to resolve (sym)links.
  * @param {Function} deps.which A function to perform a `which(1)`-like lookup.
- * @returns The full path to the binary of the executable.
+ * @returns {string} The full path to the binary of the executable.
+ * @throws {Error} If the `deps` aren't provided.
  */
 function resolveExecutable({ executable }, { exists, readlink, which }) {
   if (readlink === undefined || which === undefined) {
@@ -9366,60 +9360,39 @@ function isStringable(value) {
 }
 
 /**
- * Merges any number of objects into a single object.
+ * Parses options provided to {@link escapeShellArg} or {@link quoteShellArg}.
  *
- * Note: the values of objects appearing later in the list of arguments take
- * precedence when merging.
- *
- * @param {...Object} objects The objects to merge.
- * @returns {Object} The merged object.
- */
-function mergeObjects(...objects) {
-  const baseObject = Object.create(null);
-  const mergedObjects = Object.assign(baseObject, ...objects);
-  return mergedObjects;
-}
-
-/**
- * Parses arguments provided to {@link escapeShellArg} or {@link quoteShellArg}.
- *
- * @param {Object} args The arguments for this function.
- * @param {string} args.arg The argument to escape.
- * @param {Object} args.options The options for escaping `arg`.
- * @param {string} [args.options.shell] The shell to escape `arg` for.
+ * @param {object} args The arguments for this function.
+ * @param {object} args.options The options for escaping.
+ * @param {string} [args.options.shell] The shell to escape for.
  * @param {boolean} [args.options.interpolation] Is interpolation enabled.
- * @param {boolean} [args.options.quoted] Is `arg` being quoted.
- * @param {Object} args.process The `process` values.
- * @param {Object} args.process.env The environment variables.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} args.process The `process` values.
+ * @param {object} args.process.env The environment variables.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.getDefaultShell Get the default shell for the system.
  * @param {Function} deps.getShellName Get the name of a shell.
- * @returns {Object} The parsed arguments.
+ * @returns {object} The parsed arguments.
  */
-function parseArgs(
-  { arg, options, process },
+function parseOptions(
+  { options: { interpolation, shell }, process: { env } },
   { getDefaultShell, getShellName }
 ) {
-  const env = process.env;
-  const interpolation = options.interpolation ? true : false;
-  const quoted = options.quoted;
-  const shell = isString(options.shell)
-    ? options.shell
-    : getDefaultShell({ env });
+  interpolation = interpolation ? true : false;
+  shell = isString(shell) ? shell : getDefaultShell({ env });
 
   const shellName = getShellName({ shell }, { resolveExecutable });
-  return { arg, interpolation, quoted, shellName };
+  return { interpolation, shellName };
 }
 
 /**
  * Escapes an argument for the given shell.
  *
- * @param {Object} args The arguments for this function.
+ * @param {object} args The arguments for this function.
  * @param {string} args.arg The argument to escape.
  * @param {boolean} args.interpolation Is interpolation enabled.
  * @param {boolean} args.quoted Is `arg` being quoted.
  * @param {string} args.shellName The name of the shell to escape `arg` for.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.getEscapeFunction Get the escape function for a shell.
  * @returns {string} The escaped argument.
  * @throws {TypeError} The argument to escape is not stringable.
@@ -9434,17 +9407,17 @@ function escape$1(
 
   const argAsString = arg.toString();
   const escape = getEscapeFunction(shellName);
-  const escapedArg = escape(argAsString, interpolation, quoted);
+  const escapedArg = escape(argAsString, { interpolation, quoted });
   return escapedArg;
 }
 
 /**
  * Quotes and escape an argument for the given shell.
  *
- * @param {Object} args The arguments for this function.
+ * @param {object} args The arguments for this function.
  * @param {string} args.arg The argument to escape.
  * @param {string} args.shellName The name of the shell to escape `arg` for.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.getEscapeFunction Get the escape function for a shell.
  * @param {Function} deps.getQuoteFunction Get the quote function for a shell.
  * @returns {string} The quoted and escaped argument.
@@ -9463,44 +9436,66 @@ function quote$1({ arg, shellName }, { getEscapeFunction, getQuoteFunction }) {
 /**
  * Escapes an argument for the given shell.
  *
- * @param {Object} args The arguments for this function.
+ * @param {object} args The arguments for this function.
  * @param {string} args.arg The argument to escape.
- * @param {Object} args.options The options for escaping `arg`.
+ * @param {object} args.options The options for escaping `arg`.
+ * @param {boolean} [args.options.interpolation] Is interpolation enabled.
  * @param {string} [args.options.shell] The shell to escape `arg` for.
- * @param {boolean} [args.options.interpolation=false] Is interpolation enabled.
- * @param {Object} args.process The `process` values.
- * @param {Object} args.process.env The environment variables.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} args.process The `process` values.
+ * @param {object} args.process.env The environment variables.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.getDefaultShell Get the default shell for the system.
  * @param {Function} deps.getEscapeFunction Get an escape function for a shell.
  * @param {Function} deps.getShellName Get the name of a shell.
  * @returns {string} The escaped argument.
  */
-function escapeShellArg({ arg, options, process }, deps) {
-  options = mergeObjects(options, { quoted: false });
-  const escapeArgs = parseArgs({ arg, options, process }, deps);
-  return escape$1(escapeArgs, deps);
+function escapeShellArg(
+  { arg, options: { interpolation, shell }, process: { env } },
+  { getDefaultShell, getEscapeFunction, getShellName }
+) {
+  const options = parseOptions(
+    { options: { interpolation, shell }, process: { env } },
+    { getDefaultShell, getShellName }
+  );
+  return escape$1(
+    {
+      arg,
+      interpolation: options.interpolation,
+      quoted: false,
+      shellName: options.shellName,
+    },
+    { getEscapeFunction }
+  );
 }
 
 /**
  * Quotes and escape an argument for the given shell.
  *
- * @param {Object} args The arguments for this function.
+ * @param {object} args The arguments for this function.
  * @param {string} args.arg The argument to escape.
- * @param {Object} args.options The options for escaping `arg`.
+ * @param {object} args.options The options for escaping `arg`.
  * @param {string} [args.options.shell] The shell to escape `arg` for.
- * @param {Object} args.process The `process` values.
- * @param {Object} args.process.env The environment variables.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} args.process The `process` values.
+ * @param {object} args.process.env The environment variables.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.getDefaultShell Get the default shell for the system.
  * @param {Function} deps.getEscapeFunction Get an escape function for a shell.
  * @param {Function} deps.getQuoteFunction Get a quote function for a shell.
  * @param {Function} deps.getShellName Get the name of a shell.
  * @returns {string} The quoted and escaped argument.
  */
-function quoteShellArg(args, deps) {
-  const quoteArgs = parseArgs(args, deps);
-  return quote$1(quoteArgs, deps);
+function quoteShellArg(
+  { arg, options: { shell }, process: { env } },
+  { getDefaultShell, getEscapeFunction, getQuoteFunction, getShellName }
+) {
+  const options = parseOptions(
+    { options: { shell }, process: { env } },
+    { getDefaultShell, getShellName }
+  );
+  return quote$1(
+    { arg, shellName: options.shellName },
+    { getEscapeFunction, getQuoteFunction }
+  );
 }
 
 /**
@@ -9536,56 +9531,55 @@ const binZsh = "zsh";
  * Escapes a shell argument for use in Bash(-like shells).
  *
  * @param {string} arg The argument to escape.
- * @param {boolean} interpolation Is interpolation enabled.
- * @param {boolean} quoted Is `arg` being quoted.
+ * @param {object} options The escape options.
+ * @param {boolean} options.interpolation Is interpolation enabled.
+ * @param {boolean} options.quoted Is `arg` being quoted.
  * @returns {string} The escaped argument.
  */
-function escapeArgBash(arg, interpolation, quoted) {
-  let result = arg.replace(/\0/gu, "");
+function escapeArgBash(arg, { interpolation, quoted }) {
+  let result = arg.replace(/[\0\u0008\u001B\u009B]/gu, "");
 
   if (interpolation) {
     result = result
       .replace(/\\/gu, "\\\\")
       .replace(/\n/gu, " ")
       .replace(/(^|\s)([#~])/gu, "$1\\$2")
-      .replace(/([*?])/gu, "\\$1")
-      .replace(/([$&;|])/gu, "\\$1")
-      .replace(/([()<>])/gu, "\\$1")
-      .replace(/(["'`])/gu, "\\$1")
-      .replace(/(?<!\{)\{+(?=(?:[^{][^,.]*)?[,.][^}]*\})/gu, (curlyBraces) =>
-        curlyBraces.replace(/\{/gu, "\\{")
-      )
-      .replace(/(?<=[:=])(~)(?=[\s+\-/0:=]|$)/gu, "\\$1");
+      .replace(/(["$&'()*;<>?`{|])/gu, "\\$1")
+      .replace(/(?<=[:=])(~)(?=[\s+\-/0:=]|$)/gu, "\\$1")
+      .replace(/([\t ])/gu, "\\$1");
   } else if (quoted) {
     result = result.replace(/'/gu, `'\\''`);
   }
+
+  result = result.replace(/\r(?!\n)/gu, "");
 
   return result;
 }
 
 /**
- * Escapes a shell argument for use in Dash
+ * Escapes a shell argument for use in Dash.
  *
  * @param {string} arg The argument to escape.
- * @param {boolean} interpolation Is interpolation enabled.
- * @param {boolean} quoted Is `arg` being quoted.
+ * @param {object} options The escape options.
+ * @param {boolean} options.interpolation Is interpolation enabled.
+ * @param {boolean} options.quoted Is `arg` being quoted.
  * @returns {string} The escaped argument.
  */
-function escapeArgDash(arg, interpolation, quoted) {
-  let result = arg.replace(/\0/gu, "");
+function escapeArgDash(arg, { interpolation, quoted }) {
+  let result = arg.replace(/[\0\u0008\u001B\u009B]/gu, "");
 
   if (interpolation) {
     result = result
       .replace(/\\/gu, "\\\\")
       .replace(/\n/gu, " ")
       .replace(/(^|\s)([#~])/gu, "$1\\$2")
-      .replace(/([*?])/gu, "\\$1")
-      .replace(/([$&;|])/gu, "\\$1")
-      .replace(/([()<>])/gu, "\\$1")
-      .replace(/(["'`])/gu, "\\$1");
+      .replace(/(["$&'()*;<>?`|])/gu, "\\$1")
+      .replace(/([\t\n ])/gu, "\\$1");
   } else if (quoted) {
     result = result.replace(/'/gu, `'\\''`);
   }
+
+  result = result.replace(/\r(?!\n)/gu, "");
 
   return result;
 }
@@ -9594,26 +9588,26 @@ function escapeArgDash(arg, interpolation, quoted) {
  * Escapes a shell argument for use in Zsh.
  *
  * @param {string} arg The argument to escape.
- * @param {boolean} interpolation Is interpolation enabled.
- * @param {boolean} quoted Is `arg` being quoted.
+ * @param {object} options The escape options.
+ * @param {boolean} options.interpolation Is interpolation enabled.
+ * @param {boolean} options.quoted Is `arg` being quoted.
  * @returns {string} The escaped argument.
  */
-function escapeArgZsh(arg, interpolation, quoted) {
-  let result = arg.replace(/\0/gu, "");
+function escapeArgZsh(arg, { interpolation, quoted }) {
+  let result = arg.replace(/[\0\u0008\u001B\u009B]/gu, "");
 
   if (interpolation) {
     result = result
       .replace(/\\/gu, "\\\\")
       .replace(/\n/gu, " ")
       .replace(/(^|\s)([#=~])/gu, "$1\\$2")
-      .replace(/([*?])/gu, "\\$1")
-      .replace(/([$&;|])/gu, "\\$1")
-      .replace(/([()<>])/gu, "\\$1")
-      .replace(/(["'`])/gu, "\\$1")
-      .replace(/([[\]{}])/gu, "\\$1");
+      .replace(/(["$&'()*;<>?[\]`{|}])/gu, "\\$1")
+      .replace(/([\t ])/gu, "\\$1");
   } else if (quoted) {
     result = result.replace(/'/gu, `'\\''`);
   }
+
+  result = result.replace(/\r(?!\n)/gu, "");
 
   return result;
 }
@@ -9629,32 +9623,6 @@ function quoteArg$1(arg) {
 }
 
 /**
- * The mapping from shell names to functions that escape arguments for that
- * shell.
- *
- * @constant
- * @type {Map<string, Function>}
- */
-const escapeFunctionsByShell$1 = new Map([
-  [binBash, escapeArgBash],
-  [binDash, escapeArgDash],
-  [binZsh, escapeArgZsh],
-]);
-
-/**
- * The mapping from shell names to functions that quote arguments for that
- * shell.
- *
- * @constant
- * @type {Map<string, Function>}
- */
-const quoteFunctionsByShell$1 = new Map([
-  [binBash, quoteArg$1],
-  [binDash, quoteArg$1],
-  [binZsh, quoteArg$1],
-]);
-
-/**
  * Returns the basename of a directory or file path on a Unix system.
  *
  * @param {string} fullPath A Unix-style directory or file path.
@@ -9668,7 +9636,7 @@ function getBasename$1(fullPath) {
  * Returns the default shell for Unix systems.
  *
  * For more information, see `options.shell` in:
- * https://nodejs.org/api/child_process.html#child_processexeccommand-options-callback
+ * https://nodejs.org/api/child_process.html#child_processexeccommand-options-callback.
  *
  * @returns {string} The default shell.
  */
@@ -9683,7 +9651,16 @@ function getDefaultShell$1() {
  * @returns {Function?} A function to escape arguments for use in the shell.
  */
 function getEscapeFunction$1(shellName) {
-  return escapeFunctionsByShell$1.get(shellName) || null;
+  switch (shellName) {
+    case binBash:
+      return escapeArgBash;
+    case binDash:
+      return escapeArgDash;
+    case binZsh:
+      return escapeArgZsh;
+    default:
+      return null;
+  }
 }
 
 /**
@@ -9693,22 +9670,29 @@ function getEscapeFunction$1(shellName) {
  * @returns {Function?} A function to quote arguments for use in the shell.
  */
 function getQuoteFunction$1(shellName) {
-  return quoteFunctionsByShell$1.get(shellName) || null;
+  switch (shellName) {
+    case binBash:
+    case binDash:
+    case binZsh:
+      return quoteArg$1;
+    default:
+      return null;
+  }
 }
 
 /**
  * Determines the name of the shell identified by a file path or file name.
  *
- * @param {Object} args The arguments for this function.
+ * @param {object} args The arguments for this function.
  * @param {string} args.shell The name or path of the shell.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.resolveExecutable Resolve the path to an executable.
  * @returns {string} The shell name.
  */
 function getShellName$1({ shell }, { resolveExecutable }) {
   shell = resolveExecutable(
     { executable: shell },
-    { exists: fs__namespace.existsSync, readlink: fs__namespace.readlinkSync, which: which__default["default"].sync }
+    { exists: fs__namespace.existsSync, readlink: fs__namespace.readlinkSync, which: which.sync }
   );
 
   const shellName = getBasename$1(shell);
@@ -9752,19 +9736,18 @@ const binPowerShell = "powershell.exe";
  * Escapes a shell argument for use in Windows Command Prompt.
  *
  * @param {string} arg The argument to escape.
- * @param {boolean} interpolation Is interpolation enabled.
- * @param {boolean} quoted Is `arg` being quoted.
+ * @param {object} options The escape options.
+ * @param {boolean} options.interpolation Is interpolation enabled.
+ * @param {boolean} options.quoted Is `arg` being quoted.
  * @returns {string} The escaped argument.
  */
-function escapeArgCmd(arg, interpolation, quoted) {
-  let result = arg.replace(/\0/gu, "").replace(/[\n\r]/gu, " ");
+function escapeArgCmd(arg, { interpolation, quoted }) {
+  let result = arg
+    .replace(/[\0\u0008\u001B\u009B]/gu, "")
+    .replace(/\r?\n|\r/gu, " ");
 
   if (interpolation) {
-    result = result
-      .replace(/\^/gu, "^^")
-      .replace(/([<>])/gu, "^$1")
-      .replace(/(")/gu, "^$1")
-      .replace(/([&|])/gu, "^$1");
+    result = result.replace(/\^/gu, "^^").replace(/(["&<>|])/gu, "^$1");
   } else if (quoted) {
     result = result.replace(/"/gu, `""`);
   }
@@ -9776,25 +9759,25 @@ function escapeArgCmd(arg, interpolation, quoted) {
  * Escapes a shell argument for use in Windows PowerShell.
  *
  * @param {string} arg The argument to escape.
- * @param {boolean} interpolation Is interpolation enabled.
- * @param {boolean} quoted Is `arg` being quoted.
+ * @param {object} options The escape options.
+ * @param {boolean} options.interpolation Is interpolation enabled.
+ * @param {boolean} options.quoted Is `arg` being quoted.
  * @returns {string} The escaped argument.
  */
-function escapeArgPowerShell(arg, interpolation, quoted) {
+function escapeArgPowerShell(arg, { interpolation, quoted }) {
   let result = arg
-    .replace(/\0/gu, "")
+    .replace(/[\0\u0008\u001B\u009B]/gu, "")
     .replace(/`/gu, "``")
-    .replace(/\$/gu, "`$$");
+    .replace(/\$/gu, "`$$")
+    .replace(/\r(?!\n)/gu, "");
 
   if (interpolation) {
     result = result
-      .replace(/[\n\r]/gu, " ")
+      .replace(/\r?\n|\r/gu, " ")
       .replace(/(^|[\s\u0085])([*1-6]?)(>)/gu, "$1$2`$3")
       .replace(/(^|[\s\u0085])([#\-:<@\]])/gu, "$1`$2")
-      .replace(/([&,;|])/gu, "`$1")
-      .replace(/([(){}])/gu, "`$1")
-      .replace(/(['‘’‚‛])/gu, "`$1")
-      .replace(/(["“”„])/gu, "`$1");
+      .replace(/(["&'(),;{|}‘’‚‛“”„])/gu, "`$1")
+      .replace(/([\s\u0085])/gu, "`$1");
   } else if (quoted) {
     result = result.replace(/(["“”„])/gu, "$1$1");
   }
@@ -9813,30 +9796,6 @@ function quoteArg(arg) {
 }
 
 /**
- * The mapping from shell names to functions that escape arguments for that
- * shell.
- *
- * @constant
- * @type {Map<string, Function>}
- */
-const escapeFunctionsByShell = new Map([
-  [binCmd, escapeArgCmd],
-  [binPowerShell, escapeArgPowerShell],
-]);
-
-/**
- * The mapping from shell names to functions that quote arguments for that
- * shell.
- *
- * @constant
- * @type {Map<string, Function>}
- */
-const quoteFunctionsByShell = new Map([
-  [binCmd, quoteArg],
-  [binPowerShell, quoteArg],
-]);
-
-/**
  * Returns the basename of a directory or file path on a Windows system.
  *
  * @param {string} fullPath A Windows-style directory or file path.
@@ -9850,16 +9809,16 @@ function getBasename(fullPath) {
  * Returns the default shell for Windows systems.
  *
  * For more information, see:
- * https://nodejs.org/api/child_process.html#default-windows-shell
+ * https://nodejs.org/api/child_process.html#default-windows-shell.
  *
- * @param {Object} args The arguments for this function.
- * @param {Object} args.env The environment variables.
+ * @param {object} args The arguments for this function.
+ * @param {object} args.env The environment variables.
  * @param {string} [args.env.ComSpec] The %COMSPEC% value.
  * @returns {string} The default shell.
  */
-function getDefaultShell({ env }) {
-  if (Object.prototype.hasOwnProperty.call(env, "ComSpec")) {
-    return env.ComSpec;
+function getDefaultShell({ env: { ComSpec } }) {
+  if (ComSpec !== undefined) {
+    return ComSpec;
   }
 
   return binCmd;
@@ -9872,7 +9831,14 @@ function getDefaultShell({ env }) {
  * @returns {Function?} A function to escape arguments for use in the shell.
  */
 function getEscapeFunction(shellName) {
-  return escapeFunctionsByShell.get(shellName) || null;
+  switch (shellName) {
+    case binCmd:
+      return escapeArgCmd;
+    case binPowerShell:
+      return escapeArgPowerShell;
+    default:
+      return null;
+  }
 }
 
 /**
@@ -9882,22 +9848,28 @@ function getEscapeFunction(shellName) {
  * @returns {Function?} A function to quote arguments for use in the shell.
  */
 function getQuoteFunction(shellName) {
-  return quoteFunctionsByShell.get(shellName) || null;
+  switch (shellName) {
+    case binCmd:
+    case binPowerShell:
+      return quoteArg;
+    default:
+      return null;
+  }
 }
 
 /**
  * Determines the name of the shell identified by a file path or file name.
  *
- * @param {Object} args The arguments for this function.
+ * @param {object} args The arguments for this function.
  * @param {string} args.shell The name or path of the shell.
- * @param {Object} deps The dependencies for this function.
+ * @param {object} deps The dependencies for this function.
  * @param {Function} deps.resolveExecutable Resolve the path to an executable.
  * @returns {string} The shell name.
  */
 function getShellName({ shell }, { resolveExecutable }) {
   shell = resolveExecutable(
     { executable: shell },
-    { exists: fs__namespace.existsSync, readlink: fs__namespace.readlinkSync, which: which__default["default"].sync }
+    { exists: fs__namespace.existsSync, readlink: fs__namespace.readlinkSync, which: which.sync }
   );
 
   const shellName = getBasename(shell);
@@ -9949,8 +9921,8 @@ const win32 = "win32";
 /**
  * Checks if the current system is a Windows system.
  *
- * @param {Object} args The arguments for this function.
- * @param {Record<string, string>} args.env The environment variables.
+ * @param {object} args The arguments for this function.
+ * @param {Object<string, string>} args.env The environment variables.
  * @param {string} args.platform The `os.platform()` value.
  * @returns {boolean} `true` if the system is Windows, `false` otherwise.
  */
@@ -9961,13 +9933,13 @@ function isWindow({ env, platform }) {
 /**
  * Returns all helper functions for a specific system.
  *
- * @param {Object} args The arguments for this function.
- * @param {Record<string, string>} args.env The environment variables.
+ * @param {object} args The arguments for this function.
+ * @param {Object<string, string>} args.env The environment variables.
  * @param {string} args.platform The `os.platform()` value.
- * @returns {Object} The helper functions for the current system.
+ * @returns {object} The helper functions for the current system.
  */
-function getHelpersByPlatform(args) {
-  if (isWindow(args)) {
+function getHelpersByPlatform({ env, platform }) {
+  if (isWindow({ env, platform })) {
     return win;
   }
 
@@ -9978,24 +9950,20 @@ function getHelpersByPlatform(args) {
  * A simple shell escape package. Use it to escape user-controlled inputs to
  * shell commands to prevent shell injection.
  *
- * @example
- *   import cp from "child_process";
- *   import * as shescape from "shescape";
- *   cp.spawn("command", shescape.escapeAll(userInput), options);
- *
+ * @overview Entrypoint for the package.
  * @module shescape
- * @version 1.5.10
+ * @version 1.6.2
  * @license MPL-2.0
  */
 
 /**
  * Get the helper functions for the current platform.
  *
- * @returns {Object} The helper functions for the current platform.
+ * @returns {object} The helper functions for the current platform.
  */
 function getPlatformHelpers() {
-  const platform = os__default["default"].platform();
-  const helpers = getHelpersByPlatform({ env: process__default["default"].env, platform });
+  const platform = os.platform();
+  const helpers = getHelpersByPlatform({ env: process.env, platform });
   return helpers;
 }
 
@@ -10015,8 +9983,18 @@ function toArrayIfNecessary(x) {
  *
  * Non-string inputs will be converted to strings using a `toString()` method.
  *
+ * NOTE: when the `interpolation` option is set to `true`, whitespace is escaped
+ * to prevent argument splitting except for cmd.exe (which does not support it).
+ *
+ * @example
+ * import { spawn } from "node:child_process";
+ * spawn(
+ *   "echo",
+ *   ["Hello", shescape.escape(userInput)],
+ *   null // `options.shell` MUST be falsy
+ * );
  * @param {string} arg The argument to escape.
- * @param {Object} [options] The escape options.
+ * @param {object} [options] The escape options.
  * @param {boolean} [options.interpolation=false] Is interpolation enabled.
  * @param {boolean | string} [options.shell] The shell to escape for.
  * @returns {string} The escaped argument.
@@ -10025,7 +10003,7 @@ function toArrayIfNecessary(x) {
  */
 function escape(arg, options = {}) {
   const helpers = getPlatformHelpers();
-  return escapeShellArg({ arg, options, process: process__default["default"] }, helpers);
+  return escapeShellArg({ arg, options, process }, helpers);
 }
 
 /**
@@ -10035,8 +10013,15 @@ function escape(arg, options = {}) {
  * Non-array inputs will be converted to one-value arrays and non-string values
  * will be converted to strings using a `toString()` method.
  *
+ * @example
+ * import { spawn } from "node:child_process";
+ * spawn(
+ *   "echo",
+ *   shescape.escapeAll(["Hello", userInput]),
+ *   null // `options.shell` MUST be falsy
+ * );
  * @param {string[]} args The arguments to escape.
- * @param {Object} [options] The escape options.
+ * @param {object} [options] The escape options.
  * @param {boolean} [options.interpolation=false] Is interpolation enabled.
  * @param {boolean | string} [options.shell] The shell to escape for.
  * @returns {string[]} The escaped arguments.
@@ -10054,8 +10039,25 @@ function escapeAll(args, options = {}) {
  *
  * Non-string inputs will be converted to strings using a `toString()` method.
  *
+ * @example
+ * import { spawn } from "node:child_process";
+ * const spawnOptions = { shell: true }; // `options.shell` SHOULD be truthy
+ * const shescapeOptions = { ...spawnOptions };
+ * spawn(
+ *   "echo",
+ *   ["Hello", shescape.quote(userInput, shescapeOptions)],
+ *   spawnOptions
+ * );
+ * @example
+ * import { exec } from "node:child_process";
+ * const execOptions = null || { };
+ * const shescapeOptions = { ...execOptions };
+ * exec(
+ *   `echo Hello ${shescape.quote(userInput, shescapeOptions)}`,
+ *   execOptions
+ * );
  * @param {string} arg The argument to quote and escape.
- * @param {Object} [options] The escape and quote options.
+ * @param {object} [options] The escape and quote options.
  * @param {boolean | string} [options.shell] The shell to escape for.
  * @returns {string} The quoted and escaped argument.
  * @throws {TypeError} The argument is not stringable.
@@ -10063,7 +10065,7 @@ function escapeAll(args, options = {}) {
  */
 function quote(arg, options = {}) {
   const helpers = getPlatformHelpers();
-  return quoteShellArg({ arg, options, process: process__default["default"] }, helpers);
+  return quoteShellArg({ arg, options, process }, helpers);
 }
 
 /**
@@ -10073,8 +10075,17 @@ function quote(arg, options = {}) {
  * Non-array inputs will be converted to one-value arrays and non-string values
  * will be converted to strings using a `toString()` method.
  *
+ * @example
+ * import { spawn } from "node:child_process";
+ * const spawnOptions = { shell: true }; // `options.shell` SHOULD be truthy
+ * const shescapeOptions = { ...spawnOptions };
+ * spawn(
+ *   "echo",
+ *   shescape.quoteAll(["Hello", userInput], shescapeOptions),
+ *   spawnOptions
+ * );
  * @param {string[]} args The arguments to quote and escape.
- * @param {Object} [options] The escape and quote options.
+ * @param {object} [options] The escape and quote options.
  * @param {boolean | string} [options.shell] The shell to escape for.
  * @returns {string[]} The quoted and escaped arguments.
  * @throws {TypeError} One of the arguments is not stringable.
@@ -10097,7 +10108,7 @@ exports.quoteAll = quoteAll;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"lint-action","version":"2.1.0","description":"GitHub Action for detecting and fixing linting errors","repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.10.0","command-exists":"^1.2.9","glob":"^8.0.3","parse-diff":"^0.10.0","shescape":"^1.5.10"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.36.0","eslint":"8.31.0","eslint-config-airbnb-base":"15.0.0","eslint-config-prettier":"^8.5.0","eslint-plugin-import":"^2.26.0","eslint-plugin-jsdoc":"^39.6.4","fs-extra":"^11.1.0","jest":"^29.3.1","prettier":"^2.8.1"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"setupFiles":["./test/mock-actions-core.js"]},"prettier":"@samuelmeuli/prettier-config"}');
+module.exports = JSON.parse('{"name":"lint-action","version":"2.1.0","description":"GitHub Action for detecting and fixing linting errors","repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.10.0","command-exists":"^1.2.9","glob":"^8.0.3","parse-diff":"^0.10.0","shescape":"^1.6.2"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.36.0","eslint":"8.31.0","eslint-config-airbnb-base":"15.0.0","eslint-config-prettier":"^8.6.0","eslint-plugin-import":"^2.26.0","eslint-plugin-jsdoc":"^39.6.4","fs-extra":"^11.1.0","jest":"^29.3.1","prettier":"^2.8.1"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"setupFiles":["./test/mock-actions-core.js"]},"prettier":"@samuelmeuli/prettier-config"}');
 
 /***/ })
 
