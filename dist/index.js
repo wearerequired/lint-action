@@ -8687,7 +8687,7 @@ class SwiftLint {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		const fixArg = fix ? "autocorrect" : "lint";
+		const fixArg = fix ? "--fix" : "";
 		return run(`${prefix} swiftlint ${fixArg} ${args}`, {
 			dir,
 			ignoreErrors: true,
