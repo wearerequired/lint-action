@@ -19,7 +19,7 @@
 		"command-exists": "^1.2.9",
 		"glob": "^8.0.3",
 		"parse-diff": "^0.10.0",
-		"shescape": "^1.5.10"
+		"shescape": "^1.6.2"
 	},
 	"peerDependencies": {},
 	"devDependencies": {
@@ -28,7 +28,7 @@
 		"@vercel/ncc": "^0.36.0",
 		"eslint": "8.31.0",
 		"eslint-config-airbnb-base": "15.0.0",
-		"eslint-config-prettier": "^8.5.0",
+		"eslint-config-prettier": "^8.6.0",
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-jsdoc": "^39.6.4",
 		"fs-extra": "^11.1.0",
