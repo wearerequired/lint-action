@@ -11,11 +11,11 @@ function getLintParams(dir) {
 	const stdoutFile1 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file1.css",
-	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[{"line":2,"column":14,"rule":"no-extra-semicolons","severity":"warning","text":"Unexpected extra semicolon (no-extra-semicolons)"}]}`;
+	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":false,"warnings":[{"line":2,"column":14,"endLine":2,"endColumn":15,"rule":"no-extra-semicolons","severity":"warning","text":"Unexpected extra semicolon (no-extra-semicolons)"}]}`;
 	const stdoutFile2 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file2.scss",
-	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":1,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"}]}`;
+	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":1,"column":6,"endLine":1,"endColumn":8,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"}]}`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
@@ -55,7 +55,7 @@ function getFixParams(dir) {
 	const stdoutFile2 = `{"source":"${joinDoubleBackslash(
 		dir,
 		"file2.scss",
-	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":1,"column":6,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"}]}`;
+	)}","deprecations":[],"invalidOptionWarnings":[],"parseErrors":[],"errored":true,"warnings":[{"line":1,"column":6,"endLine":1,"endColumn":8,"rule":"block-no-empty","severity":"error","text":"Unexpected empty block (block-no-empty)"}]}`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
