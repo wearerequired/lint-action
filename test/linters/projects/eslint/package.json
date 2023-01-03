@@ -3,6 +3,6 @@
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {
-		"eslint": "^7.21.0"
+		"eslint": "^8.31.0"
 	}
 }

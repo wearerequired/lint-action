@@ -3,9 +3,9 @@
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {
-		"postcss": "^8.4.5",
-		"stylelint": "^14.2.0",
-		"stylelint-config-standard-scss": "^3.0.0"
+		"postcss": "^8.4.20",
+		"stylelint": "^14.16.1",
+		"stylelint-config-standard-scss": "^6.1.0"
 	},
 	"stylelint": {
 		"extends": "stylelint-config-standard-scss",
