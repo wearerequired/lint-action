@@ -2797,10 +2797,10 @@ parent-module@^1.0.0:
   dependencies:
     callsites "^3.0.0"
 
-parse-diff@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/parse-diff/-/parse-diff-0.9.0.tgz#2e71b5dc5d8f4b9c19c471fd6325646dc9f21724"
-  integrity sha512-Jn+VZORAezkfOXR6B40EZcXxdJBamtgBpfeoFH6hxD+p0e74nVaCL9SWlQj1ggc8b6AexgPKlDiiE0CMMZDSbQ==
+parse-diff@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/parse-diff/-/parse-diff-0.10.0.tgz#5961025b3a3231a73ce45add331cf08c47c5d6af"
+  integrity sha512-7ZnB7HXPl2WdTtSGGzMFuCIzpmaxrDsLwKZp2AQRQVlmL9MUnCHESAmrbKKD5g+ItFJiCN2YPfPyMjWeJV/JoA==
 
 parse-json@^5.2.0:
   version "5.2.0"
