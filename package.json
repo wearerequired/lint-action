@@ -33,7 +33,7 @@
 		"eslint-plugin-jsdoc": "^39.6.4",
 		"fs-extra": "^11.1.0",
 		"jest": "^29.3.1",
-		"prettier": "^2.8.1"
+		"prettier": "^2.8.2"
 	},
 	"eslintConfig": {
 		"root": true,
