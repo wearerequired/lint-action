@@ -25,7 +25,8 @@ function getLintParams(dir) {
 					path: "file1.ts",
 					firstLine: 1,
 					lastLine: 1,
-					message: "TS7034: Variable 'str' implicitly has type 'any' in some locations where its type cannot be determined",
+					message:
+						"TS7034: Variable 'str' implicitly has type 'any' in some locations where its type cannot be determined",
 				},
 				{
 					path: "file1.ts",

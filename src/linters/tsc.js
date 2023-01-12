@@ -46,13 +46,10 @@ class TSC {
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
 		// TSC does not support auto-fixing
 		const commandPrefix = prefix || getNpmBinCommand(dir);
-		return run(
-			`${commandPrefix} tsc --noEmit --pretty false ${args}`,
-			{
-				dir,
-				ignoreErrors: true,
-			},
-		);
+		return run(`${commandPrefix} tsc --noEmit --pretty false ${args}`, {
+			dir,
+			ignoreErrors: true,
+		});
 	}
 
 	/**
