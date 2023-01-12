@@ -7,7 +7,7 @@ const { removeTrailingPeriod } = require("../utils/string");
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
- * https://eslint.org
+ * https://www.typescriptlang.org/docs/handbook/compiler-options.html
  */
 class TSC {
 	static get name() {
@@ -44,11 +44,10 @@ class TSC {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		// const extensionsArg = extensions.map((ext) => `.${ext}`).join(",");
-		// const fixArg = fix ? "--fix" : "";
+		// TSC does not support auto-fixing
 		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(
-			`${commandPrefix} tsc --noEmit --pretty false`,
+			`${commandPrefix} tsc --noEmit --pretty false ${args}`,
 			{
 				dir,
 				ignoreErrors: true,
@@ -67,7 +66,8 @@ class TSC {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = output.status === 0;
 
-const regex = /^(?<file>.+)\((?<line>\d+),(?<column>\d+)\):\s(?<code>\w+)\s(?<message>.+)$/gm;
+		// example: file1.ts(4,25): error TS7005: Variable 'str' implicitly has an 'any' type.
+		const regex = /^(?<file>.+)\((?<line>\d+),(?<column>\d+)\):\s(?<code>\w+)\s(?<message>.+)$/gm;
 
 		const errors = [];
 		const matches = output.stdout.matchAll(regex);
@@ -77,27 +77,17 @@ const regex = /^(?<file>.+)\((?<line>\d+),(?<column>\d+)\):\s(?<code>\w+)\s(?<me
 			errors.push({ file, line, column, code, message });
 		}
 
-
 		for (const error of errors) {
 			const { file, line, message } = error;
-			// const path = file.substring(dir.length + 1);
 
-			// column = column || 0;
-
-				const entry = {
-					path: file,
-					firstLine: Number(line),
-					lastLine: Number(line),
-					message: `${removeTrailingPeriod(message)}`,
-				};
+			const entry = {
+				path: file,
+				firstLine: Number(line),
+				lastLine: Number(line),
+				message: `${removeTrailingPeriod(message)}`,
+			};
 
 			lintResult.error.push(entry);
-				// if (severity === 1) {
-				// 	lintResult.warning.push(entry);
-				// } else if (severity === 2) {
-				// 	lintResult.error.push(entry);
-				// }
-
 		}
 
 		return lintResult;
