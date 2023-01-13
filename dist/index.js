@@ -8733,6 +8733,8 @@ module.exports = SwiftLint;
 /***/ 7540:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const core = __nccwpck_require__(2186);
+
 const { run } = __nccwpck_require__(9575);
 const commandExists = __nccwpck_require__(5265);
 const { initLintResult } = __nccwpck_require__(9149);
@@ -8779,7 +8781,10 @@ class TSC {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		// TSC does not support auto-fixing
+		if (fix) {
+			core.warning(`${this.name} does not support auto-fixing`);
+		}
+
 		const commandPrefix = prefix || getNpmBinCommand(dir);
 		return run(`${commandPrefix} tsc --noEmit --pretty false ${args}`, {
 			dir,
