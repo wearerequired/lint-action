@@ -210,7 +210,7 @@ inputs:
   tsc_extensions:
     description: Extensions of files to check with TSC
     required: false
-    default: "js"
+    default: "ts"
   tsc_command_prefix:
     description: Shell command to prepend to the linter command. Will default to `npx --no-install` for NPM and `yarn run --silent` for Yarn.
     required: false
@@ -218,7 +218,7 @@ inputs:
   tsc_auto_fix:
     description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
     required: false
-    default: "true"
+    default: "false"
 
   # PHP
 

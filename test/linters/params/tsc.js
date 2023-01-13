@@ -1,3 +1,5 @@
+const { EOL } = require("os");
+
 const TSC = require("../../../src/linters/tsc");
 
 const testName = "tsc";
@@ -7,7 +9,7 @@ const extensions = ["js"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
-	const stdoutFile1 = `file1.ts(1,5): error TS7034: Variable 'str' implicitly has type 'any' in some locations where its type cannot be determined.\nfile1.ts(4,25): error TS7005: Variable 'str' implicitly has an 'any' type.`;
+	const stdoutFile1 = `file1.ts(1,5): error TS7034: Variable 'str' implicitly has type 'any' in some locations where its type cannot be determined.${EOL}file1.ts(4,25): error TS7005: Variable 'str' implicitly has an 'any' type.`;
 	const stdoutFile2 = `file2.ts(3,1): error TS2322: Type 'string' is not assignable to type 'number'.`;
 	return {
 		// Expected output of the linting function
