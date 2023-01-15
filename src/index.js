@@ -13,7 +13,7 @@ const { getSummary } = require("./utils/lint-result");
  * Parses the action configuration and runs all enabled linters on matching files
  */
 async function runAction() {
-	const context = getContext();
+	const context = await getContext();
 	const autoFix = core.getInput("auto_fix") === "true";
 	const commit = core.getInput("commit") === "true";
 	const skipVerification = core.getInput("git_no_verify") === "true";
@@ -24,7 +24,9 @@ async function runAction() {
 	const checkName = core.getInput("check_name", { required: true });
 	const neutralCheckOnWarning = core.getInput("neutral_check_on_warning") === "true";
 	const isPullRequest =
-		context.eventName === "pull_request" || context.eventName === "pull_request_target";
+		context.eventName === "pull_request" ||
+		context.eventName === "pull_request_target" ||
+		(context.eventName === "issue_comment" && context.event.issue.pull_request);
 
 	// If on a PR from fork: Display messages regarding action limitations
 	if (context.eventName === "pull_request" && context.repository.hasFork) {

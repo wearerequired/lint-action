@@ -1,6 +1,7 @@
 const { readFileSync } = require("fs");
 
 const core = require("@actions/core");
+const { getOctokit, context } = require("@actions/github");
 
 const { name: actionName } = require("../../package.json");
 const { getEnv } = require("../utils/action");
@@ -69,14 +70,30 @@ function parseEnvFile(eventPath) {
  * Parses the name of the current branch from the GitHub webhook event
  * @param {string} eventName - GitHub event type
  * @param {object} event - GitHub webhook event payload
- * @returns {string} - Branch name
+ * @param {string} token - GitHub token
+ * @returns {Promise<string>} - Branch name
  */
-function parseBranch(eventName, event) {
+async function parseBranch(eventName, event, token) {
 	if (eventName === "push" || eventName === "workflow_dispatch") {
 		return event.ref.substring(11); // Remove "refs/heads/" from start of string
 	}
 	if (eventName === "pull_request" || eventName === "pull_request_target") {
 		return event.pull_request.head.ref;
+	}
+	if (eventName === "issue_comment") {
+		core.info("in parseBranch for issue_comment event payload", event);
+		if (event.issue.pull_request) {
+			const octokit = getOctokit(token);
+			const { data: pullRequest } = await octokit.rest.pulls.get({
+				owner: context.repo.owner,
+				repo: context.repo.repo,
+				pull_number: context.issue.number,
+			});
+			return pullRequest.head.ref;
+		}
+		throw Error(
+			`${actionName} does not support issue_comment event that is not associated to a PR`,
+		);
 	}
 	throw Error(`${actionName} does not support "${eventName}" GitHub events`);
 }
@@ -93,7 +110,12 @@ function parseRepository(eventName, event) {
 	const cloneUrl = event.repository.clone_url;
 	let forkName;
 	let forkCloneUrl;
-	if (eventName === "pull_request" || eventName === "pull_request_target") {
+
+	if (
+		eventName === "pull_request" ||
+		eventName === "pull_request_target" ||
+		(eventName === "issue_comment" && event.issue.pull_request)
+	) {
 		// "pull_request" events are triggered on the repository where the PR is made. The PR branch can
 		// be on the same repository (`forkRepository` is set to `null`) or on a fork (`forkRepository`
 		// is defined)
@@ -113,15 +135,15 @@ function parseRepository(eventName, event) {
 
 /**
  * Returns information about the GitHub repository and action trigger event
- * @returns {GithubContext} context - Information about the GitHub repository and action trigger
- * event
+ * @returns {Promise<GithubContext>} context - Information about the GitHub repository
+ * and action trigger event
  */
-function getContext() {
+async function getContext() {
 	const { actor, eventName, eventPath, token, workspace } = parseActionEnv();
 	const event = parseEnvFile(eventPath);
 	return {
 		actor,
-		branch: parseBranch(eventName, event),
+		branch: await parseBranch(eventName, event, token),
 		event,
 		eventName,
 		repository: parseRepository(eventName, event),
