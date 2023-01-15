@@ -53,6 +53,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [swift-format](https://github.com/apple/swift-format) (official)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
   - [SwiftLint](https://github.com/realm/SwiftLint)
+- **TypeScript:**
+  - [tsc](https://www.typescriptlang.org/docs/handbook/compiler-options.html)
 - **VB.NET:**
   - [dotnet-format](https://github.com/dotnet/format)
 
@@ -441,6 +443,7 @@ Some options are not available for specific linters:
 | swift_format_official |     ✅      |     ✅     |
 | swift_format_lockwood |     ✅      | ❌ (swift) |
 | swiftlint             |     ✅      | ❌ (swift) |
+| tsc                   |     ❌      |  ❌ (ts)   |
 | xo                    |     ✅      |     ✅     |
 
 ## Limitations
