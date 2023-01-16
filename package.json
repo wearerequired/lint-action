@@ -1,6 +1,6 @@
 {
 	"name": "lint-action",
-	"version": "2.3.0",
+	"version": "2.3.1",
 	"description": "GitHub Action for detecting and fixing linting errors",
 	"repository": "github:wearerequired/lint-action",
 	"license": "MIT",
