@@ -39,18 +39,24 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Check out repository (push)
+      - name: Get Pull Request (issue_comment)
+        if: github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, 'run-lint')
+        id: get-pr
+        uses: actions/github-script@v6.3.3
+        with:
+          retries: 2
+          script: |
+            return github.rest.pulls.get({
+              pull_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+
+      - name: Check out repository (issue_comment)
         if: github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, 'run-lint')
         uses: actions/checkout@v3
-
-      - name: Checkout Pull Request
-        if: github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, 'run-lint')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          PR_URL="${{ github.event.issue.pull_request.url }}"
-          PR_NUM=${PR_URL##*/}
-          hub pr checkout $PR_NUM
+        with:
+          ref: ${{ fromJson(steps.get-pr.outputs.result).data.head.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
