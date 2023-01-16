@@ -4,6 +4,7 @@ const core = require("@actions/core");
 
 const { name: actionName } = require("../../package.json");
 const { getEnv } = require("../utils/action");
+const { fetchPullRequest } = require("./api");
 
 /**
  * GitHub Actions workflow's environment variables
@@ -69,14 +70,23 @@ function parseEnvFile(eventPath) {
  * Parses the name of the current branch from the GitHub webhook event
  * @param {string} eventName - GitHub event type
  * @param {object} event - GitHub webhook event payload
+ * @param {object | undefined} pullRequest - pull request payload associated to event
  * @returns {string} - Branch name
  */
-function parseBranch(eventName, event) {
+function parseBranch(eventName, event, pullRequest) {
 	if (eventName === "push" || eventName === "workflow_dispatch") {
 		return event.ref.substring(11); // Remove "refs/heads/" from start of string
 	}
 	if (eventName === "pull_request" || eventName === "pull_request_target") {
-		return event.pull_request.head.ref;
+		return pullRequest.head.ref;
+	}
+	if (eventName === "issue_comment") {
+		if (event.issue.pull_request) {
+			return pullRequest.head.ref;
+		}
+		throw Error(
+			`${actionName} does not support issue_comment event that is not associated to a PR`,
+		);
 	}
 	throw Error(`${actionName} does not support "${eventName}" GitHub events`);
 }
@@ -86,20 +96,26 @@ function parseBranch(eventName, event) {
  * Fork detection is only supported for the "pull_request" event
  * @param {string} eventName - GitHub event type
  * @param {object} event - GitHub webhook event payload
+ * @param {object | undefined} pullRequest - pull request payload associated to event
  * @returns {GithubRepository} - Information about the GitHub repository and its fork (if it exists)
  */
-function parseRepository(eventName, event) {
+function parseRepository(eventName, event, pullRequest) {
 	const repoName = event.repository.full_name;
 	const cloneUrl = event.repository.clone_url;
 	let forkName;
 	let forkCloneUrl;
-	if (eventName === "pull_request" || eventName === "pull_request_target") {
+
+	if (
+		eventName === "pull_request" ||
+		eventName === "pull_request_target" ||
+		(eventName === "issue_comment" && event.issue.pull_request)
+	) {
 		// "pull_request" events are triggered on the repository where the PR is made. The PR branch can
 		// be on the same repository (`forkRepository` is set to `null`) or on a fork (`forkRepository`
 		// is defined)
-		const headRepoName = event.pull_request.head.repo.full_name;
+		const headRepoName = pullRequest.head.repo.full_name;
 		forkName = repoName === headRepoName ? undefined : headRepoName;
-		const headForkCloneUrl = event.pull_request.head.repo.clone_url;
+		const headForkCloneUrl = pullRequest.head.repo.clone_url;
 		forkCloneUrl = cloneUrl === headForkCloneUrl ? undefined : headForkCloneUrl;
 	}
 	return {
@@ -112,19 +128,37 @@ function parseRepository(eventName, event) {
 }
 
 /**
- * Returns information about the GitHub repository and action trigger event
- * @returns {GithubContext} context - Information about the GitHub repository and action trigger
- * event
+ * Parses the name of the current branch from the GitHub webhook event
+ * @param {string} eventName - GitHub event type
+ * @param {object} event - GitHub webhook event payload
+ * @param {string} token - GitHub token
+ * @returns {Promise<object | undefined>} - The payload corresponding to the pull request
  */
-function getContext() {
+async function parsePullRequest(eventName, event, token) {
+	if (eventName === "pull_request" || eventName === "pull_request_target") {
+		return event.pull_request;
+	}
+	if (eventName === "issue_comment" && event.issue.pull_request) {
+		return fetchPullRequest(event.repository.full_name, event.issue.number, token);
+	}
+	return undefined;
+}
+
+/**
+ * Returns information about the GitHub repository and action trigger event
+ * @returns {Promise<GithubContext>} context - Information about the GitHub repository
+ * and action trigger event
+ */
+async function getContext() {
 	const { actor, eventName, eventPath, token, workspace } = parseActionEnv();
 	const event = parseEnvFile(eventPath);
+	const pullRequest = await parsePullRequest(eventName, event, token);
 	return {
 		actor,
-		branch: parseBranch(eventName, event),
+		branch: await parseBranch(eventName, event, pullRequest),
 		event,
 		eventName,
-		repository: parseRepository(eventName, event),
+		repository: parseRepository(eventName, event, pullRequest),
 		token,
 		workspace,
 	};
