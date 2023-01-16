@@ -7,6 +7,9 @@ on:
   pull_request_target:
     branches:
       - master
+  issue_comment:
+    types:
+      - created
 
 permissions:
   checks: write
@@ -36,6 +39,14 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Checkout Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL="${{ github.event.issue.pull_request.url }}"
+          PR_NUM=${PR_URL##*/}
+          hub pr checkout $PR_NUM
+      
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
