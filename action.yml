@@ -492,6 +492,26 @@ inputs:
     required: false
     default: "true"
 
+  rustfmt:
+    description: Enable or disable rustfmt
+    required: false
+    default: "false"
+  rustfmt_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  rustfmt_extensions:
+    description: Extensions of files to check with rustfmt
+    required: false
+    default: "rs"
+  rustfmt_dir:
+    description: Directory where the rustfmt command should be run
+    required: false
+  rustfmt_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
+
   # Swift
 
   # Alias of `swift_format_lockwood` (for backward compatibility)

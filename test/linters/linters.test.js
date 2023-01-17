@@ -19,6 +19,7 @@ const phpCodeSnifferParams = require("./params/php-codesniffer");
 const prettierParams = require("./params/prettier");
 const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
+const rustfmtParams = require("./params/rustfmt");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
 // const swiftFormatOfficial = require("./params/swift-format-official");
@@ -43,6 +44,7 @@ const linterParams = [
 	prettierParams,
 	pylintParams,
 	ruboCopParams,
+	rustfmtParams,
 	stylelintParams,
 	tscParams,
 	xoParams,
