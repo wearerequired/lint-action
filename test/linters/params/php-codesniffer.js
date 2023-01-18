@@ -2,6 +2,7 @@ const PHPCodeSniffer = require("../../../src/linters/php-codesniffer");
 
 const testName = "php-codesniffer";
 const linter = PHPCodeSniffer;
+const args = "";
 const commandPrefix = "";
 const extensions = ["php"];
 
@@ -60,4 +61,4 @@ function getLintParams(dir) {
 // Linting with auto-fixing
 const getFixParams = getLintParams; // Does not support auto-fixing -> option has no effect
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

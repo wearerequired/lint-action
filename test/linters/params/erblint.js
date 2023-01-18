@@ -2,6 +2,7 @@ const Erblint = require("../../../src/linters/erblint");
 
 const testName = "erblint";
 const linter = Erblint;
+const args = "";
 const commandPrefix = "bundle exec";
 const extensions = ["erb"];
 
@@ -48,4 +49,4 @@ function getLintParams(dir) {
 
 const getFixParams = getLintParams; // Does not support auto-fixing -> option has no effect
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

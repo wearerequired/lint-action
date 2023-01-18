@@ -3,6 +3,7 @@ const { joinDoubleBackslash } = require("../../test-utils");
 
 const testName = "eslint-typescript";
 const linter = ESLint;
+const args = "";
 const commandPrefix = "";
 const extensions = ["js", "ts"];
 
@@ -92,4 +93,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];
