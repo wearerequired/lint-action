@@ -170,4 +170,5 @@ module.exports = {
 	parseBranch,
 	parseEnvFile,
 	parseRepository,
+	parsePullRequest,
 };
