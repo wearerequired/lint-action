@@ -2,6 +2,7 @@ const RuboCop = require("../../../src/linters/rubocop");
 
 const testName = "rubocop";
 const linter = RuboCop;
+const args = "";
 const commandPrefix = "bundle exec";
 const extensions = ["rb"];
 
@@ -65,4 +66,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

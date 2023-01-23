@@ -3,6 +3,7 @@ const { joinDoubleBackslash } = require("../../test-utils");
 
 const testName = "stylelint";
 const linter = Stylelint;
+const args = "";
 const commandPrefix = "";
 const extensions = ["css", "sass", "scss"];
 
@@ -79,4 +80,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

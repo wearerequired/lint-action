@@ -1,6 +1,7 @@
 const Autopep8 = require("./autopep8");
 const Black = require("./black");
 const ClangFormat = require("./clang-format");
+const Clippy = require("./clippy");
 const DotnetFormat = require("./dotnet-format");
 const Erblint = require("./erblint");
 const ESLint = require("./eslint");
@@ -22,6 +23,7 @@ const XO = require("./xo");
 
 const linters = {
 	// Linters
+	clippy: Clippy,
 	erblint: Erblint,
 	eslint: ESLint,
 	flake8: Flake8,

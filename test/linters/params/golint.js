@@ -3,6 +3,7 @@ const Golint = require("../../../src/linters/golint");
 const testName = "golint";
 const linter = Golint;
 const commandPrefix = "";
+const args = "";
 const extensions = ["go"];
 
 // Linting without auto-fixing
@@ -43,4 +44,4 @@ function getLintParams(dir) {
 // Linting with auto-fixing
 const getFixParams = getLintParams; // Does not support auto-fixing -> option has no effect
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

@@ -3,6 +3,7 @@ const Autopep8 = require("../../../src/linters/autopep8");
 const testName = "autopep8";
 const linter = Autopep8;
 const commandPrefix = "";
+const args = "";
 const extensions = ["py"];
 
 // Linting without auto-fixing
@@ -61,4 +62,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

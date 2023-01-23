@@ -3,6 +3,7 @@ const { TEST_DATE } = require("../../test-utils");
 
 const testName = "black";
 const linter = Black;
+const args = "";
 const commandPrefix = "";
 const extensions = ["py"];
 
@@ -62,4 +63,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

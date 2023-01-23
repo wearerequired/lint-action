@@ -4,6 +4,7 @@ const Swiftlint = require("../../../src/linters/swiftlint");
 
 const testName = "swiftlint";
 const linter = Swiftlint;
+const args = "";
 const commandPrefix = "";
 const extensions = ["swift"];
 
@@ -79,4 +80,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

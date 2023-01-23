@@ -4,6 +4,7 @@ const { joinDoubleBackslash } = require("../../test-utils");
 const testName = "xo";
 const linter = XO;
 const commandPrefix = "";
+const args = "";
 const extensions = ["js"];
 
 // Linting without auto-fixing
@@ -106,4 +107,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];
