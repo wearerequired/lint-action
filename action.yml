@@ -499,7 +499,7 @@ inputs:
   rustfmt_args:
     description: Additional arguments to pass to the linter
     required: false
-    default: ""
+    default: " -- --color=never "
   rustfmt_extensions:
     description: Extensions of files to check with rustfmt
     required: false
