@@ -5,7 +5,7 @@ const RustFmt = require("../../../src/linters/rustfmt");
 const testName = "rustfmt";
 const linter = RustFmt;
 const commandPrefix = "";
-const args = " -- --color=never ";
+const args = "-- --color=never";
 const extensions = ["rs"];
 
 // Linting without auto-fixing

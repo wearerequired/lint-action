@@ -35,7 +35,7 @@ class RustFmt {
 	 * @param {string} prefix - Prefix to the lint command
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
-	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+	static lint(dir, extensions, args = "-- --color=never", fix = false, prefix = "") {
 		if (extensions.length !== 1 || extensions[0] !== "rs") {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
