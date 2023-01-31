@@ -4,6 +4,7 @@ const TSC = require("../../../src/linters/tsc");
 
 const testName = "tsc";
 const linter = TSC;
+const args = "";
 const commandPrefix = "";
 const extensions = ["js"];
 
@@ -50,4 +51,4 @@ function getLintParams(dir) {
 // TSC does not support auto-fixing
 const getFixParams = getLintParams;
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

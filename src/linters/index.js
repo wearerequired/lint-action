@@ -1,6 +1,7 @@
 const Autopep8 = require("./autopep8");
 const Black = require("./black");
 const ClangFormat = require("./clang-format");
+const Clippy = require("./clippy");
 const DotnetFormat = require("./dotnet-format");
 const Erblint = require("./erblint");
 const ESLint = require("./eslint");
@@ -13,6 +14,7 @@ const PHPCodeSniffer = require("./php-codesniffer");
 const Prettier = require("./prettier");
 const Pylint = require("./pylint");
 const RuboCop = require("./rubocop");
+const RustFmt = require("./rustfmt");
 const Stylelint = require("./stylelint");
 const SwiftFormatLockwood = require("./swift-format-lockwood");
 const SwiftFormatOfficial = require("./swift-format-official");
@@ -22,6 +24,7 @@ const XO = require("./xo");
 
 const linters = {
 	// Linters
+	clippy: Clippy,
 	erblint: Erblint,
 	eslint: ESLint,
 	flake8: Flake8,
@@ -42,6 +45,7 @@ const linters = {
 	dotnet_format: DotnetFormat,
 	gofmt: Gofmt,
 	oitnb: Oitnb,
+	rustfmt: RustFmt,
 	prettier: Prettier,
 	swift_format_lockwood: SwiftFormatLockwood,
 	swift_format_official: SwiftFormatOfficial,

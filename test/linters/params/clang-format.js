@@ -4,6 +4,7 @@ const ClangFormat = require("../../../src/linters/clang-format");
 
 const testName = "clang-format";
 const linter = ClangFormat;
+const args = "";
 const commandPrefix = "";
 const extensions = ["c", "mm"];
 
@@ -65,4 +66,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

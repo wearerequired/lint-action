@@ -5,6 +5,7 @@ const DotnetFormat = require("../../../src/linters/dotnet-format");
 
 const testName = "dotnet-format";
 const linter = DotnetFormat;
+const args = "";
 const commandPrefix = "";
 const extensions = ["cs"];
 
@@ -81,4 +82,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

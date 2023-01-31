@@ -2450,6 +2450,12 @@ function setopts (self, pattern, options) {
     pattern = "**/" + pattern
   }
 
+  self.windowsPathsNoEscape = !!options.windowsPathsNoEscape ||
+    options.allowWindowsEscape === false
+  if (self.windowsPathsNoEscape) {
+    pattern = pattern.replace(/\\/g, '/')
+  }
+
   self.silent = !!options.silent
   self.pattern = pattern
   self.strict = options.strict !== false
@@ -2505,8 +2511,6 @@ function setopts (self, pattern, options) {
   // Note that they are not supported in Glob itself anyway.
   options.nonegate = true
   options.nocomment = true
-  // always treat \ in patterns as escapes, not path separators
-  options.allowWindowsEscape = true
 
   self.minimatch = new Minimatch(pattern, options)
   self.options = self.minimatch.options
@@ -5385,7 +5389,7 @@ function onceStrict (fn) {
 /***/ ((module) => {
 
 "use strict";
-function _createForOfIteratorHelper(o,allowArrayLike){var it=typeof Symbol!=="undefined"&&o[Symbol.iterator]||o["@@iterator"];if(!it){if(Array.isArray(o)||(it=_unsupportedIterableToArray(o))||allowArrayLike&&o&&typeof o.length==="number"){if(it)o=it;var i=0;var F=function F(){};return{s:F,n:function n(){if(i>=o.length)return{done:true};return{done:false,value:o[i++]}},e:function e(_e2){throw _e2},f:F}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var normalCompletion=true,didErr=false,err;return{s:function s(){it=it.call(o)},n:function n(){var step=it.next();normalCompletion=step.done;return step},e:function e(_e3){didErr=true;err=_e3},f:function f(){try{if(!normalCompletion&&it["return"]!=null)it["return"]()}finally{if(didErr)throw err}}}}function _defineProperty(obj,key,value){if(key in obj){Object.defineProperty(obj,key,{value:value,enumerable:true,configurable:true,writable:true})}else{obj[key]=value}return obj}function _slicedToArray(arr,i){return _arrayWithHoles(arr)||_iterableToArrayLimit(arr,i)||_unsupportedIterableToArray(arr,i)||_nonIterableRest()}function _nonIterableRest(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function _unsupportedIterableToArray(o,minLen){if(!o)return;if(typeof o==="string")return _arrayLikeToArray(o,minLen);var n=Object.prototype.toString.call(o).slice(8,-1);if(n==="Object"&&o.constructor)n=o.constructor.name;if(n==="Map"||n==="Set")return Array.from(o);if(n==="Arguments"||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return _arrayLikeToArray(o,minLen)}function _arrayLikeToArray(arr,len){if(len==null||len>arr.length)len=arr.length;for(var i=0,arr2=new Array(len);i<len;i++){arr2[i]=arr[i]}return arr2}function _iterableToArrayLimit(arr,i){var _i=arr==null?null:typeof Symbol!=="undefined"&&arr[Symbol.iterator]||arr["@@iterator"];if(_i==null)return;var _arr=[];var _n=true;var _d=false;var _s,_e;try{for(_i=_i.call(arr);!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break}}catch(err){_d=true;_e=err}finally{try{if(!_n&&_i["return"]!=null)_i["return"]()}finally{if(_d)throw _e}}return _arr}function _arrayWithHoles(arr){if(Array.isArray(arr))return arr}module.exports=function(input){if(!input)return[];if(typeof input!=="string"||input.match(/^\s+$/))return[];var lines=input.split("\n");if(lines.length===0)return[];var files=[];var currentFile=null;var currentChunk=null;var deletedLineCounter=0;var addedLineCounter=0;var currentFileChanges=null;var normal=function normal(line){var _currentChunk;(_currentChunk=currentChunk)===null||_currentChunk===void 0?void 0:_currentChunk.changes.push({type:"normal",normal:true,ln1:deletedLineCounter++,ln2:addedLineCounter++,content:line});currentFileChanges.oldLines--;currentFileChanges.newLines--};var start=function start(line){var _parseFiles;var _ref=(_parseFiles=parseFiles(line))!==null&&_parseFiles!==void 0?_parseFiles:[],_ref2=_slicedToArray(_ref,2),fromFileName=_ref2[0],toFileName=_ref2[1];currentFile={chunks:[],deletions:0,additions:0,from:fromFileName,to:toFileName};files.push(currentFile)};var restart=function restart(){if(!currentFile||currentFile.chunks.length)start()};var newFile=function newFile(){restart();currentFile["new"]=true;currentFile.from="/dev/null"};var deletedFile=function deletedFile(){restart();currentFile.deleted=true;currentFile.to="/dev/null"};var index=function index(line){restart();currentFile.index=line.split(" ").slice(1)};var fromFile=function fromFile(line){restart();currentFile.from=parseOldOrNewFile(line)};var toFile=function toFile(line){restart();currentFile.to=parseOldOrNewFile(line)};var toNumOfLines=function toNumOfLines(number){return+(number||1)};var chunk=function chunk(line,match){if(!currentFile)return;var _match$slice=match.slice(1),_match$slice2=_slicedToArray(_match$slice,4),oldStart=_match$slice2[0],oldNumLines=_match$slice2[1],newStart=_match$slice2[2],newNumLines=_match$slice2[3];deletedLineCounter=+oldStart;addedLineCounter=+newStart;currentChunk={content:line,changes:[],oldStart:+oldStart,oldLines:toNumOfLines(oldNumLines),newStart:+newStart,newLines:toNumOfLines(newNumLines)};currentFileChanges={oldLines:toNumOfLines(oldNumLines),newLines:toNumOfLines(newNumLines)};currentFile.chunks.push(currentChunk)};var del=function del(line){if(!currentChunk)return;currentChunk.changes.push({type:"del",del:true,ln:deletedLineCounter++,content:line});currentFile.deletions++;currentFileChanges.oldLines--};var add=function add(line){if(!currentChunk)return;currentChunk.changes.push({type:"add",add:true,ln:addedLineCounter++,content:line});currentFile.additions++;currentFileChanges.newLines--};var eof=function eof(line){var _currentChunk$changes3;if(!currentChunk)return;var _currentChunk$changes=currentChunk.changes.slice(-1),_currentChunk$changes2=_slicedToArray(_currentChunk$changes,1),mostRecentChange=_currentChunk$changes2[0];currentChunk.changes.push((_currentChunk$changes3={type:mostRecentChange.type},_defineProperty(_currentChunk$changes3,mostRecentChange.type,true),_defineProperty(_currentChunk$changes3,"ln1",mostRecentChange.ln1),_defineProperty(_currentChunk$changes3,"ln2",mostRecentChange.ln2),_defineProperty(_currentChunk$changes3,"ln",mostRecentChange.ln),_defineProperty(_currentChunk$changes3,"content",line),_currentChunk$changes3))};var schemaHeaders=[[/^diff\s/,start],[/^new file mode \d+$/,newFile],[/^deleted file mode \d+$/,deletedFile],[/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/,index],[/^---\s/,fromFile],[/^\+\+\+\s/,toFile],[/^@@\s+-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/,chunk],[/^\\ No newline at end of file$/,eof]];var schemaContent=[[/^-/,del],[/^\+/,add],[/^\s+/,normal]];var parseContentLine=function parseContentLine(line){var _iterator=_createForOfIteratorHelper(schemaContent),_step;try{for(_iterator.s();!(_step=_iterator.n()).done;){var _step$value=_slicedToArray(_step.value,2),pattern=_step$value[0],handler=_step$value[1];var match=line.match(pattern);if(match){handler(line,match);break}}}catch(err){_iterator.e(err)}finally{_iterator.f()}if(currentFileChanges.oldLines===0&&currentFileChanges.newLines===0){currentFileChanges=null}};var parseHeaderLine=function parseHeaderLine(line){var _iterator2=_createForOfIteratorHelper(schemaHeaders),_step2;try{for(_iterator2.s();!(_step2=_iterator2.n()).done;){var _step2$value=_slicedToArray(_step2.value,2),pattern=_step2$value[0],handler=_step2$value[1];var match=line.match(pattern);if(match){handler(line,match);break}}}catch(err){_iterator2.e(err)}finally{_iterator2.f()}};var parseLine=function parseLine(line){if(currentFileChanges){parseContentLine(line)}else{parseHeaderLine(line)}return};var _iterator3=_createForOfIteratorHelper(lines),_step3;try{for(_iterator3.s();!(_step3=_iterator3.n()).done;){var line=_step3.value;parseLine(line)}}catch(err){_iterator3.e(err)}finally{_iterator3.f()}return files};var fileNameDiffRegex=/(a|i|w|c|o|1|2)\/.*(?=["']? ["']?(b|i|w|c|o|1|2)\/)|(b|i|w|c|o|1|2)\/.*$/g;var gitFileHeaderRegex=/^(a|b|i|w|c|o|1|2)\//;var parseFiles=function parseFiles(line){var fileNames=line===null||line===void 0?void 0:line.match(fileNameDiffRegex);return fileNames===null||fileNames===void 0?void 0:fileNames.map(function(fileName){return fileName.replace(gitFileHeaderRegex,"").replace(/("|')$/,"")})};var qoutedFileNameRegex=/^\\?['"]|\\?['"]$/g;var parseOldOrNewFile=function parseOldOrNewFile(line){var fileName=leftTrimChars(line,"-+").trim();fileName=removeTimeStamp(fileName);return fileName.replace(qoutedFileNameRegex,"").replace(gitFileHeaderRegex,"")};var leftTrimChars=function leftTrimChars(string,trimmingChars){string=makeString(string);if(!trimmingChars&&String.prototype.trimLeft)return string.trimLeft();var trimmingString=formTrimmingString(trimmingChars);return string.replace(new RegExp("^".concat(trimmingString,"+")),"")};var timeStampRegex=/\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/;var removeTimeStamp=function removeTimeStamp(string){var timeStamp=timeStampRegex.exec(string);if(timeStamp){string=string.substring(0,timeStamp.index).trim()}return string};var formTrimmingString=function formTrimmingString(trimmingChars){if(trimmingChars===null||trimmingChars===undefined)return"\\s";else if(trimmingChars instanceof RegExp)return trimmingChars.source;return"[".concat(makeString(trimmingChars).replace(/([.*+?^=!:${}()|[\]/\\])/g,"\\$1"),"]")};var makeString=function makeString(itemToConvert){return(itemToConvert!==null&&itemToConvert!==void 0?itemToConvert:"")+""};
+function _createForOfIteratorHelper(o,allowArrayLike){var it=typeof Symbol!=="undefined"&&o[Symbol.iterator]||o["@@iterator"];if(!it){if(Array.isArray(o)||(it=_unsupportedIterableToArray(o))||allowArrayLike&&o&&typeof o.length==="number"){if(it)o=it;var i=0;var F=function F(){};return{s:F,n:function n(){if(i>=o.length)return{done:true};return{done:false,value:o[i++]}},e:function e(_e2){throw _e2},f:F}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var normalCompletion=true,didErr=false,err;return{s:function s(){it=it.call(o)},n:function n(){var step=it.next();normalCompletion=step.done;return step},e:function e(_e3){didErr=true;err=_e3},f:function f(){try{if(!normalCompletion&&it["return"]!=null)it["return"]()}finally{if(didErr)throw err}}}}function _defineProperty(obj,key,value){if(key in obj){Object.defineProperty(obj,key,{value:value,enumerable:true,configurable:true,writable:true})}else{obj[key]=value}return obj}function _slicedToArray(arr,i){return _arrayWithHoles(arr)||_iterableToArrayLimit(arr,i)||_unsupportedIterableToArray(arr,i)||_nonIterableRest()}function _nonIterableRest(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function _unsupportedIterableToArray(o,minLen){if(!o)return;if(typeof o==="string")return _arrayLikeToArray(o,minLen);var n=Object.prototype.toString.call(o).slice(8,-1);if(n==="Object"&&o.constructor)n=o.constructor.name;if(n==="Map"||n==="Set")return Array.from(o);if(n==="Arguments"||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return _arrayLikeToArray(o,minLen)}function _arrayLikeToArray(arr,len){if(len==null||len>arr.length)len=arr.length;for(var i=0,arr2=new Array(len);i<len;i++){arr2[i]=arr[i]}return arr2}function _iterableToArrayLimit(arr,i){var _i=arr==null?null:typeof Symbol!=="undefined"&&arr[Symbol.iterator]||arr["@@iterator"];if(_i==null)return;var _arr=[];var _n=true;var _d=false;var _s,_e;try{for(_i=_i.call(arr);!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break}}catch(err){_d=true;_e=err}finally{try{if(!_n&&_i["return"]!=null)_i["return"]()}finally{if(_d)throw _e}}return _arr}function _arrayWithHoles(arr){if(Array.isArray(arr))return arr}module.exports=function(input){if(!input)return[];if(typeof input!=="string"||input.match(/^\s+$/))return[];var lines=input.split("\n");if(lines.length===0)return[];var files=[];var currentFile=null;var currentChunk=null;var deletedLineCounter=0;var addedLineCounter=0;var currentFileChanges=null;var normal=function normal(line){var _currentChunk;(_currentChunk=currentChunk)===null||_currentChunk===void 0?void 0:_currentChunk.changes.push({type:"normal",normal:true,ln1:deletedLineCounter++,ln2:addedLineCounter++,content:line});currentFileChanges.oldLines--;currentFileChanges.newLines--};var start=function start(line){var _parseFiles;var _ref=(_parseFiles=parseFiles(line))!==null&&_parseFiles!==void 0?_parseFiles:[],_ref2=_slicedToArray(_ref,2),fromFileName=_ref2[0],toFileName=_ref2[1];currentFile={chunks:[],deletions:0,additions:0,from:fromFileName,to:toFileName};files.push(currentFile)};var restart=function restart(){if(!currentFile||currentFile.chunks.length)start()};var newFile=function newFile(_,match){restart();currentFile["new"]=true;currentFile.newMode=match[1];currentFile.from="/dev/null"};var deletedFile=function deletedFile(_,match){restart();currentFile.deleted=true;currentFile.oldMode=match[1];currentFile.to="/dev/null"};var oldMode=function oldMode(_,match){restart();currentFile.oldMode=match[1]};var newMode=function newMode(_,match){restart();currentFile.newMode=match[1]};var index=function index(line,match){restart();currentFile.index=line.split(" ").slice(1);if(match[1]){currentFile.oldMode=currentFile.newMode=match[1].trim()}};var fromFile=function fromFile(line){restart();currentFile.from=parseOldOrNewFile(line)};var toFile=function toFile(line){restart();currentFile.to=parseOldOrNewFile(line)};var toNumOfLines=function toNumOfLines(number){return+(number||1)};var chunk=function chunk(line,match){if(!currentFile)return;var _match$slice=match.slice(1),_match$slice2=_slicedToArray(_match$slice,4),oldStart=_match$slice2[0],oldNumLines=_match$slice2[1],newStart=_match$slice2[2],newNumLines=_match$slice2[3];deletedLineCounter=+oldStart;addedLineCounter=+newStart;currentChunk={content:line,changes:[],oldStart:+oldStart,oldLines:toNumOfLines(oldNumLines),newStart:+newStart,newLines:toNumOfLines(newNumLines)};currentFileChanges={oldLines:toNumOfLines(oldNumLines),newLines:toNumOfLines(newNumLines)};currentFile.chunks.push(currentChunk)};var del=function del(line){if(!currentChunk)return;currentChunk.changes.push({type:"del",del:true,ln:deletedLineCounter++,content:line});currentFile.deletions++;currentFileChanges.oldLines--};var add=function add(line){if(!currentChunk)return;currentChunk.changes.push({type:"add",add:true,ln:addedLineCounter++,content:line});currentFile.additions++;currentFileChanges.newLines--};var eof=function eof(line){var _currentChunk$changes3;if(!currentChunk)return;var _currentChunk$changes=currentChunk.changes.slice(-1),_currentChunk$changes2=_slicedToArray(_currentChunk$changes,1),mostRecentChange=_currentChunk$changes2[0];currentChunk.changes.push((_currentChunk$changes3={type:mostRecentChange.type},_defineProperty(_currentChunk$changes3,mostRecentChange.type,true),_defineProperty(_currentChunk$changes3,"ln1",mostRecentChange.ln1),_defineProperty(_currentChunk$changes3,"ln2",mostRecentChange.ln2),_defineProperty(_currentChunk$changes3,"ln",mostRecentChange.ln),_defineProperty(_currentChunk$changes3,"content",line),_currentChunk$changes3))};var schemaHeaders=[[/^diff\s/,start],[/^new file mode (\d+)$/,newFile],[/^deleted file mode (\d+)$/,deletedFile],[/^old mode (\d+)$/,oldMode],[/^new mode (\d+)$/,newMode],[/^index\s[\da-zA-Z]+\.\.[\da-zA-Z]+(\s(\d+))?$/,index],[/^---\s/,fromFile],[/^\+\+\+\s/,toFile],[/^@@\s+-(\d+),?(\d+)?\s+\+(\d+),?(\d+)?\s@@/,chunk],[/^\\ No newline at end of file$/,eof]];var schemaContent=[[/^\\ No newline at end of file$/,eof],[/^-/,del],[/^\+/,add],[/^\s+/,normal]];var parseContentLine=function parseContentLine(line){var _iterator=_createForOfIteratorHelper(schemaContent),_step;try{for(_iterator.s();!(_step=_iterator.n()).done;){var _step$value=_slicedToArray(_step.value,2),pattern=_step$value[0],handler=_step$value[1];var match=line.match(pattern);if(match){handler(line,match);break}}}catch(err){_iterator.e(err)}finally{_iterator.f()}if(currentFileChanges.oldLines===0&&currentFileChanges.newLines===0){currentFileChanges=null}};var parseHeaderLine=function parseHeaderLine(line){var _iterator2=_createForOfIteratorHelper(schemaHeaders),_step2;try{for(_iterator2.s();!(_step2=_iterator2.n()).done;){var _step2$value=_slicedToArray(_step2.value,2),pattern=_step2$value[0],handler=_step2$value[1];var match=line.match(pattern);if(match){handler(line,match);break}}}catch(err){_iterator2.e(err)}finally{_iterator2.f()}};var parseLine=function parseLine(line){if(currentFileChanges){parseContentLine(line)}else{parseHeaderLine(line)}return};var _iterator3=_createForOfIteratorHelper(lines),_step3;try{for(_iterator3.s();!(_step3=_iterator3.n()).done;){var line=_step3.value;parseLine(line)}}catch(err){_iterator3.e(err)}finally{_iterator3.f()}return files};var fileNameDiffRegex=/(a|i|w|c|o|1|2)\/.*(?=["']? ["']?(b|i|w|c|o|1|2)\/)|(b|i|w|c|o|1|2)\/.*$/g;var gitFileHeaderRegex=/^(a|b|i|w|c|o|1|2)\//;var parseFiles=function parseFiles(line){var fileNames=line===null||line===void 0?void 0:line.match(fileNameDiffRegex);return fileNames===null||fileNames===void 0?void 0:fileNames.map(function(fileName){return fileName.replace(gitFileHeaderRegex,"").replace(/("|')$/,"")})};var qoutedFileNameRegex=/^\\?['"]|\\?['"]$/g;var parseOldOrNewFile=function parseOldOrNewFile(line){var fileName=leftTrimChars(line,"-+").trim();fileName=removeTimeStamp(fileName);return fileName.replace(qoutedFileNameRegex,"").replace(gitFileHeaderRegex,"")};var leftTrimChars=function leftTrimChars(string,trimmingChars){string=makeString(string);if(!trimmingChars&&String.prototype.trimLeft)return string.trimLeft();var trimmingString=formTrimmingString(trimmingChars);return string.replace(new RegExp("^".concat(trimmingString,"+")),"")};var timeStampRegex=/\t.*|\d{4}-\d\d-\d\d\s\d\d:\d\d:\d\d(.\d+)?\s(\+|-)\d\d\d\d/;var removeTimeStamp=function removeTimeStamp(string){var timeStamp=timeStampRegex.exec(string);if(timeStamp){string=string.substring(0,timeStamp.index).trim()}return string};var formTrimmingString=function formTrimmingString(trimmingChars){if(trimmingChars===null||trimmingChars===undefined)return"\\s";else if(trimmingChars instanceof RegExp)return trimmingChars.source;return"[".concat(makeString(trimmingChars).replace(/([.*+?^=!:${}()|[\]/\\])/g,"\\$1"),"]")};var makeString=function makeString(itemToConvert){return(itemToConvert!==null&&itemToConvert!==void 0?itemToConvert:"")+""};
 
 
 /***/ }),
@@ -7095,6 +7099,134 @@ module.exports = ClangFormat;
 
 /***/ }),
 
+/***/ 244:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { run } = __nccwpck_require__(9575);
+const commandExists = __nccwpck_require__(5265);
+const { initLintResult } = __nccwpck_require__(9149);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+/**
+ * https://rust-lang.github.io/rust-clippy/
+ */
+class Clippy {
+	static get name() {
+		return "clippy";
+	}
+
+	/**
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
+	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
+	 */
+	static async verifySetup(dir, prefix = "") {
+		// Verify that cargo is installed (required to execute clippy)
+		if (!(await commandExists("cargo"))) {
+			throw new Error("cargo is not installed");
+		}
+
+		// Verify that clippy is installed
+		try {
+			run(`${prefix} cargo clippy --version`, { dir });
+		} catch (err) {
+			throw new Error(`${this.name} is not installed`);
+		}
+	}
+
+	/**
+	 * Runs the linting program and returns the command output
+	 * @param {string} dir - Directory to run the linter in
+	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
+	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
+	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
+	 */
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+		if (extensions.length !== 1 || extensions[0] !== "rs") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
+
+		// clippy will throw an error if `--allow-dirty` is used when `--fix` isn't.
+		// in order to have tests run consistently and to help out users we remove `--allow-dirty`
+		// when not in fix
+		const localArgs = fix ? args : args.replace("--allow-dirty", "");
+
+		const fixArg = fix ? "--fix" : "";
+		return run(`${prefix} cargo clippy ${fixArg} --message-format json ${localArgs}`, {
+			dir,
+			ignoreErrors: true,
+		});
+	}
+
+	/**
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir - Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
+	 * @returns {LintResult} - Parsed lint result
+	 */
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+
+		const lines = output.stdout.split("\n").map((line) => {
+			let parsedLine;
+			try {
+				let normalizedLine = line;
+				if (process.platform === "win32") {
+					normalizedLine = line.replace(/\\/gi, "\\\\");
+				}
+				parsedLine = JSON.parse(normalizedLine);
+			} catch (err) {
+				throw Error(
+					`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`,
+				);
+			}
+			return parsedLine;
+		});
+
+		lines.forEach((line) => {
+			if (line.reason === "compiler-message") {
+				if (line.message.level === "warning") {
+					const { code, message, spans } = line.message;
+					// don't add the message counting the warnings
+					if (code !== null) {
+						lintResult.warning.push({
+							path: spans[0].file_name,
+							firstLine: spans[0].line_start,
+							lastLine: spans[0].line_end,
+							message,
+						});
+					}
+				} else if (line.message.level === "error") {
+					const { code, message, spans } = line.message;
+					// don't add the message counting the errors
+					if (code !== null) {
+						lintResult.warning.push({
+							path: spans[0].file_name,
+							firstLine: spans[0].line_start,
+							lastLine: spans[0].line_end,
+							message,
+						});
+					}
+				}
+			}
+		});
+
+		lintResult.isSuccess =
+			output.status === 0 && lintResult.warning.length === 0 && lintResult.error.length === 0;
+
+		return lintResult;
+	}
+}
+
+module.exports = Clippy;
+
+
+/***/ }),
+
 /***/ 6216:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -7698,6 +7830,7 @@ module.exports = Golint;
 const Autopep8 = __nccwpck_require__(3569);
 const Black = __nccwpck_require__(9844);
 const ClangFormat = __nccwpck_require__(6632);
+const Clippy = __nccwpck_require__(244);
 const DotnetFormat = __nccwpck_require__(6216);
 const Erblint = __nccwpck_require__(9674);
 const ESLint = __nccwpck_require__(7169);
@@ -7710,6 +7843,7 @@ const PHPCodeSniffer = __nccwpck_require__(5405);
 const Prettier = __nccwpck_require__(3460);
 const Pylint = __nccwpck_require__(4963);
 const RuboCop = __nccwpck_require__(1399);
+const RustFmt = __nccwpck_require__(3421);
 const Stylelint = __nccwpck_require__(194);
 const SwiftFormatLockwood = __nccwpck_require__(8983);
 const SwiftFormatOfficial = __nccwpck_require__(1828);
@@ -7719,6 +7853,7 @@ const XO = __nccwpck_require__(728);
 
 const linters = {
 	// Linters
+	clippy: Clippy,
 	erblint: Erblint,
 	eslint: ESLint,
 	flake8: Flake8,
@@ -7739,6 +7874,7 @@ const linters = {
 	dotnet_format: DotnetFormat,
 	gofmt: Gofmt,
 	oitnb: Oitnb,
+	rustfmt: RustFmt,
 	prettier: Prettier,
 	swift_format_lockwood: SwiftFormatLockwood,
 	swift_format_official: SwiftFormatOfficial,
@@ -8357,6 +8493,95 @@ class RuboCop {
 }
 
 module.exports = RuboCop;
+
+
+/***/ }),
+
+/***/ 3421:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { run } = __nccwpck_require__(9575);
+const commandExists = __nccwpck_require__(5265);
+const { initLintResult } = __nccwpck_require__(9149);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+const PARSE_REGEX = /([\s\S]*?) at line (\d*):$([\s\S]*)/m;
+
+/**
+ * https://github.com/rust-lang/rustfmt
+ */
+class RustFmt {
+	static get name() {
+		return "rustfmt";
+	}
+
+	/**
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
+	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
+	 */
+	static async verifySetup(dir, prefix = "") {
+		// Verify that cargo format is installed
+		if (!(await commandExists("cargo-fmt"))) {
+			throw new Error("Cargo format is not installed");
+		}
+	}
+
+	/**
+	 * Runs the linting program and returns the command output
+	 * @param {string} dir - Directory to run the linter in
+	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
+	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
+	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
+	 */
+	static lint(dir, extensions, args = "-- --color=never", fix = false, prefix = "") {
+		if (extensions.length !== 1 || extensions[0] !== "rs") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
+		const fixArg = fix ? "" : "--check";
+		return run(`${prefix} cargo fmt ${fixArg} ${args}`, {
+			dir,
+			ignoreErrors: true,
+		});
+	}
+
+	/**
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir - Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
+	 * @returns {LintResult} - Parsed lint result
+	 */
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+		lintResult.isSuccess = output.status === 0;
+		if (!output.stdout) {
+			return lintResult;
+		}
+
+		const diffs = output.stdout.split(/^Diff in /gm).slice(1);
+		for (const diff of diffs) {
+			const [_, pathFull, line, message] = diff.match(PARSE_REGEX);
+			// Split on dir works for windows UNC paths, the substring strips out the
+			// left over '/' or '\\'
+			const path = pathFull.split(dir)[1].substring(1);
+			const lineNr = parseInt(line, 10);
+			lintResult.error.push({
+				path,
+				firstLine: lineNr,
+				lastLine: lineNr,
+				message,
+			});
+		}
+
+		return lintResult;
+	}
+}
+
+module.exports = RustFmt;
 
 
 /***/ }),
@@ -9334,6 +9559,7 @@ var os = __nccwpck_require__(2037);
 var process = __nccwpck_require__(7282);
 var fs = __nccwpck_require__(7147);
 var path = __nccwpck_require__(1017);
+var util = __nccwpck_require__(3837);
 var which = __nccwpck_require__(4207);
 
 function _interopNamespaceDefault(e) {
@@ -9620,6 +9846,14 @@ function quoteShellArg(
 const binBash = "bash";
 
 /**
+ * The name of the C shell (csh) binary.
+ *
+ * @constant
+ * @type {string}
+ */
+const binCsh = "csh";
+
+/**
  * The name of the Debian Almquist shell (Dash) binary.
  *
  * @constant
@@ -9645,12 +9879,14 @@ const binZsh = "zsh";
  * @returns {string} The escaped argument.
  */
 function escapeArgBash(arg, { interpolation, quoted }) {
-  let result = arg.replace(/[\0\u0008\u001B\u009B]/gu, "");
+  let result = arg
+    .replace(/[\0\u0008\u001B\u009B]/gu, "")
+    .replace(/\r(?!\n)/gu, "");
 
   if (interpolation) {
     result = result
       .replace(/\\/gu, "\\\\")
-      .replace(/\n/gu, " ")
+      .replace(/\r?\n/gu, " ")
       .replace(/(^|\s)([#~])/gu, "$1\\$2")
       .replace(/(["$&'()*;<>?`{|])/gu, "\\$1")
       .replace(/(?<=[:=])(~)(?=[\s+\-/0:=]|$)/gu, "\\$1")
@@ -9659,7 +9895,50 @@ function escapeArgBash(arg, { interpolation, quoted }) {
     result = result.replace(/'/gu, `'\\''`);
   }
 
-  result = result.replace(/\r(?!\n)/gu, "");
+  return result;
+}
+
+/**
+ * Escapes a shell argument for use in csh.
+ *
+ * @param {string} arg The argument to escape.
+ * @param {object} options The escape options.
+ * @param {boolean} options.interpolation Is interpolation enabled.
+ * @param {boolean} options.quoted Is `arg` being quoted.
+ * @returns {string} The escaped argument.
+ */
+function escapeArgCsh(arg, { interpolation, quoted }) {
+  let result = arg
+    .replace(/[\0\u0008\u001B\u009B]/gu, "")
+    .replace(/\r?\n|\r/gu, " ");
+
+  if (interpolation) {
+    result = result
+      .replace(/\\/gu, "\\\\")
+      .replace(/(^|\s)(~)/gu, "$1\\$2")
+      .replace(/(["#$&'()*;<>?[`{|])/gu, "\\$1")
+      .replace(/([\t ])/gu, "\\$1");
+
+    const textEncoder = new util.TextEncoder();
+    result = result
+      .split("")
+      .map(
+        // Due to a bug in C shell version 20110502-7, when a character whose
+        // utf-8 encoding includes the bytes 0xA0 (160 in decimal) appears in
+        // an argument after an escaped character, it will hang and endlessly
+        // consume memory unless the character is escaped with quotes.
+        // ref: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=995013
+        (char) => (textEncoder.encode(char).includes(160) ? `'${char}'` : char)
+      )
+      .join("");
+  } else {
+    result = result.replace(/\\!$/gu, "\\\\!");
+    if (quoted) {
+      result = result.replace(/'/gu, `'\\''`);
+    }
+  }
+
+  result = result.replace(/!(?!$)/gu, "\\!");
 
   return result;
 }
@@ -9674,20 +9953,20 @@ function escapeArgBash(arg, { interpolation, quoted }) {
  * @returns {string} The escaped argument.
  */
 function escapeArgDash(arg, { interpolation, quoted }) {
-  let result = arg.replace(/[\0\u0008\u001B\u009B]/gu, "");
+  let result = arg
+    .replace(/[\0\u0008\u001B\u009B]/gu, "")
+    .replace(/\r(?!\n)/gu, "");
 
   if (interpolation) {
     result = result
       .replace(/\\/gu, "\\\\")
-      .replace(/\n/gu, " ")
+      .replace(/\r?\n/gu, " ")
       .replace(/(^|\s)([#~])/gu, "$1\\$2")
       .replace(/(["$&'()*;<>?`|])/gu, "\\$1")
       .replace(/([\t\n ])/gu, "\\$1");
   } else if (quoted) {
     result = result.replace(/'/gu, `'\\''`);
   }
-
-  result = result.replace(/\r(?!\n)/gu, "");
 
   return result;
 }
@@ -9702,20 +9981,20 @@ function escapeArgDash(arg, { interpolation, quoted }) {
  * @returns {string} The escaped argument.
  */
 function escapeArgZsh(arg, { interpolation, quoted }) {
-  let result = arg.replace(/[\0\u0008\u001B\u009B]/gu, "");
+  let result = arg
+    .replace(/[\0\u0008\u001B\u009B]/gu, "")
+    .replace(/\r(?!\n)/gu, "");
 
   if (interpolation) {
     result = result
       .replace(/\\/gu, "\\\\")
-      .replace(/\n/gu, " ")
+      .replace(/\r?\n/gu, " ")
       .replace(/(^|\s)([#=~])/gu, "$1\\$2")
       .replace(/(["$&'()*;<>?[\]`{|}])/gu, "\\$1")
       .replace(/([\t ])/gu, "\\$1");
   } else if (quoted) {
     result = result.replace(/'/gu, `'\\''`);
   }
-
-  result = result.replace(/\r(?!\n)/gu, "");
 
   return result;
 }
@@ -9762,6 +10041,8 @@ function getEscapeFunction$1(shellName) {
   switch (shellName) {
     case binBash:
       return escapeArgBash;
+    case binCsh:
+      return escapeArgCsh;
     case binDash:
       return escapeArgDash;
     case binZsh:
@@ -9780,6 +10061,7 @@ function getEscapeFunction$1(shellName) {
 function getQuoteFunction$1(shellName) {
   switch (shellName) {
     case binBash:
+    case binCsh:
     case binDash:
     case binZsh:
       return quoteArg$1;
@@ -9881,7 +10163,7 @@ function escapeArgPowerShell(arg, { interpolation, quoted }) {
 
   if (interpolation) {
     result = result
-      .replace(/\r?\n|\r/gu, " ")
+      .replace(/\r?\n/gu, " ")
       .replace(/(^|[\s\u0085])([*1-6]?)(>)/gu, "$1$2`$3")
       .replace(/(^|[\s\u0085])([#\-:<@\]])/gu, "$1`$2")
       .replace(/(["&'(),;{|}‘’‚‛“”„])/gu, "`$1")
@@ -10055,12 +10337,12 @@ function getHelpersByPlatform({ env, platform }) {
 }
 
 /**
- * A simple shell escape package. Use it to escape user-controlled inputs to
+ * A simple shell escape library. Use it to escape user-controlled inputs to
  * shell commands to prevent shell injection.
  *
- * @overview Entrypoint for the package.
+ * @overview Entrypoint for the library.
  * @module shescape
- * @version 1.6.2
+ * @version 1.6.4
  * @license MPL-2.0
  */
 
@@ -10216,7 +10498,7 @@ exports.quoteAll = quoteAll;
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"lint-action","version":"2.2.0","description":"GitHub Action for detecting and fixing linting errors","repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.10.0","command-exists":"^1.2.9","glob":"^8.0.3","parse-diff":"^0.10.0","shescape":"^1.6.2"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.36.0","eslint":"8.32.0","eslint-config-airbnb-base":"15.0.0","eslint-config-prettier":"^8.6.0","eslint-plugin-import":"^2.26.0","eslint-plugin-jsdoc":"^39.6.4","fs-extra":"^11.1.0","jest":"^29.3.1","prettier":"^2.8.3"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"setupFiles":["./test/mock-actions-core.js"]},"prettier":"@samuelmeuli/prettier-config"}');
+module.exports = JSON.parse('{"name":"lint-action","version":"2.3.0","description":"GitHub Action for detecting and fixing linting errors","repository":"github:wearerequired/lint-action","license":"MIT","private":true,"main":"./dist/index.js","scripts":{"test":"jest","lint":"eslint --max-warnings 0 \\"**/*.js\\"","lint:fix":"yarn lint --fix","format":"prettier --list-different \\"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\\"","format:fix":"yarn format --write","build":"ncc build ./src/index.js"},"dependencies":{"@actions/core":"^1.10.0","command-exists":"^1.2.9","glob":"^8.1.0","parse-diff":"^0.11.0","shescape":"^1.6.4"},"peerDependencies":{},"devDependencies":{"@samuelmeuli/eslint-config":"^6.0.0","@samuelmeuli/prettier-config":"^2.0.1","@vercel/ncc":"^0.36.0","eslint":"8.32.0","eslint-config-airbnb-base":"15.0.0","eslint-config-prettier":"^8.6.0","eslint-plugin-import":"^2.26.0","eslint-plugin-jsdoc":"^39.6.7","fs-extra":"^11.1.0","jest":"^29.3.1","prettier":"^2.8.3"},"eslintConfig":{"root":true,"extends":["@samuelmeuli/eslint-config","plugin:jsdoc/recommended"],"env":{"node":true,"jest":true},"settings":{"jsdoc":{"mode":"typescript"}},"rules":{"no-await-in-loop":"off","no-unused-vars":["error",{"args":"none","varsIgnorePattern":"^_"}],"jsdoc/check-indentation":"error","jsdoc/check-syntax":"error","jsdoc/newline-after-description":["error","never"],"jsdoc/require-description":"error","jsdoc/require-hyphen-before-param-description":"error","jsdoc/require-jsdoc":"off"}},"eslintIgnore":["node_modules/","test/linters/projects/","test/tmp/","dist/"],"jest":{"setupFiles":["./test/mock-actions-core.js"]},"prettier":"@samuelmeuli/prettier-config"}');
 
 /***/ })
 

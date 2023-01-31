@@ -49,6 +49,9 @@ _**Note:** The behavior of actions like this one is currently limited in the con
 - **Ruby:**
   - [ERB Lint](https://github.com/Shopify/erb-lint)
   - [RuboCop](https://rubocop.readthedocs.io)
+- **Rust:**
+  - [clippy](https://github.com/rust-lang/rust-clippy)
+  - [rustfmt](https://github.com/rust-lang/rustfmt)
 - **Swift:**
   - [swift-format](https://github.com/apple/swift-format) (official)
   - [SwiftFormat](https://github.com/nicklockwood/SwiftFormat) (by Nick Lockwood)
@@ -427,6 +430,7 @@ Some options are not available for specific linters:
 | autopep8              |     ✅      |  ❌ (py)   |
 | black                 |     ✅      |     ✅     |
 | clang_format          |     ✅      |     ✅     |
+| clippy                |     ✅      |  ❌ (rs)   |
 | dotnet_format         |     ✅      |  ❌ (cs)   |
 | erblint               |     ❌      |  ❌ (erb)  |
 | eslint                |     ✅      |     ✅     |
@@ -439,6 +443,7 @@ Some options are not available for specific linters:
 | prettier              |     ✅      |     ✅     |
 | pylint                |     ❌      |  ❌ (py)   |
 | rubocop               |     ✅      |  ❌ (rb)   |
+| rustfmt               |     ✅      |  ❌ (rs)   |
 | stylelint             |     ✅      |     ✅     |
 | swift_format_official |     ✅      |     ✅     |
 | swift_format_lockwood |     ✅      | ❌ (swift) |

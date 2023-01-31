@@ -6,6 +6,7 @@ const { normalizeDates, normalizePaths, createTmpDir } = require("../test-utils"
 const autopep8Params = require("./params/autopep8");
 const blackParams = require("./params/black");
 const clangFormatParams = require("./params/clang-format");
+const clippyParams = require("./params/clippy");
 const dotnetFormatParams = require("./params/dotnet-format");
 const erblintParams = require("./params/erblint");
 const eslintParams = require("./params/eslint");
@@ -18,6 +19,7 @@ const phpCodeSnifferParams = require("./params/php-codesniffer");
 const prettierParams = require("./params/prettier");
 const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
+const rustfmtParams = require("./params/rustfmt");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
 // const swiftFormatOfficial = require("./params/swift-format-official");
@@ -29,6 +31,7 @@ const linterParams = [
 	autopep8Params,
 	blackParams,
 	clangFormatParams,
+	clippyParams,
 	dotnetFormatParams,
 	erblintParams,
 	eslintParams,
@@ -41,6 +44,7 @@ const linterParams = [
 	prettierParams,
 	pylintParams,
 	ruboCopParams,
+	rustfmtParams,
 	stylelintParams,
 	tscParams,
 	xoParams,
@@ -69,7 +73,7 @@ afterAll(async () => {
 // Test all linters
 describe.each(linterParams)(
 	"%s",
-	(projectName, linter, commandPrefix, extensions, getLintParams, getFixParams) => {
+	(projectName, linter, commandPrefix, extensions, args, getLintParams, getFixParams) => {
 		const projectTmpDir = join(tmpDir, projectName);
 		beforeAll(async () => {
 			await expect(linter.verifySetup(projectTmpDir, commandPrefix)).resolves.toEqual(undefined);
@@ -84,7 +88,7 @@ describe.each(linterParams)(
 
 			// Test `lint` function
 			test(`${linter.name} returns expected ${lintMode} output`, () => {
-				const cmdOutput = linter.lint(projectTmpDir, extensions, "", autoFix, commandPrefix);
+				const cmdOutput = linter.lint(projectTmpDir, extensions, args, autoFix, commandPrefix);
 
 				// Exit code
 				expect(cmdOutput.status).toEqual(expected.cmdOutput.status);

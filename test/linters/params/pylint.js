@@ -4,6 +4,7 @@ const Pylint = require("../../../src/linters/pylint");
 
 const testName = "pylint";
 const linter = Pylint;
+const args = "";
 const commandPrefix = "";
 const extensions = ["py"];
 
@@ -83,4 +84,4 @@ function getLintParams(dir) {
 // Linting with auto-fixing
 const getFixParams = getLintParams; // Does not support auto-fixing -> option has no effect
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];

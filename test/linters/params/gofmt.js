@@ -2,6 +2,7 @@ const Gofmt = require("../../../src/linters/gofmt");
 
 const testName = "gofmt";
 const linter = Gofmt;
+const args = "";
 const commandPrefix = "";
 const extensions = ["go"];
 
@@ -61,4 +62,4 @@ function getFixParams(dir) {
 	};
 }
 
-module.exports = [testName, linter, commandPrefix, extensions, getLintParams, getFixParams];
+module.exports = [testName, linter, commandPrefix, extensions, args, getLintParams, getFixParams];
