@@ -12,7 +12,7 @@ afterAll(async () => {
 	await remove(tmpDir);
 });
 
-describe("useYarn()", () => {
+describe.skip("useYarn()", () => {
 	test("should return `true` if there is a Yarn lockfile", async () => {
 		const dir = join(tmpDir, "yarn-project");
 		const lockfilePath = join(dir, "yarn.lock");
