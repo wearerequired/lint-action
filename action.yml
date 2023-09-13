@@ -220,6 +220,30 @@ inputs:
     required: false
     default: "false"
 
+  deno_lint:
+    description: Enable or disable deno lint checks
+    required: false
+    default: "false"
+  deno_lint_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  deno_lint_dir:
+    description: Directory where the deno lint command should be run
+    required: false
+  deno_lint_extensions:
+    description: Extensions of files to check with deno lint
+    required: false
+    default: "ts"
+  deno_lint_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+  deno_lint_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "false"
+
   # PHP
 
   php_codesniffer:
