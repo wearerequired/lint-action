@@ -68,13 +68,15 @@ class Prettier {
 		}
 
 		const paths = output.stdout.split(/\r?\n/);
-		lintResult.error = paths.filter(path => !!path).map((path) => ({
-			path,
-			firstLine: 1,
-			lastLine: 1,
-			message:
-				"There are issues with this file's formatting, please run Prettier to fix the errors",
-		}));
+		lintResult.error = paths
+			.filter((path) => !!path)
+			.map((path) => ({
+				path,
+				firstLine: 1,
+				lastLine: 1,
+				message:
+					"There are issues with this file's formatting, please run Prettier to fix the errors",
+			}));
 
 		return lintResult;
 	}
