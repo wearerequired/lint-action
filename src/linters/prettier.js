@@ -1,9 +1,13 @@
+const { sep } = require("path");
+
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+const PARSE_REGEX = /^\[(warning|error)] ([^:]*): (.*) \(([0-9]+):([0-9]+)\)$/gm;
 
 /**
  * https://prettier.io
@@ -77,6 +81,31 @@ class Prettier {
 				message:
 					"There are issues with this file's formatting, please run Prettier to fix the errors",
 			}));
+
+		// Fall back to stderr if stdout is empty
+		if (lintResult.error.length === 0 && output.stderr) {
+			const matches = output.stderr.matchAll(PARSE_REGEX);
+			for (const match of matches) {
+				const [_, level, pathFull, text, line] = match;
+				const leadingSep = `.${sep}`;
+				let path = pathFull;
+				if (path.startsWith(leadingSep)) {
+					path = path.substring(2); // Remove "./" or ".\" from start of path
+				}
+				const lineNr = parseInt(line, 10);
+				const result = {
+					path,
+					firstLine: lineNr,
+					lastLine: lineNr,
+					message: text,
+				};
+				if (level === "error") {
+					lintResult.error.push(result);
+				} else if (level === "warning") {
+					lintResult.warning.push(result);
+				}
+			}
+		}
 
 		return lintResult;
 	}
