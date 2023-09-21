@@ -4,6 +4,7 @@ const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
+const { removeANSIColorCodes } = require("../utils/string");
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
@@ -83,8 +84,9 @@ class Prettier {
 			}));
 
 		// Fall back to stderr if stdout is empty
-		if (lintResult.error.length === 0 && output.stderr) {
-			const matches = output.stderr.matchAll(PARSE_REGEX);
+		if (output.stderr) {
+			// -no-color not fully respected
+			const matches = removeANSIColorCodes(output.stderr).matchAll(PARSE_REGEX);
 			for (const match of matches) {
 				const [_, level, pathFull, text, line] = match;
 				const leadingSep = `.${sep}`;
