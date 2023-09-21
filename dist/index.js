@@ -8196,12 +8196,17 @@ module.exports = PHPCodeSniffer;
 /***/ 3460:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const { sep } = __nccwpck_require__(1017);
+
 const { run } = __nccwpck_require__(9575);
 const commandExists = __nccwpck_require__(5265);
 const { initLintResult } = __nccwpck_require__(9149);
 const { getNpmBinCommand } = __nccwpck_require__(1838);
+const { removeANSIColorCodes } = __nccwpck_require__(9321);
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+const PARSE_REGEX = /^\[(warning|error)] ([^:]*): (.*) \(([0-9]+):([0-9]+)\)$/gm;
 
 /**
  * https://prettier.io
@@ -8266,13 +8271,41 @@ class Prettier {
 		}
 
 		const paths = output.stdout.split(/\r?\n/);
-		lintResult.error = paths.map((path) => ({
-			path,
-			firstLine: 1,
-			lastLine: 1,
-			message:
-				"There are issues with this file's formatting, please run Prettier to fix the errors",
-		}));
+		lintResult.error = paths
+			.filter((path) => !!path)
+			.map((path) => ({
+				path,
+				firstLine: 1,
+				lastLine: 1,
+				message:
+					"There are issues with this file's formatting, please run Prettier to fix the errors",
+			}));
+
+		// Fall back to stderr if stdout is empty
+		if (output.stderr) {
+			// -no-color not fully respected
+			const matches = removeANSIColorCodes(output.stderr).matchAll(PARSE_REGEX);
+			for (const match of matches) {
+				const [_, level, pathFull, text, line] = match;
+				const leadingSep = `.${sep}`;
+				let path = pathFull;
+				if (path.startsWith(leadingSep)) {
+					path = path.substring(2); // Remove "./" or ".\" from start of path
+				}
+				const lineNr = parseInt(line, 10);
+				const result = {
+					path,
+					firstLine: lineNr,
+					lastLine: lineNr,
+					message: text,
+				};
+				if (level === "error") {
+					lintResult.error.push(result);
+				} else if (level === "warning") {
+					lintResult.warning.push(result);
+				}
+			}
+		}
 
 		return lintResult;
 	}
@@ -9437,9 +9470,23 @@ function removeTrailingPeriod(str) {
 	return str[str.length - 1] === "." ? str.substring(0, str.length - 1) : str;
 }
 
+/**
+ * Strips ansi escape codes
+ * @param {string} str - Console output to escape
+ * @returns {string} - Pure ansi output
+ */
+function removeANSIColorCodes(str) {
+	return str.replace(
+		// eslint-disable-next-line no-control-regex
+		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+		"",
+	);
+}
+
 module.exports = {
 	capitalizeFirstLetter,
 	removeTrailingPeriod,
+	removeANSIColorCodes,
 };
 
 

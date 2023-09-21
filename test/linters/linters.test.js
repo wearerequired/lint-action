@@ -2,6 +2,7 @@ const { join } = require("path");
 
 const { copy, remove } = require("fs-extra");
 
+const { removeANSIColorCodes } = require("../../src/utils/string");
 const { normalizeDates, normalizePaths, createTmpDir } = require("../test-utils");
 const autopep8Params = require("./params/autopep8");
 const blackParams = require("./params/black");
@@ -17,6 +18,7 @@ const golintParams = require("./params/golint");
 const mypyParams = require("./params/mypy");
 const phpCodeSnifferParams = require("./params/php-codesniffer");
 const prettierParams = require("./params/prettier");
+const prettierInvalidParams = require("./params/prettier-invalid");
 const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
 const rustfmtParams = require("./params/rustfmt");
@@ -42,6 +44,7 @@ const linterParams = [
 	mypyParams,
 	phpCodeSnifferParams,
 	prettierParams,
+	prettierInvalidParams,
 	pylintParams,
 	ruboCopParams,
 	rustfmtParams,
@@ -109,10 +112,10 @@ describe.each(linterParams)(
 				stderr = normalizePaths(stderr, tmpDir);
 				if ("stderrParts" in expected.cmdOutput) {
 					expected.cmdOutput.stderrParts.forEach((stderrParts) =>
-						expect(stderr).toEqual(expect.stringContaining(stderrParts)),
+						expect(removeANSIColorCodes(stderr)).toEqual(expect.stringContaining(stderrParts)),
 					);
 				} else if ("stderr" in expected.cmdOutput) {
-					expect(stderr).toEqual(expected.cmdOutput.stderr);
+					expect(removeANSIColorCodes(stderr)).toEqual(expected.cmdOutput.stderr);
 				}
 			});
 
