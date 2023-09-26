@@ -10,8 +10,8 @@ const extensions = ["py"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
-	const stdoutPart1 = `file1.py:7: error: Dict entry 0 has incompatible type "str": "int"; expected "str": "str"`;
-	const stdoutPart2 = `file1.py:11: error: Argument 1 to "main" has incompatible type "List[str]"; expected "str"`;
+	const stdoutPart1 = `file1.py:7: error: Dict entry 0 has incompatible type "str": "int"; expected "str": "str"  [dict-item]`;
+	const stdoutPart2 = `file1.py:11: error: Argument 1 to "main" has incompatible type "List[str]"; expected "str"  [arg-type]`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
@@ -28,13 +28,13 @@ function getLintParams(dir) {
 					path: "file1.py",
 					firstLine: 7,
 					lastLine: 7,
-					message: `Dict entry 0 has incompatible type "str": "int"; expected "str": "str"`,
+					message: `Dict entry 0 has incompatible type "str": "int"; expected "str": "str"  [dict-item]`,
 				},
 				{
 					path: "file1.py",
 					firstLine: 11,
 					lastLine: 11,
-					message: `Argument 1 to "main" has incompatible type "List[str]"; expected "str"`,
+					message: `Argument 1 to "main" has incompatible type "List[str]"; expected "str"  [arg-type]`,
 				},
 			],
 		},

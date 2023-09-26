@@ -18,7 +18,7 @@
 		"@actions/core": "^1.10.0",
 		"command-exists": "^1.2.9",
 		"glob": "^8.1.0",
-		"parse-diff": "^0.11.0",
+		"parse-diff": "^0.11.1",
 		"shescape": "^1.6.4"
 	},
 	"peerDependencies": {},

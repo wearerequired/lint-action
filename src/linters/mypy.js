@@ -67,7 +67,7 @@ class Mypy {
 		if (!specifiedPath) {
 			extraArgs = ` ${dir}`;
 		}
-		return run(`${prefix} mypy ${args}${extraArgs}`, {
+		return run(`${prefix} mypy --no-color-output --no-error-summary ${args}${extraArgs}`, {
 			dir,
 			ignoreErrors: true,
 		});
