@@ -3,7 +3,7 @@
 	"main": "index.js",
 	"private": true,
 	"devDependencies": {
-		"postcss": "^8.4.20",
+		"postcss": "^8.4.31",
 		"stylelint": "^14.16.1",
 		"stylelint-config-standard-scss": "^6.1.0"
 	},
