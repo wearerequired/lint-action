@@ -12,9 +12,9 @@ const extensions = ["py"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {
-	const absolutePathFile1 = join(dir, 'file1.py');
+	const absolutePathFile1 = join(dir, "file1.py");
 	const stdoutFile1 = `--- ${absolutePathFile1}	${TEST_DATE}\n+++ ${absolutePathFile1}	${TEST_DATE}\n@@ -1,10 +1,10 @@\n var_1 = "hello"\n var_2 = "world"\n \n \n-def main ():  # Whitespace error\n+def main():  # Whitespace error\n     print("hello " + var_2)\n \n \n def add(num_1, num_2):\n     return num_1 + num_2\n@@ -19,8 +19,9 @@\n \n \n def divide(num_1, num_2):\n     return num_1 / num_2\n \n+\n # Blank lines error\n \n main()`;
-	const absolutePathFile2 = join(dir, 'file2.py');
+	const absolutePathFile2 = join(dir, "file2.py");
 	const stdoutFile2 = `--- ${absolutePathFile2}	${TEST_DATE}\n+++ ${absolutePathFile2}	${TEST_DATE}\n@@ -1,2 +1,2 @@\n def add(num_1, num_2):\n-  return num_1 + num_2  # Indentation error\n+    return num_1 + num_2  # Indentation error`;
 	return {
 		// Expected output of the linting function
