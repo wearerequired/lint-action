@@ -7843,6 +7843,7 @@ const PHPCodeSniffer = __nccwpck_require__(5405);
 const Prettier = __nccwpck_require__(3460);
 const Pylint = __nccwpck_require__(4963);
 const RuboCop = __nccwpck_require__(1399);
+const StandardRB = __nccwpck_require__(9460);
 const RustFmt = __nccwpck_require__(3421);
 const Stylelint = __nccwpck_require__(194);
 const SwiftFormatLockwood = __nccwpck_require__(8983);
@@ -7862,6 +7863,7 @@ const linters = {
 	php_codesniffer: PHPCodeSniffer,
 	pylint: Pylint,
 	rubocop: RuboCop,
+	standardrb: StandardRB,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
 	xo: XO,
@@ -9441,6 +9443,14 @@ module.exports = {
 	capitalizeFirstLetter,
 	removeTrailingPeriod,
 };
+
+
+/***/ }),
+
+/***/ 9460:
+/***/ ((module) => {
+
+module.exports = eval("require")("./standard");
 
 
 /***/ }),
