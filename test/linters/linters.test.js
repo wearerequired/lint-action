@@ -20,6 +20,7 @@ const prettierParams = require("./params/prettier");
 const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
 const rustfmtParams = require("./params/rustfmt");
+const standardRBParams = require("./params/standardrb");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
 // const swiftFormatOfficial = require("./params/swift-format-official");
@@ -45,6 +46,7 @@ const linterParams = [
 	pylintParams,
 	ruboCopParams,
 	rustfmtParams,
+	standardRBParams,
 	stylelintParams,
 	tscParams,
 	xoParams,
