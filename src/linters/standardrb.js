@@ -6,7 +6,6 @@ const { initLintResult } = require("../utils/lint-result"); const { removeTraili
 
 // Mapping of standard severities to severities used for GitHub commit annotations
 const severityMap = {
-	refactor: "warning",
 	info: "warning",
 	convention: "warning",
 	refactor: "warning",
