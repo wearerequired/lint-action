@@ -1,6 +1,7 @@
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
-const { initLintResult } = require("../utils/lint-result"); const { removeTrailingPeriod } = require("../utils/string");
+const { initLintResult } = require("../utils/lint-result");
+const { removeTrailingPeriod } = require("../utils/string");
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
