@@ -64,17 +64,20 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 			core.info(
 				`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
 			);
-			await request(`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					// "Accept" header is required to access Checks API during preview period
-					Accept: "application/vnd.github.antiope-preview+json",
-					Authorization: `Bearer ${context.token}`,
-					"User-Agent": actionName,
+			await request(
+				`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						// "Accept" header is required to access Checks API during preview period
+						Accept: "application/vnd.github.antiope-preview+json",
+						Authorization: `Bearer ${context.token}`,
+						"User-Agent": actionName,
+					},
+					body,
 				},
-				body,
-			});
+			);
 			core.info(`${linterName} check created successfully`);
 		} catch (err) {
 			let errorMessage = err.message;
