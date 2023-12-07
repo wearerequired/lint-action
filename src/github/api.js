@@ -33,14 +33,6 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		];
 	}
 
-	// Only use the first 50 annotations (limit for a single API request)
-	if (annotations.length > 50) {
-		core.info(
-			`There are more than 50 errors/warnings from ${linterName}. Annotations are created for the first 50 issues only.`,
-		);
-		annotations = annotations.slice(0, 50);
-	}
-
 	let conclusion;
 	if (lintResult.isSuccess) {
 		if (annotations.length > 0 && neutralCheckOnWarning) {
@@ -59,43 +51,50 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		output: {
 			title: capitalizeFirstLetter(summary),
 			summary: `${linterName} found ${summary}`,
-			annotations,
+			annotations: undefined,
 		},
 	};
-	try {
-		core.info(
-			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
-		);
-		await request(`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				// "Accept" header is required to access Checks API during preview period
-				Accept: "application/vnd.github.antiope-preview+json",
-				Authorization: `Bearer ${context.token}`,
-				"User-Agent": actionName,
-			},
-			body,
-		});
-		core.info(`${linterName} check created successfully`);
-	} catch (err) {
-		let errorMessage = err.message;
-		if (err.data) {
-			try {
-				const errorData = JSON.parse(err.data);
-				if (errorData.message) {
-					errorMessage += `. ${errorData.message}`;
-				}
-				if (errorData.documentation_url) {
-					errorMessage += ` ${errorData.documentation_url}`;
-				}
-			} catch (e) {
-				// Ignore
-			}
-		}
-		core.error(errorMessage);
 
-		throw new Error(`Error trying to create GitHub check for ${linterName}: ${errorMessage}`);
+	// GitHub only allows 50 annotations per request, chunk them and send multiple requests
+	const chunkSize = 50;
+	for (let i = 0; i < annotations.length; i += chunkSize) {
+		body.output.annotations = annotations.slice(i, i + chunkSize);
+
+		try {
+			core.info(
+				`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
+			);
+			await request(`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					// "Accept" header is required to access Checks API during preview period
+					Accept: "application/vnd.github.antiope-preview+json",
+					Authorization: `Bearer ${context.token}`,
+					"User-Agent": actionName,
+				},
+				body,
+			});
+			core.info(`${linterName} check created successfully`);
+		} catch (err) {
+			let errorMessage = err.message;
+			if (err.data) {
+				try {
+					const errorData = JSON.parse(err.data);
+					if (errorData.message) {
+						errorMessage += `. ${errorData.message}`;
+					}
+					if (errorData.documentation_url) {
+						errorMessage += ` ${errorData.documentation_url}`;
+					}
+				} catch (e) {
+					// Ignore
+				}
+			}
+			core.error(errorMessage);
+
+			throw new Error(`Error trying to create GitHub check for ${linterName}: ${errorMessage}`);
+		}
 	}
 }
 
