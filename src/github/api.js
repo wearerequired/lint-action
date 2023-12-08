@@ -80,19 +80,50 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 			core.info(
 				`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
 			);
-			await request(
-				`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`,
-				{
-					method: "POST",
-					headers,
-					body: {
-						...body,
-						head_sha: existingRun ? undefined : sha,
-						check_run_id: existingRun ? existingRun.id : undefined,
+
+			if (existingRun == null) {
+				await request(
+					`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`,
+					{
+						method: "POST",
+						headers,
+						body: {
+							name: linterName,
+							conclusion,
+							head_sha: sha,
+							output: {
+								title: capitalizeFirstLetter(summary),
+								summary: `${linterName} found ${summary}`,
+								annotations: undefined,
+							},
+						},
 					},
-				},
-			);
-			core.info(`${linterName} check created successfully`);
+				);
+
+				core.info(`${linterName} check created successfully`);
+			} else {
+				const existingRunId = existingRun.id;
+
+				await request(
+					`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs/${existingRunId}`,
+					{
+						method: "PATCH",
+						headers,
+						body: {
+							name: linterName,
+							conclusion,
+							check_run_id: existingRunId,
+							output: {
+								title: capitalizeFirstLetter(summary),
+								summary: `${linterName} found ${summary}`,
+								annotations: undefined,
+							},
+						},
+					},
+				);
+
+				core.info(`${linterName} check updated successfully`);
+			}
 		} catch (err) {
 			let errorMessage = err.message;
 			if (err.data) {
