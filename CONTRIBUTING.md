@@ -14,6 +14,7 @@ If you want to add support for an additional linter, please open an issue to dis
 - Update the [`action.yml`](./action.yml) file with the options provided by the new linter.
 - Mention your linter in the [`README.md`](./README.md) file.
 - Update the [test workflow file](./.github/workflows/test.yml).
+- Update the [`dist/index.js`](./dist/index.js) file with `yarn build`.
 
 ## Release process
 
