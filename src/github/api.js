@@ -46,7 +46,6 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 
 	const body = {
 		name: linterName,
-		head_sha: sha,
 		conclusion,
 		output: {
 			title: capitalizeFirstLetter(summary),
@@ -55,10 +54,27 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		},
 	};
 
+	const headers = {
+		"Content-Type": "application/json",
+		// "Accept" header is required to access Checks API during preview period
+		Accept: "application/vnd.github.antiope-preview+json",
+		Authorization: `Bearer ${context.token}`,
+		"User-Agent": actionName,
+	};
+
 	// GitHub only allows 50 annotations per request, chunk them and send multiple requests
 	const chunkSize = 50;
 	for (let i = 0; i < annotations.length; i += chunkSize) {
 		body.output.annotations = annotations.slice(i, i + chunkSize);
+
+		const checkRuns = await request(
+			`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/commits/${sha}/check-runs`,
+			{
+				method: "GET",
+				headers,
+			},
+		);
+		const existingRun = checkRuns.data.check_runs.find((run) => run.name === body.name);
 
 		try {
 			core.info(
@@ -68,14 +84,12 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 				`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`,
 				{
 					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						// "Accept" header is required to access Checks API during preview period
-						Accept: "application/vnd.github.antiope-preview+json",
-						Authorization: `Bearer ${context.token}`,
-						"User-Agent": actionName,
+					headers,
+					body: {
+						...body,
+						head_sha: existingRun ? undefined : sha,
+						check_run_id: existingRun ? existingRun.id : undefined,
 					},
-					body,
 				},
 			);
 			core.info(`${linterName} check created successfully`);
