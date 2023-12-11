@@ -5,7 +5,7 @@ const testName = "deno-lint";
 const linter = DenoLint;
 const args = "";
 const commandPrefex = "";
-const extensions = ["ts"];
+const extensions = ["*"];
 
 // Linting without auto-fixing
 function getLintParams(dir) {

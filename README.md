@@ -432,7 +432,7 @@ Some options are not available for specific linters:
 | black                 |     ✅      |     ✅     |
 | clang_format          |     ✅      |     ✅     |
 | clippy                |     ✅      |  ❌ (rs)   |
-| deno_lint             |     ❌      |  ❌ (ts)   |
+| deno_lint             |     ❌      |     ✅     |
 | dotnet_format         |     ✅      |  ❌ (cs)   |
 | erblint               |     ❌      |  ❌ (erb)  |
 | eslint                |     ✅      |     ✅     |

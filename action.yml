@@ -234,7 +234,7 @@ inputs:
   deno_lint_extensions:
     description: Extensions of files to check with deno lint
     required: false
-    default: "ts"
+    default: "*"
   deno_lint_command_prefix:
     description: Shell command to prepend to the linter command
     required: false

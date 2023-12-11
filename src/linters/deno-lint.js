@@ -37,15 +37,28 @@ class DenoLint {
 	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
 	 */
 	static lint(dir, extensions, args = "", fix = false, prefix = "") {
-		if (extensions.length !== 1 || extensions[0] !== "ts") {
-			throw new Error(`${this.name} error: File extensions are not configurable`);
-		}
-
 		if (fix) {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
-		return run(`${prefix} deno lint --json ${args}`, {
+		let targets;
+		switch (extensions.length) {
+			case 0:
+				targets = "";
+				break;
+			case 1:
+				if (extensions[0] === "*") {
+					targets = ""; // all files supported by deno lint
+				} else {
+					targets = `./**/*.${extensions[0]}`;
+				}
+				break;
+			default:
+				targets = `./**/*.{${extensions.map((ext) => ext).join(",")}}`;
+				break;
+		}
+
+		return run(`${prefix} deno lint ${targets} --json ${args}`, {
 			dir,
 			ignoreErrors: true,
 		});
