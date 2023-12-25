@@ -2814,12 +2814,12 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shescape@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/shescape/-/shescape-1.6.4.tgz#b29a1cc33657ee48d624d89a8f7c8b9da780fe1d"
-  integrity sha512-3nJDj7UyM2V6UTjVH2PR/FVVKytxlT1sN8FdGHsF0KlyAHxWatdwZAc7D6UMhYw8BRmAeow/t7X62ABAineUjg==
+shescape@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.0.tgz#1b5c2f612418ed6184a720e27f06f0b11fb8300c"
+  integrity sha512-VFjtoo9Y25/fprhMo+bIb+OAM+mFUP0Veg57Bg973j2RSWEAoNPia5hBY+lYVIra5Nl/6CtlQYmDGWSvA3IWWw==
   dependencies:
-    which "^2.0.0"
+    which "^3.0.0"
 
 side-channel@^1.0.4:
   version "1.0.4"
@@ -3106,10 +3106,17 @@ which-boxed-primitive@^1.0.2:
     is-string "^1.0.5"
     is-symbol "^1.0.3"
 
-which@^2.0.0, which@^2.0.1:
+which@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
+  dependencies:
+    isexe "^2.0.0"
+
+which@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/which/-/which-3.0.1.tgz#89f1cd0c23f629a8105ffe69b8172791c87b4be1"
+  integrity sha512-XA1b62dzQzLfaEOSQFTCOd5KFf/1VSzZo7/7TUjnya6u0vGGKzU96UQBZTAThCb2j4/xjBAyii1OhRLJEivHvg==
   dependencies:
     isexe "^2.0.0"
 
