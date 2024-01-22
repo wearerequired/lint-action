@@ -114,7 +114,7 @@ jobs:
           bundler: 2
 
       - name: Set up bundle cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./test/linters/projects/**/vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('./test/linters/projects/**/Gemfile.lock', '.github/workflows/test.yml') }}
@@ -139,7 +139,7 @@ jobs:
       - name: Set up Swift cache (Linux)
         id: cache-swift
         if: startsWith(matrix.os, 'ubuntu')
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./swift-format/.build
           key: ${{ runner.os }}-swift-0.50500.0
@@ -161,7 +161,7 @@ jobs:
 
       - name: Set up Mint cache (macOS)
         if: startsWith(matrix.os, 'macos')
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.mint
           key: ${{ runner.os }}-mint-${{ hashFiles('./test/linters/projects/**/Mintfile', '.github/workflows/test.yml') }}
