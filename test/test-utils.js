@@ -1,7 +1,7 @@
 const { mkdtempSync, realpathSync } = require("fs");
 const { join } = require("path");
 
-const DATE_REGEX = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+ [+-]\d{4}/g;
+const DATE_REGEX = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d+ ?[+-]\d{2}:?\d{2}/g;
 const TEST_DATE = "2019-01-01 00:00:00.000000 +0000";
 
 /**
