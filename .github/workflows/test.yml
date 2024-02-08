@@ -44,14 +44,16 @@ jobs:
       # Go
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.19.4
+          go-version: 1.21.6
 
       - name: Install Go dependencies
         run: |
-          cd ./test/linters/projects/golint
+          cd ./test/linters/projects/golint/
           go install golang.org/x/lint/golint@latest
+          cd ../staticcheck/
+          go install honnef.co/go/tools/cmd/staticcheck@latest
 
       # Node.js
 

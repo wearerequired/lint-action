@@ -29,6 +29,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
 - **Go:**
   - [gofmt](https://golang.org/cmd/gofmt)
   - [golint](https://github.com/golang/lint)
+  - [staticcheck](https://staticcheck.dev/)
 - **JavaScript:**
   - [ESLint](https://eslint.org)
   - [Prettier](https://prettier.io)
@@ -437,6 +438,7 @@ Some options are not available for specific linters:
 | flake8                |     ❌      |     ✅     |
 | gofmt                 |     ✅      |  ❌ (go)   |
 | golint                |     ❌      |  ❌ (go)   |
+| staticcheck           |     ❌      |  ❌ (go)   |
 | mypy                  |     ❌      |  ❌ (py)   |
 | oitnb                 |     ✅      |     ✅     |
 | php_codesniffer       |     ❌      |     ✅     |
