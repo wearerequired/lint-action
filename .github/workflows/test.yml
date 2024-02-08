@@ -50,9 +50,9 @@ jobs:
 
       - name: Install Go dependencies
         run: |
-          cd ./test/linters/projects/golint
+          cd ${{ github.workspace }}/test/linters/projects/golint
           go install golang.org/x/lint/golint@latest
-          cd $GITHUB_WORKSPACE/test/linters/projects/staticcheck
+          cd ${{ github.workspace }}/test/linters/projects/staticcheck
           go install honnef.co/go/tools/cmd/staticcheck@latest
 
       # Node.js
