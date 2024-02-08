@@ -120,7 +120,6 @@ inputs:
     required: false
     default: "false"
 
-
   staticcheck:
     description: Enable or disable staticcheck checks
     required: false
@@ -140,8 +139,6 @@ inputs:
     description: Shell command to prepend to the linter command
     required: false
     default: ""
-
-
 
   # JavaScript
 

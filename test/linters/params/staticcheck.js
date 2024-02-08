@@ -10,8 +10,7 @@ const extensions = ["go"];
 function getLintParams(dir) {
 	const stdoutFile1 =
 		"file1.go:20:2: this value of err is never used (SA4006)\nfile1.go:20:9: New doesn't have side effects and its return value is ignored (SA4017)\nfile1.go:31:6: func main1 is unused (U1000)";
-	const stdoutFile2 =
-		`file2.go:11:3: this linter directive didn't match anything; should it be removed? (staticcheck)\nfile2.go:12:19: calling regexp.MatchString in a loop has poor performance, consider using regexp.Compile (SA6000)\nfile2.go:25:6: func main2 is unused (U1000)`;
+	const stdoutFile2 = `file2.go:11:3: this linter directive didn't match anything; should it be removed? (staticcheck)\nfile2.go:12:19: calling regexp.MatchString in a loop has poor performance, consider using regexp.Compile (SA6000)\nfile2.go:25:6: func main2 is unused (U1000)`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
@@ -46,13 +45,15 @@ function getLintParams(dir) {
 					path: "file2.go",
 					firstLine: 11,
 					lastLine: 11,
-					message: "This linter directive didn't match anything; should it be removed? (staticcheck)",
+					message:
+						"This linter directive didn't match anything; should it be removed? (staticcheck)",
 				},
 				{
 					path: "file2.go",
 					firstLine: 12,
 					lastLine: 12,
-					message: "Calling regexp.MatchString in a loop has poor performance, consider using regexp.Compile (SA6000)",
+					message:
+						"Calling regexp.MatchString in a loop has poor performance, consider using regexp.Compile (SA6000)",
 				},
 				{
 					path: "file2.go",
