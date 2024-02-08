@@ -10,7 +10,7 @@ const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
 /**
  * https://github.com/golang/lint
  */
-class StaticCheck {
+class Staticcheck {
 	static get name() {
 		return "staticcheck";
 	}
@@ -74,4 +74,4 @@ class StaticCheck {
 	}
 }
 
-module.exports = Golint;
+module.exports = Staticcheck;
