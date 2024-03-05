@@ -15,7 +15,7 @@ const severityMap = {
 };
 
 /**
- * https://rubocop.readthedocs.io
+ * https://docs.rubocop.org
  */
 class RuboCop {
 	static get name() {
