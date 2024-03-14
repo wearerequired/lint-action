@@ -19,18 +19,18 @@
 		"command-exists": "^1.2.9",
 		"glob": "^8.1.0",
 		"parse-diff": "^0.11.0",
-		"shescape": "^1.6.4"
+		"shescape": "^2.1.0"
 	},
 	"peerDependencies": {},
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
-		"@vercel/ncc": "^0.36.0",
+		"@vercel/ncc": "^0.38.1",
 		"eslint": "8.32.0",
 		"eslint-config-airbnb-base": "15.0.0",
 		"eslint-config-prettier": "^8.6.0",
 		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-jsdoc": "^39.6.7",
+		"eslint-plugin-jsdoc": "^48.0.0",
 		"fs-extra": "^11.1.0",
 		"jest": "^29.3.1",
 		"prettier": "^2.8.3"
@@ -61,10 +61,7 @@
 			],
 			"jsdoc/check-indentation": "error",
 			"jsdoc/check-syntax": "error",
-			"jsdoc/newline-after-description": [
-				"error",
-				"never"
-			],
+			"jsdoc/tag-lines": "error",
 			"jsdoc/require-description": "error",
 			"jsdoc/require-hyphen-before-param-description": "error",
 			"jsdoc/require-jsdoc": "off"
