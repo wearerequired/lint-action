@@ -5,6 +5,7 @@ const {
 	parseBranch,
 	parseEnvFile,
 	parseRepository,
+	parsePullRequest,
 } = require("../../src/github/context");
 const prOpenEvent = require("./events/pull-request-open.json");
 const prSyncEvent = require("./events/pull-request-sync.json");
@@ -87,13 +88,16 @@ describe("parseEnvFile()", () => {
 });
 
 describe("parseBranch()", () => {
-	test('works with "push" event', () => {
-		expect(parseBranch("push", pushEvent)).toEqual(BRANCH);
+	test('works with "push" event', async () => {
+		const pr = await parsePullRequest("push", pushEvent);
+		expect(parseBranch("push", pushEvent, pr)).toEqual(BRANCH);
 	});
 
-	test('works with "pull_request" event', () => {
-		expect(parseBranch("pull_request", prOpenEvent)).toEqual(BRANCH);
-		expect(parseBranch("pull_request", prSyncEvent)).toEqual(BRANCH);
+	test('works with "pull_request" event', async () => {
+		const prOpen = await parsePullRequest("pull_request", prOpenEvent);
+		const prSync = await parsePullRequest("pull_request", prSyncEvent);
+		expect(parseBranch("pull_request", prOpenEvent, prOpen)).toEqual(BRANCH);
+		expect(parseBranch("pull_request", prSyncEvent, prSync)).toEqual(BRANCH);
 	});
 
 	test("throws error for unsupported event", () => {
@@ -102,9 +106,10 @@ describe("parseBranch()", () => {
 });
 
 describe("parseRepository()", () => {
-	test('works with "push" event', () => {
+	test('works with "push" event', async () => {
 		// Fork detection is not supported for "push" events
-		expect(parseRepository("push", pushEvent)).toEqual({
+		const pr = await parsePullRequest("push", pushEvent);
+		expect(parseRepository("push", pushEvent, pr)).toEqual({
 			repoName: REPOSITORY,
 			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: undefined,
@@ -113,8 +118,10 @@ describe("parseRepository()", () => {
 		});
 	});
 
-	test('works with "pull_request" event on repository without fork', () => {
-		expect(parseRepository("pull_request", prOpenEvent)).toEqual({
+	test('works with "pull_request" event on repository without fork', async () => {
+		const prOpen = await parsePullRequest("pull_request", prOpenEvent);
+		const prSync = await parsePullRequest("pull_request", prSyncEvent);
+		expect(parseRepository("pull_request", prOpenEvent, prOpen)).toEqual({
 			repoName: REPOSITORY,
 			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: undefined,
@@ -122,7 +129,7 @@ describe("parseRepository()", () => {
 			hasFork: false,
 		});
 
-		expect(parseRepository("pull_request", prSyncEvent)).toEqual({
+		expect(parseRepository("pull_request", prSyncEvent, prSync)).toEqual({
 			repoName: REPOSITORY,
 			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: undefined,
@@ -131,11 +138,12 @@ describe("parseRepository()", () => {
 		});
 	});
 
-	test('works with "pull_request" event on repository with fork', () => {
+	test('works with "pull_request" event on repository with fork', async () => {
 		const prOpenEventMod = { ...prOpenEvent };
 		prOpenEventMod.pull_request.head.repo.full_name = FORK_REPOSITORY;
 		prOpenEventMod.pull_request.head.repo.clone_url = `https://github.com/${FORK_REPOSITORY}.git`;
-		expect(parseRepository("pull_request", prOpenEventMod)).toEqual({
+		const prOpenMod = await parsePullRequest("pull_request", prOpenEventMod);
+		expect(parseRepository("pull_request", prOpenEventMod, prOpenMod)).toEqual({
 			repoName: REPOSITORY,
 			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: FORK_REPOSITORY,
@@ -146,7 +154,8 @@ describe("parseRepository()", () => {
 		const prSyncEventMod = { ...prSyncEvent };
 		prSyncEventMod.pull_request.head.repo.full_name = FORK_REPOSITORY;
 		prSyncEventMod.pull_request.head.repo.clone_url = `https://github.com/${FORK_REPOSITORY}.git`;
-		expect(parseRepository("pull_request", prSyncEventMod)).toEqual({
+		const prSyncMod = await parsePullRequest("pull_request", prOpenEventMod);
+		expect(parseRepository("pull_request", prSyncEventMod, prSyncMod)).toEqual({
 			repoName: REPOSITORY,
 			cloneUrl: `https://github.com/${REPOSITORY}.git`,
 			forkName: FORK_REPOSITORY,

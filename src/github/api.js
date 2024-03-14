@@ -99,4 +99,52 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 	}
 }
 
-module.exports = { createCheck };
+/**
+ * Fetches a Pull Request on GitHub
+ * @param {string} repository - The Github Repository with user name ex: wearerequired/master
+ * @param {string} pullRequestNumber - SHA of the commit which should be annotated
+ * @param {string} token - github token for authentication
+ * @returns {object} pull request information
+ */
+async function fetchPullRequest(repository, pullRequestNumber, token) {
+	try {
+		core.info(`fetchPullRequest for owner ${repository}`);
+		const response = await request(
+			`${process.env.GITHUB_API_URL}/repos/${repository}/pulls/${pullRequestNumber}`,
+			{
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+					Authorization: `Bearer ${token}`,
+					"User-Agent": actionName,
+				},
+			},
+		);
+		core.info(
+			`fetchPullRequest completed successfully for owner:${repository} pull:${pullRequestNumber}`,
+		);
+		return response.data;
+	} catch (err) {
+		let errorMessage = err.message;
+		if (err.data) {
+			try {
+				const errorData = JSON.parse(err.data);
+				if (errorData.message) {
+					errorMessage += `. ${errorData.message}`;
+				}
+				if (errorData.documentation_url) {
+					errorMessage += ` ${errorData.documentation_url}`;
+				}
+			} catch (e) {
+				// Ignore
+			}
+		}
+		core.error(errorMessage);
+		throw new Error(
+			`Error while trying to fetch PR for owner:${repository} pull:${pullRequestNumber}`,
+		);
+	}
+}
+
+module.exports = { createCheck, fetchPullRequest };
