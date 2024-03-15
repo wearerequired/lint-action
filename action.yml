@@ -416,6 +416,30 @@ inputs:
     required: false
     default: "false"
 
+  ruff:
+    description: Enable or disable ruff checks
+    required: false
+    default: "false"
+  ruff_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  ruff_dir:
+    description: Directory where the ruff command should be run
+    required: false
+  ruff_extensions:
+    description: Extensions of files to check with ruff
+    required: false
+    default: "py"
+  ruff_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+  ruff_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
+
   # Ruby
 
   rubocop:

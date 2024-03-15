@@ -2613,10 +2613,10 @@ parent-module@^1.0.0:
   dependencies:
     callsites "^3.0.0"
 
-parse-diff@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/parse-diff/-/parse-diff-0.11.0.tgz#8b0394216aa2ae12fb532a907972aa152fcfd59e"
-  integrity sha512-9P+oyFJJU9jLd9/EEXf2nlyz6GNBxt2senI22/3ss1AVqf+ntxY9eNZJW9tqEyH8w8Ywfzhgixo061x70OCkzQ==
+parse-diff@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/parse-diff/-/parse-diff-0.11.1.tgz#d93ca2d225abed280782bccb1476711ca9dd84f0"
+  integrity sha512-Oq4j8LAOPOcssanQkIjxosjATBIEJhCxMCxPhMu+Ci4wdNmAEdx0O+a7gzbR2PyKXgKPvRLIN5g224+dJAsKHA==
 
 parse-json@^5.2.0:
   version "5.2.0"

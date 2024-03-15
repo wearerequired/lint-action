@@ -46,6 +46,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [Mypy](https://mypy.readthedocs.io/)
   - [oitnb](https://pypi.org/project/oitnb/)
   - [Pylint](https://pylint.pycqa.org)
+  - [Ruff](https://beta.ruff.rs)
 - **Ruby:**
   - [ERB Lint](https://github.com/Shopify/erb-lint)
   - [RuboCop](https://rubocop.readthedocs.io)
@@ -443,6 +444,7 @@ Some options are not available for specific linters:
 | prettier              |     ✅      |     ✅     |
 | pylint                |     ❌      |  ❌ (py)   |
 | rubocop               |     ✅      |  ❌ (rb)   |
+| ruff                  |     ✅      |  ❌ (py)   |
 | rustfmt               |     ✅      |  ❌ (rs)   |
 | stylelint             |     ✅      |     ✅     |
 | swift_format_official |     ✅      |     ✅     |
