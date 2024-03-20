@@ -7,6 +7,7 @@ const autopep8Params = require("./params/autopep8");
 const blackParams = require("./params/black");
 const clangFormatParams = require("./params/clang-format");
 const clippyParams = require("./params/clippy");
+const denoLintParams = require("./params/deno-lint");
 const dotnetFormatParams = require("./params/dotnet-format");
 const erblintParams = require("./params/erblint");
 const eslintParams = require("./params/eslint");
@@ -32,6 +33,7 @@ const linterParams = [
 	blackParams,
 	clangFormatParams,
 	clippyParams,
+	denoLintParams,
 	dotnetFormatParams,
 	erblintParams,
 	eslintParams,
