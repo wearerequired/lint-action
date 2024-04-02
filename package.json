@@ -61,10 +61,7 @@
 			],
 			"jsdoc/check-indentation": "error",
 			"jsdoc/check-syntax": "error",
-			"jsdoc/newline-after-description": [
-				"error",
-				"never"
-			],
+			"jsdoc/tag-lines": "error",
 			"jsdoc/require-description": "error",
 			"jsdoc/require-hyphen-before-param-description": "error",
 			"jsdoc/require-jsdoc": "off"
