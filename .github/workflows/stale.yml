@@ -5,24 +5,28 @@ on:
   schedule:
     - cron: "45 2 * * *"
 
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   stale:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/stale@v7
+      - uses: actions/stale@v9
         with:
           stale-issue-message: |
             This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.
           stale-issue-label: "stale"
           exempt-issue-labels: "bug,blocked,in progress,never-stale"
-          days-before-issue-stale: 15
-          days-before-issue-close: 5
+          days-before-issue-stale: 60
+          days-before-issue-close: 20
           stale-pr-message: |
             Thank you for your contribution to this project!
 
             This pull request has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs.
           stale-pr-label: "stale"
           exempt-pr-labels: "waiting for review,never-stale"
-          days-before-pr-stale: 45
-          days-before-pr-close: 10
+          days-before-pr-stale: 90
+          days-before-pr-close: 20
