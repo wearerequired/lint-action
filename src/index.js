@@ -66,7 +66,7 @@ async function runAction() {
 		if (core.getInput(linterId) === "true") {
 			core.startGroup(`Run ${linter.name}`);
 
-			const fileExtensions = core.getInput(`${linterId}_extensions`, { required: true });
+			const fileExtensions = core.getInput(`${linterId}_extensions`);
 			const args = core.getInput(`${linterId}_args`);
 			const lintDirRel = core.getInput(`${linterId}_dir`) || ".";
 			const prefix = core.getInput(`${linterId}_command_prefix`);
