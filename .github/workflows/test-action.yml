@@ -28,16 +28,16 @@ jobs:
     steps:
       - name: Check out repository (push)
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check out repository (pull_request_target)
         if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
           cache: "yarn"
