@@ -147,7 +147,7 @@ jobs:
       - name: Install Swift dependencies (Linux, uncached)
         if: steps.cache-swift.outputs.cache-hit != 'true' && startsWith(matrix.os, 'ubuntu')
         run: |
-          git clone --branch 0.50500.0 --depth 1 https://github.com/apple/swift-format
+          git clone --branch 0.50600.0 --depth 1 https://github.com/apple/swift-format
           cd swift-format
           swift build -c release
           echo "${PWD}/.build/release" >> $GITHUB_PATH
