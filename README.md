@@ -256,7 +256,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: 3.8
 
@@ -328,7 +328,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "6.0.x"
 
@@ -363,7 +363,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: 3.8
 
