@@ -142,7 +142,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./swift-format/.build
-          key: ${{ runner.os }}-swift-0.50500.0
+          key: ${{ runner.os }}-swift-0.50600.0
 
       - name: Install Swift dependencies (Linux, uncached)
         if: steps.cache-swift.outputs.cache-hit != 'true' && startsWith(matrix.os, 'ubuntu')
