@@ -139,7 +139,7 @@ jobs:
       - uses: swift-actions/setup-swift@v2
         if: startsWith(matrix.os, 'ubuntu')
         with:
-          swift-version: "5.1.0"
+          swift-version: "5.5.0"
 
       - name: Set up Swift cache (Linux)
         id: cache-swift
