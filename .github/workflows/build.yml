@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Custom token to allow commits trigger other workflows.
           token: ${{ secrets.BUILD_ACTION_GITHUB_TOKEN }}
