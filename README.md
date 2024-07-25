@@ -133,9 +133,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 20
 
       # ESLint and Prettier must be in `package.json`
       - name: Install Node.js dependencies
