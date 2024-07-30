@@ -418,6 +418,30 @@ inputs:
 
   # Ruby
 
+  standardrb:
+    description: Enable or disable StandardRB checks
+    required: false
+    default: "false"
+  standardrb_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  standardrb_dir:
+    description: Directory where the standardrb command should be run
+    required: false
+  standardrb_extensions:
+    description: Extensions of files to check with standardrb
+    required: false
+    default: "rb"
+  standardrb_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: "bundle exec"
+  standardrb_auto_fix:
+    description: Whether this linter should try to fix code style issues automatically. If set to `true`, it will only work if "auto_fix" is set to `true` as well
+    required: false
+    default: "true"
+
   rubocop:
     description: Enable or disable RuboCop checks
     required: false
