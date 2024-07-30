@@ -120,6 +120,26 @@ inputs:
     required: false
     default: "false"
 
+  staticcheck:
+    description: Enable or disable staticcheck checks
+    required: false
+    default: "false"
+  staticcheck_dir:
+    description: Directory where the staticcheck command should be run
+    required: false
+  staticcheck_args:
+    description: Additional arguments to pass to the linter
+    required: false
+    default: ""
+  staticcheck_extensions:
+    description: Extensions of files to check with staticcheck
+    required: false
+    default: "go"
+  staticcheck_command_prefix:
+    description: Shell command to prepend to the linter command
+    required: false
+    default: ""
+
   # JavaScript
 
   eslint:
