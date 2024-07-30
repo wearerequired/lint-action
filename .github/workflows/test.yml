@@ -41,6 +41,11 @@ jobs:
         if: startsWith(matrix.os, 'macos')
         run: brew install clang-format
 
+      # Deno
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+
       # Go
 
       - name: Set up Go
