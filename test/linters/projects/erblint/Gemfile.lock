@@ -55,7 +55,8 @@ GEM
       loofah (~> 2.19, >= 2.19.1)
     rainbow (3.1.1)
     regexp_parser (2.6.1)
-    rexml (3.2.5)
+    rexml (3.3.2)
+      strscan
     rubocop (1.12.1)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
@@ -69,6 +70,7 @@ GEM
       parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
     smart_properties (1.17.0)
+    strscan (3.1.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
