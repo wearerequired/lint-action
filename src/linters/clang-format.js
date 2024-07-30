@@ -1,9 +1,11 @@
 const glob = require("glob");
-const { quoteAll } = require("shescape");
+const { Shescape } = require("shescape");
 
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
+
+const { quoteAll } = new Shescape({ shell: false });
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 

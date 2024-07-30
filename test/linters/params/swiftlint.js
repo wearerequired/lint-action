@@ -13,7 +13,7 @@ function getLintParams(dir) {
 	const stdoutFile1 = `${join(
 		dir,
 		"file1.swift",
-	)}:5:1: warning: Vertical Whitespace Violation: Limit vertical whitespace to a single empty line. Currently 2. (vertical_whitespace)`;
+	)}:5:1: warning: Vertical Whitespace Violation: Limit vertical whitespace to a single empty line; currently 2 (vertical_whitespace)`;
 	const stdoutFile2 = `${join(
 		dir,
 		"file2.swift",
