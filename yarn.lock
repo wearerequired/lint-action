@@ -2847,10 +2847,10 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shescape@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.0.tgz#1b5c2f612418ed6184a720e27f06f0b11fb8300c"
-  integrity sha512-VFjtoo9Y25/fprhMo+bIb+OAM+mFUP0Veg57Bg973j2RSWEAoNPia5hBY+lYVIra5Nl/6CtlQYmDGWSvA3IWWw==
+shescape@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.2.tgz#89ad8b88e6bc18a6036563aec2bc676d2db688cc"
+  integrity sha512-jrEZH2xlw2WgsU6RssozOaGRolg+iJQrpb1kMMWVZNmZCZCowFZJqsvIbJhyUhelUKjAb2AYivMkwXpTp190gg==
   dependencies:
     which "^3.0.0"
 
