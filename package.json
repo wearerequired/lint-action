@@ -1,6 +1,6 @@
 {
 	"name": "lint-action",
-	"version": "2.3.0",
+	"version": "2.4.0",
 	"description": "GitHub Action for detecting and fixing linting errors",
 	"repository": "github:wearerequired/lint-action",
 	"license": "MIT",
@@ -19,21 +19,21 @@
 		"command-exists": "^1.2.9",
 		"glob": "^8.1.0",
 		"parse-diff": "^0.11.0",
-		"shescape": "^2.1.0"
+		"shescape": "^2.1.5"
 	},
 	"peerDependencies": {},
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
 		"@vercel/ncc": "^0.38.1",
-		"eslint": "8.32.0",
+		"eslint": "9.30.0",
 		"eslint-config-airbnb-base": "15.0.0",
-		"eslint-config-prettier": "^8.6.0",
-		"eslint-plugin-import": "^2.26.0",
+		"eslint-config-prettier": "^10.1.5",
+		"eslint-plugin-import": "^2.32.0",
 		"eslint-plugin-jsdoc": "^48.0.0",
 		"fs-extra": "^11.1.0",
 		"jest": "^29.3.1",
-		"prettier": "^2.8.3"
+		"prettier": "^3.6.2"
 	},
 	"eslintConfig": {
 		"root": true,
