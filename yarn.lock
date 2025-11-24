@@ -1912,6 +1912,11 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
+isexe@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/isexe/-/isexe-3.1.1.tgz#4a407e2bd78ddfb14bea0c27c6f7072dde775f0d"
+  integrity sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==
+
 istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.0.tgz#189e7909d0a39fa5a3dfad5b03f71947770191d3"
@@ -2847,12 +2852,12 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shescape@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.0.tgz#1b5c2f612418ed6184a720e27f06f0b11fb8300c"
-  integrity sha512-VFjtoo9Y25/fprhMo+bIb+OAM+mFUP0Veg57Bg973j2RSWEAoNPia5hBY+lYVIra5Nl/6CtlQYmDGWSvA3IWWw==
+shescape@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.7.tgz#14215cea2be7035ff64f8450b1d20b6be0149ae1"
+  integrity sha512-Y1syY0ggm3ow7mE1zrcK9YrOhAqv/IGbm3+J9S+MXLukwXf/M8yzL3hZp7ubVeSy250TT7M5SVKikTZkKyib6w==
   dependencies:
-    which "^3.0.0"
+    which "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0"
 
 side-channel@^1.0.4:
   version "1.0.4"
@@ -3146,12 +3151,12 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-which@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/which/-/which-3.0.1.tgz#89f1cd0c23f629a8105ffe69b8172791c87b4be1"
-  integrity sha512-XA1b62dzQzLfaEOSQFTCOd5KFf/1VSzZo7/7TUjnya6u0vGGKzU96UQBZTAThCb2j4/xjBAyii1OhRLJEivHvg==
+"which@^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/which/-/which-6.0.0.tgz#a3a721a14cdd9b991a722e493c177eeff82ff32a"
+  integrity sha512-f+gEpIKMR9faW/JgAgPK1D7mekkFoqbmiwvNzuhsHetni20QSgzg9Vhn0g2JSJkkfehQnqdUAx7/e15qS1lPxg==
   dependencies:
-    isexe "^2.0.0"
+    isexe "^3.1.1"
 
 word-wrap@^1.2.3:
   version "1.2.3"
