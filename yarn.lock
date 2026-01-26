@@ -313,6 +313,13 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@ericcornelissen/lregexp@^1.0.3":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@ericcornelissen/lregexp/-/lregexp-1.0.7.tgz#0105aaaa7dcc18e3ed905645da3674e8eb12a9c0"
+  integrity sha512-1FFCOKq49eWRCinu3VuTfV1jv0kgeSET89OHDAUDaASzvIpwmh2/nFUayoEXB65mPT3atgECjlu3KVTIQU7jhw==
+  dependencies:
+    is-supported-regexp-flag "^2.0.0"
+
 "@es-joy/jsdoccomment@~0.41.0":
   version "0.41.0"
   resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.41.0.tgz#4a2f7db42209c0425c71a1476ef1bdb6dcd836f6"
@@ -1893,6 +1900,11 @@ is-string@^1.0.5, is-string@^1.0.7:
   dependencies:
     has-tostringtag "^1.0.0"
 
+is-supported-regexp-flag@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/is-supported-regexp-flag/-/is-supported-regexp-flag-2.0.0.tgz#abd2dd286ba5f24596d68df6dba52c4e199aba08"
+  integrity sha512-8i4+OYUjdUaJ88KAs1WojIThDFjIpeYNrSlYy1g/At2p9YjQ7HEmB1yn60un0jRFjM3TQbKPMAluTPEPncZfqA==
+
 is-symbol@^1.0.2, is-symbol@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.4.tgz#a6dac93b635b063ca6872236de88910a57af139c"
@@ -1911,6 +1923,11 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
+
+isexe@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/isexe/-/isexe-3.1.1.tgz#4a407e2bd78ddfb14bea0c27c6f7072dde775f0d"
+  integrity sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==
 
 istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
   version "3.2.0"
@@ -2847,12 +2864,13 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shescape@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.0.tgz#1b5c2f612418ed6184a720e27f06f0b11fb8300c"
-  integrity sha512-VFjtoo9Y25/fprhMo+bIb+OAM+mFUP0Veg57Bg973j2RSWEAoNPia5hBY+lYVIra5Nl/6CtlQYmDGWSvA3IWWw==
+shescape@^2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.8.tgz#645bb57c77f3832952b12b219819f0c52d297a4d"
+  integrity sha512-owfw+5BB1A51KyNiCuUOyDSh1JOw+DrxgX0Uac7eORpF6YBEoLjbDlHn6tHQudnyi3pt3HeHl9jJ30YPmtEMHQ==
   dependencies:
-    which "^3.0.0"
+    "@ericcornelissen/lregexp" "^1.0.3"
+    which "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0"
 
 side-channel@^1.0.4:
   version "1.0.4"
@@ -3146,12 +3164,12 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-which@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/which/-/which-3.0.1.tgz#89f1cd0c23f629a8105ffe69b8172791c87b4be1"
-  integrity sha512-XA1b62dzQzLfaEOSQFTCOd5KFf/1VSzZo7/7TUjnya6u0vGGKzU96UQBZTAThCb2j4/xjBAyii1OhRLJEivHvg==
+"which@^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/which/-/which-6.0.0.tgz#a3a721a14cdd9b991a722e493c177eeff82ff32a"
+  integrity sha512-f+gEpIKMR9faW/JgAgPK1D7mekkFoqbmiwvNzuhsHetni20QSgzg9Vhn0g2JSJkkfehQnqdUAx7/e15qS1lPxg==
   dependencies:
-    isexe "^2.0.0"
+    isexe "^3.1.1"
 
 word-wrap@^1.2.3:
   version "1.2.3"
