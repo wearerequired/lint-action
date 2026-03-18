@@ -38,7 +38,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
 - **Objective-C++:**
   - [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html)
 - **PHP:**
-  - [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)
+  - [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer)
 - **Python:**
   - [Autopep8](https://github.com/hhatto/autopep8)
   - [Black](https://black.readthedocs.io)
