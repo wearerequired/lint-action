@@ -2,20 +2,33 @@
 # yarn lockfile v1
 
 
-"@actions/core@^1.10.0":
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.10.0.tgz#44551c3c71163949a2f06e94d9ca2157a0cfac4f"
-  integrity sha512-2aZDDa3zrrZbP5ZYg159sNoLRb61nQ7awl5pSvIq5Qpj81vwDzdMRKzkWJGJuwVvWpvZKx7vspJALyvaaIQyug==
+"@actions/core@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@actions/core/-/core-3.0.1.tgz#0f4d8b14527ee51e0db061eedc24a206c9f98c23"
+  integrity sha512-a6d/Nwahm9fliVGRhdhofo40HjHQasUPusmc7vBfyky+7Z+P2A1J68zyFVaNcEclc/Se+eO595oAr5nwEIoIUA==
   dependencies:
-    "@actions/http-client" "^2.0.1"
-    uuid "^8.3.2"
+    "@actions/exec" "^3.0.0"
+    "@actions/http-client" "^4.0.0"
 
-"@actions/http-client@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@actions/http-client/-/http-client-2.0.1.tgz#873f4ca98fe32f6839462a6f046332677322f99c"
-  integrity sha512-PIXiMVtz6VvyaRsGY268qvj57hXQEpsYogYOu2nrQhlf+XCGmZstmuZBbAybUl1nQGnvS1k1eEsQ69ZoD7xlSw==
+"@actions/exec@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@actions/exec/-/exec-3.0.0.tgz#8c3464d20f0aa4068707757021d7e3c01a7ee203"
+  integrity sha512-6xH/puSoNBXb72VPlZVm7vQ+svQpFyA96qdDBvhB8eNZOE8LtPf9L4oAsfzK/crCL8YZ+19fKYVnM63Sl+Xzlw==
+  dependencies:
+    "@actions/io" "^3.0.2"
+
+"@actions/http-client@^4.0.0":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@actions/http-client/-/http-client-4.0.1.tgz#22a23a7625ba1326d9ba154012ca8301a27f88a3"
+  integrity sha512-+Nvd1ImaOZBSoPbsUtEhv+1z99H12xzncCkz0a3RuehINE81FZSe2QTj3uvAPTcJX/SCzUQHQ0D1GrPMbrPitg==
   dependencies:
     tunnel "^0.0.6"
+    undici "^6.23.0"
+
+"@actions/io@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@actions/io/-/io-3.0.2.tgz#6f89b27a159d109836d983efa283997c23b92284"
+  integrity sha512-nRBchcMM+QK1pdjO7/idu86rbJI5YHUKCvKs0KxnSYbVe3F51UfGxuZX4Qy/fWlp6l7gWFwIkrOzN+oUK03kfw==
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
@@ -3087,6 +3100,11 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
+undici@^6.23.0:
+  version "6.25.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.25.0.tgz#8c4efb8c998dc187fc1cfb5dde1ef19a211849fb"
+  integrity sha512-ZgpWDC5gmNiuY9CnLVXEH8rl50xhRCuLNA97fAUnKi8RRuV4E6KG31pDTsLVUKnohJE0I3XDrTeEydAXRw47xg==
+
 universalify@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-2.0.0.tgz#75a4984efedc4b08975c5aeb73f530d02df25717"
@@ -3106,11 +3124,6 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
-
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
-  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-to-istanbul@^9.0.1:
   version "9.0.1"
