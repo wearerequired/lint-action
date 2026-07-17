@@ -108,7 +108,7 @@ async function runAction() {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
 					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name), skipVerification);
-					git.pushChanges(skipVerification);
+					git.pushChanges(context, skipVerification);
 				}
 			}
 

@@ -59,3 +59,39 @@ jobs:
           prettier: true
           prettier_extensions: "css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml"
           neutral_check_on_warning: true
+
+  test-checked-out-branch:
+    name: Run action (checked-out branch)
+    # The action switches to the PR branch itself. Checking out the branch here (instead of the
+    # detached SHA above) covers the case where the branch is already checked out, which used to
+    # fail with "cannot force update the current branch". Fork branches do not exist on origin,
+    # so this job only runs for pull requests from the same repository.
+    if: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: ".nvmrc"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build action
+        run: yarn build
+
+      - name: Run linters
+        uses: ./
+        with:
+          continue_on_error: false
+          eslint: true
+          prettier: true
+          prettier_extensions: "css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml"
+          neutral_check_on_warning: true
