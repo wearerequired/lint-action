@@ -1,14 +1,9 @@
 const glob = require("glob");
-const { Shescape } = require("shescape");
 
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
-
-// `run` executes commands through the default system shell (`execSync`): `cmd.exe` on Windows and
-// `/bin/sh` elsewhere ("bash" quoting is valid for any POSIX sh). Do not destructure the methods,
-// they rely on `this` being the instance.
-const shescape = new Shescape({ shell: process.platform === "win32" ? "cmd.exe" : "bash" });
+const { shescape } = require("../utils/shescape");
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
