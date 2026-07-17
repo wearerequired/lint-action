@@ -47,7 +47,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [oitnb](https://pypi.org/project/oitnb/)
   - [Pylint](https://pylint.pycqa.org)
 - **Ruby:**
-  - [ERB Lint](https://github.com/Shopify/erb-lint)
+  - [ERB Lint](https://github.com/Shopify/erb-lint) (requires erb_lint v0.7.0 or later)
   - [RuboCop](https://rubocop.readthedocs.io)
 - **Rust:**
   - [clippy](https://github.com/rust-lang/rust-clippy)
