@@ -35080,7 +35080,9 @@ function checkOutRemoteBranch(context) {
 	// the Checkout Action configures a fetch refspec which only covers the ref it checked out.
 	// `context.branch` is attacker-controlled (fork PR head ref), so it must be quoted
 	core.info(`Fetching remote branch "${context.branch}"`);
-	run(`git fetch --no-tags --depth=1 ${remote} ${shescape.quote(`${context.branch}:${trackingRef}`)}`);
+	run(
+		`git fetch --no-tags --depth=1 ${remote} ${shescape.quote(`${context.branch}:${trackingRef}`)}`,
+	);
 
 	// Switch to remote branch. Unlike `git branch --force`, `git checkout -B` also works when the
 	// branch is already checked out. The fully qualified ref works independently of the fetch
