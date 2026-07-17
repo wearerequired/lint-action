@@ -1,5 +1,7 @@
 ---
 EnableDefaultLinters: true
+exclude:
+  - "vendor/**/*"
 linters:
   Rubocop:
     enabled: true

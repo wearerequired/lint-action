@@ -2,5 +2,5 @@
 
 source 'https://rubygems.org'
 
-gem 'rubocop', '~> 1.12.0'
-gem 'erb_lint', '~> 0.1.1', require: false
+gem 'rubocop', '~> 1.88'
+gem 'erb_lint', '~> 0.9.0', require: false

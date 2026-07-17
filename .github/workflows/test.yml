@@ -110,8 +110,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.7
-          bundler: 2
+          ruby-version: "4.0"
 
       - name: Set up bundle cache
         uses: actions/cache@v6
