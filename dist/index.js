@@ -35199,14 +35199,6 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		];
 	}
 
-	// Only use the first 50 annotations (limit for a single API request)
-	if (annotations.length > 50) {
-		core.info(
-			`There are more than 50 errors/warnings from ${linterName}. Annotations are created for the first 50 issues only.`,
-		);
-		annotations = annotations.slice(0, 50);
-	}
-
 	let conclusion;
 	if (lintResult.isSuccess) {
 		if (annotations.length > 0 && neutralCheckOnWarning) {
@@ -35218,31 +35210,65 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		conclusion = "failure";
 	}
 
-	const body = {
-		name: linterName,
-		head_sha: sha,
-		conclusion,
-		output: {
-			title: capitalizeFirstLetter(summary),
-			summary: `${linterName} found ${summary}`,
-			annotations,
-		},
+	const headers = {
+		"Content-Type": "application/json",
+		// "Accept" header is required to access Checks API during preview period
+		Accept: "application/vnd.github.antiope-preview+json",
+		Authorization: `Bearer ${context.token}`,
+		"User-Agent": actionName,
 	};
+	const checkRunsUrl = `${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`;
+
+	// The Checks API accepts at most 50 annotations per request. Split the annotations into batches
+	// of 50: the first batch is sent when the check run is created, the remaining batches are added
+	// by updating the same run (annotations are appended on update). The empty batch makes sure the
+	// check run is always created, even when there are no annotations
+	const maxAnnotationsPerRequest = 50;
+	const batches = [];
+	for (let i = 0; i < annotations.length; i += maxAnnotationsPerRequest) {
+		batches.push(annotations.slice(i, i + maxAnnotationsPerRequest));
+	}
+	if (batches.length === 0) {
+		batches.push([]);
+	}
+
+	const buildOutput = (batchAnnotations) => ({
+		title: capitalizeFirstLetter(summary),
+		summary: `${linterName} found ${summary}`,
+		annotations: batchAnnotations,
+	});
+
 	try {
 		core.info(
 			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
 		);
-		await request(`${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`, {
+
+		// Create the check run with the first batch of annotations
+		const { data: checkRun } = await request(checkRunsUrl, {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				// "Accept" header is required to access Checks API during preview period
-				Accept: "application/vnd.github.antiope-preview+json",
-				Authorization: `Bearer ${context.token}`,
-				"User-Agent": actionName,
+			headers,
+			body: {
+				name: linterName,
+				head_sha: sha,
+				conclusion,
+				output: buildOutput(batches[0]),
 			},
-			body,
 		});
+
+		// Add the remaining annotations by updating the same check run
+		for (const batch of batches.slice(1)) {
+			core.info(`Adding ${batch.length} more annotations to the ${linterName} check…`);
+			await request(`${checkRunsUrl}/${checkRun.id}`, {
+				method: "PATCH",
+				headers,
+				body: {
+					name: linterName,
+					conclusion,
+					output: buildOutput(batch),
+				},
+			});
+		}
+
 		core.info(`${linterName} check created successfully`);
 	} catch (err) {
 		let errorMessage = err.message;
@@ -38059,13 +38085,16 @@ module.exports = { useYarn };
 
 const https = __nccwpck_require__(5692);
 
+const MAX_RETRIES = 3;
+
 /**
  * Helper function for making HTTP requests
  * @param {string | URL} url - Request URL
  * @param {object} options - Request options
+ * @param {number} retryCount - Number of retries already attempted (used internally)
  * @returns {Promise<object>} - JSON response
  */
-function request(url, options) {
+function request(url, options, retryCount = 0) {
 	return new Promise((resolve, reject) => {
 		const req = https
 			.request(url, options, (res) => {
@@ -38074,7 +38103,19 @@ function request(url, options) {
 					data += chunk;
 				});
 				res.on("end", () => {
-					if (res.statusCode >= 400) {
+					if (res.statusCode === 429 && retryCount < MAX_RETRIES) {
+						// Too many requests: respect the "Retry-After" header if present, otherwise back off
+						// linearly
+						const retryAfterHeader = parseInt(res.headers["retry-after"], 10);
+						const retryAfter = Number.isNaN(retryAfterHeader)
+							? 5000 * (retryCount + 1)
+							: retryAfterHeader * 1000;
+						setTimeout(() => {
+							request(url, options, retryCount + 1)
+								.then(resolve)
+								.catch(reject);
+						}, retryAfter);
+					} else if (res.statusCode >= 400) {
 						const err = new Error(`Received status code ${res.statusCode}`);
 						err.response = res;
 						err.data = data;
