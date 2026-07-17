@@ -57,8 +57,8 @@ function getLintParams(dir) {
 
 // Linting with auto-fixing
 function getFixParams(dir) {
-	const stdoutFile1 = "file1.swift: Corrected Vertical Whitespace 1 time";
-	const stdoutFile2 = "file2.swift: Corrected Trailing Semicolon 1 time";
+	const stdoutFile1 = "file1.swift: Corrected vertical_whitespace 1 time";
+	const stdoutFile2 = "file2.swift: Corrected trailing_semicolon 1 time";
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
@@ -69,7 +69,7 @@ function getFixParams(dir) {
 			// - 3: No style violations of severity "Error", but severity "Warning" with --strict
 			status: 0,
 			stdoutParts: [stdoutFile1, stdoutFile2],
-			stdout: `${stdoutFile1}\n${stdoutFile2}`,
+			stdout: `${stdoutFile2}\n${stdoutFile1}`,
 		},
 		// Expected output of the parsing function
 		lintResult: {
