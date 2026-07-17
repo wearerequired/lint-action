@@ -4,6 +4,9 @@ on:
   release:
     types: [published, edited]
 
+permissions:
+  contents: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -13,4 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: Actions-R-Us/actions-tagger@v2
+      - uses: actions/checkout@v7
+
+      - name: Update major version tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          MAJOR="${TAG%%.*}"
+          if [[ ! "$MAJOR" =~ ^v[0-9]+$ ]]; then
+            echo "Skipping tag '$TAG': no major version prefix found."
+            exit 0
+          fi
+          git tag --force "$MAJOR" "$GITHUB_SHA"
+          git push --force origin "$MAJOR"
