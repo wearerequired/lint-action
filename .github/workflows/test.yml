@@ -74,6 +74,8 @@ jobs:
           yarn install
           cd ../prettier/
           yarn install
+          cd ../prettier-invalid/
+          yarn install
           cd ../stylelint/
           yarn install
           cd ../tsc/

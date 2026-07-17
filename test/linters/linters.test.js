@@ -17,6 +17,7 @@ const golintParams = require("./params/golint");
 const mypyParams = require("./params/mypy");
 const phpCodeSnifferParams = require("./params/php-codesniffer");
 const prettierParams = require("./params/prettier");
+const prettierInvalidParams = require("./params/prettier-invalid");
 const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
 const rustfmtParams = require("./params/rustfmt");
@@ -43,6 +44,7 @@ const linterParams = [
 	mypyParams,
 	phpCodeSnifferParams,
 	prettierParams,
+	prettierInvalidParams,
 	pylintParams,
 	ruboCopParams,
 	rustfmtParams,
