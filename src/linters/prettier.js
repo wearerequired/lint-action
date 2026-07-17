@@ -1,9 +1,16 @@
+const { sep } = require("path");
+
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+// Matches the summary lines Prettier prints to stderr when a file cannot be parsed, e.g.
+// `[error] file.ts: SyntaxError: '}' expected. (2:1)`. The path is anchored to a single line so it
+// does not swallow the code frame Prettier prints on the following lines
+const PARSE_REGEX = /^\[(warning|error)] ([^:\n]*): (.*) \(([0-9]+):([0-9]+)\)$/gm;
 
 /**
  * https://prettier.io
@@ -67,7 +74,10 @@ class Prettier {
 			return lintResult;
 		}
 
-		const paths = output.stdout.split(/\r?\n/);
+		// In `--list-different` mode Prettier prints the paths of files with formatting issues to
+		// stdout, one per line. Empty lines are skipped so a crash (empty stdout) does not produce an
+		// annotation with a blank path, which the GitHub API rejects with a 422 error
+		const paths = output.stdout.split(/\r?\n/).filter((path) => path.length > 0);
 		lintResult.error = paths.map((path) => ({
 			path,
 			firstLine: 1,
@@ -75,6 +85,22 @@ class Prettier {
 			message:
 				"There are issues with this file's formatting, please run Prettier to fix the errors",
 		}));
+
+		// When Prettier fails to parse a file (e.g. a syntax error) it exits without listing the file
+		// on stdout and instead prints the error to stderr. Parse it to surface a useful annotation
+		// instead of a generic empty failure
+		const leadingPathSep = `.${sep}`;
+		for (const match of (output.stderr || "").matchAll(PARSE_REGEX)) {
+			const [, level, pathRaw, message, line] = match;
+			const path = pathRaw.startsWith(leadingPathSep) ? pathRaw.substring(2) : pathRaw;
+			const lineNr = parseInt(line, 10);
+			const entry = { path, firstLine: lineNr, lastLine: lineNr, message };
+			if (level === "warning") {
+				lintResult.warning.push(entry);
+			} else {
+				lintResult.error.push(entry);
+			}
+		}
 
 		return lintResult;
 	}
