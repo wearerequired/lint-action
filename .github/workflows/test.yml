@@ -110,8 +110,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.7
-          bundler: 2
+          ruby-version: "4.0"
 
       - name: Set up bundle cache
         uses: actions/cache@v6
@@ -176,6 +175,8 @@ jobs:
           mint bootstrap --link --overwrite=y
           cd ../swiftlint/
           mint bootstrap --link --overwrite=y
+          # Mint links the executables to ~/.mint/bin which is not part of the runner's PATH
+          echo "${HOME}/.mint/bin" >> $GITHUB_PATH
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v6

@@ -17,7 +17,7 @@ function getLintParams(dir) {
 	const stdoutFile2 = `${join(
 		dir,
 		"file2.swift",
-	)}:2:22: error: Trailing Semicolon Violation: Lines should not have trailing semicolons. (trailing_semicolon)`;
+	)}:2:22: error: Trailing Semicolon Violation: Lines should not have trailing semicolons (trailing_semicolon)`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
@@ -39,7 +39,7 @@ function getLintParams(dir) {
 					firstLine: 5,
 					lastLine: 5,
 					message:
-						"Vertical Whitespace Violation: Limit vertical whitespace to a single empty line. Currently 2. (vertical_whitespace)",
+						"Vertical Whitespace Violation: Limit vertical whitespace to a single empty line; currently 2 (vertical_whitespace)",
 				},
 			],
 			error: [
@@ -48,7 +48,7 @@ function getLintParams(dir) {
 					firstLine: 2,
 					lastLine: 2,
 					message:
-						"Trailing Semicolon Violation: Lines should not have trailing semicolons. (trailing_semicolon)",
+						"Trailing Semicolon Violation: Lines should not have trailing semicolons (trailing_semicolon)",
 				},
 			],
 		},
@@ -57,8 +57,8 @@ function getLintParams(dir) {
 
 // Linting with auto-fixing
 function getFixParams(dir) {
-	const stdoutFile1 = `${join(dir, "file1.swift")}:4:1 Corrected Vertical Whitespace`;
-	const stdoutFile2 = `${join(dir, "file2.swift")}:2:22 Corrected Trailing Semicolon`;
+	const stdoutFile1 = "file1.swift: Corrected vertical_whitespace 1 time";
+	const stdoutFile2 = "file2.swift: Corrected trailing_semicolon 1 time";
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
@@ -69,7 +69,7 @@ function getFixParams(dir) {
 			// - 3: No style violations of severity "Error", but severity "Warning" with --strict
 			status: 0,
 			stdoutParts: [stdoutFile1, stdoutFile2],
-			stdout: `${stdoutFile1}\n${stdoutFile2}`,
+			stdout: `${stdoutFile2}\n${stdoutFile1}`,
 		},
 		// Expected output of the parsing function
 		lintResult: {
