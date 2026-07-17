@@ -8,9 +8,10 @@ const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 // Matches the summary lines Prettier prints to stderr when a file cannot be parsed, e.g.
-// `[error] file.ts: SyntaxError: '}' expected. (2:1)`. The path is anchored to a single line so it
-// does not swallow the code frame Prettier prints on the following lines
-const PARSE_REGEX = /^\[(warning|error)] ([^:\n]*): (.*) \(([0-9]+):([0-9]+)\)$/gm;
+// `[error] file.ts: SyntaxError: '}' expected. (2:1)`. Only error-level lines carry a file
+// position; Prettier's `[warn]` lines are option/config warnings without one. The path is anchored
+// to a single line so it does not swallow the code frame Prettier prints on the following lines
+const PARSE_REGEX = /^\[error] ([^:\n]*): (.*) \(([0-9]+):([0-9]+)\)$/gm;
 
 /**
  * https://prettier.io
@@ -91,15 +92,10 @@ class Prettier {
 		// instead of a generic empty failure
 		const leadingPathSep = `.${sep}`;
 		for (const match of (output.stderr || "").matchAll(PARSE_REGEX)) {
-			const [, level, pathRaw, message, line] = match;
+			const [, pathRaw, message, line] = match;
 			const path = pathRaw.startsWith(leadingPathSep) ? pathRaw.substring(2) : pathRaw;
 			const lineNr = parseInt(line, 10);
-			const entry = { path, firstLine: lineNr, lastLine: lineNr, message };
-			if (level === "warning") {
-				lintResult.warning.push(entry);
-			} else {
-				lintResult.error.push(entry);
-			}
+			lintResult.error.push({ path, firstLine: lineNr, lastLine: lineNr, message });
 		}
 
 		return lintResult;
