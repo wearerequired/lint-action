@@ -33,8 +33,12 @@ GEM
     unicode-emoji (4.2.0)
 
 PLATFORMS
+  arm64-darwin
   arm64-darwin-25
   ruby
+  x64-mingw-ucrt
+  x86_64-darwin
+  x86_64-linux
 
 DEPENDENCIES
   rubocop (~> 1.88)

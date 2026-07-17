@@ -25,9 +25,9 @@ class Erblint {
 		if (!(await commandExists("ruby"))) {
 			throw new Error("Ruby is not installed");
 		}
-		// Verify that erblint is installed
+		// Verify that erb_lint is installed
 		try {
-			run(`${prefix} erblint -v`, { dir });
+			run(`${prefix} erb_lint -v`, { dir });
 		} catch (err) {
 			throw new Error(`${this.name} is not installed`);
 		}
@@ -50,7 +50,9 @@ class Erblint {
 			core.warning(`${this.name} does not support auto-fixing`);
 		}
 
-		return run(`${prefix} erblint --format json --lint-all ${args}`, {
+		// The executable was renamed from `erblint` to `erb_lint` in v0.7.0. The deprecated
+		// `erblint` shim does not work on Windows, so the new name is required.
+		return run(`${prefix} erb_lint --format json --lint-all ${args}`, {
 			dir,
 			ignoreErrors: true,
 		});
