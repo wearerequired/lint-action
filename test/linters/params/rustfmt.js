@@ -19,12 +19,12 @@ function getLintParams(dir) {
 		localDir,
 		"src",
 		"foo.rs",
-	)} at line 2:\n //!\n //!\n //! This should push the error start line down past 1\n-use std::time::{SystemTime, Duration};\n+use std::time::{Duration, SystemTime};\n \n pub fn delta() -> Duration {\n-        let start = SystemTime::now(); let delta = start.elapsed().unwrap();\n-        delta\n+    let start = SystemTime::now();\n+    let delta = start.elapsed().unwrap();\n+    delta\n }\n `;
+	)}:2:\n //!\n //!\n //! This should push the error start line down past 1\n-use std::time::{SystemTime, Duration};\n+use std::time::{Duration, SystemTime};\n \n pub fn delta() -> Duration {\n-        let start = SystemTime::now(); let delta = start.elapsed().unwrap();\n-        delta\n+    let start = SystemTime::now();\n+    let delta = start.elapsed().unwrap();\n+    delta\n }\n `;
 	const stdoutFile2 = `Diff in ${join(
 		localDir,
 		"src",
 		"main.rs",
-	)} at line 1:\n mod foo;\n-fn main() {let delta = foo::delta(); println!("Time delta is {delta:?}");}\n+fn main() {\n+    let delta = foo::delta();\n+    println!("Time delta is {delta:?}");\n+}`;
+	)}:1:\n mod foo;\n-fn main() {let delta = foo::delta(); println!("Time delta is {delta:?}");}\n+fn main() {\n+    let delta = foo::delta();\n+    println!("Time delta is {delta:?}");\n+}`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
