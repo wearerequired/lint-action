@@ -5,21 +5,38 @@ const { shescape } = require("../src/utils/shescape");
 jest.mock("../src/utils/action");
 
 /**
- * Builds a GitHub context object for a pull request from the same repository
- * @param {string} branch - Branch name
+ * Builds a GitHub context object for a pull request
+ * @param {object} [options] - Options
+ * @param {string} [options.branch] - Branch name
+ * @param {boolean} [options.hasFork] - Whether the pull request comes from a fork
  * @returns {object} - Context object accepted by the git helpers
  */
-function contextForBranch(branch) {
+function makeContext({ branch = "main", hasFork = false } = {}) {
 	return {
 		actor: "octocat",
 		token: "secret-token",
 		branch,
 		repository: {
-			hasFork: false,
+			hasFork,
 			repoName: "owner/repo",
 			cloneUrl: "https://github.com/owner/repo.git",
+			forkName: hasFork ? "forker/repo" : undefined,
+			forkCloneUrl: hasFork ? "https://github.com/forker/repo.git" : undefined,
 		},
 	};
+}
+
+/**
+ * Builds the auth-carrying remote URL exactly like `checkOutRemoteBranch` does
+ * @param {string} cloneUrl - Clone URL of the repository
+ * @param {object} context - Context object the git helper receives
+ * @returns {string} - Remote URL with the actor and token embedded
+ */
+function authRemoteUrl(cloneUrl, context) {
+	const url = new URL(cloneUrl);
+	url.username = context.actor;
+	url.password = context.token;
+	return url.toString();
 }
 
 // A branch name is fully attacker-controlled for pull requests from a fork (the head ref). Git
@@ -34,7 +51,7 @@ describe("git command injection", () => {
 	});
 
 	test("checkOutRemoteBranch quotes the branch name and refspecs", () => {
-		git.checkOutRemoteBranch(contextForBranch(MALICIOUS_BRANCH));
+		git.checkOutRemoteBranch(makeContext({ branch: MALICIOUS_BRANCH }));
 		const commands = run.mock.calls.map((call) => call[0]);
 		const trackingRef = `refs/remotes/origin/${MALICIOUS_BRANCH}`;
 
@@ -48,8 +65,26 @@ describe("git command injection", () => {
 		expect(checkoutCmd).toContain(shescape.quote(trackingRef));
 	});
 
+	test("checkOutRemoteBranch quotes the auth-carrying origin remote URL", () => {
+		const context = makeContext({ hasFork: false });
+		git.checkOutRemoteBranch(context);
+		const cmd = run.mock.calls
+			.map((call) => call[0])
+			.find((c) => c.startsWith("git remote set-url origin"));
+		expect(cmd).toContain(shescape.quote(authRemoteUrl(context.repository.cloneUrl, context)));
+	});
+
+	test("checkOutRemoteBranch quotes the auth-carrying fork remote URL", () => {
+		const context = makeContext({ hasFork: true });
+		git.checkOutRemoteBranch(context);
+		const cmd = run.mock.calls
+			.map((call) => call[0])
+			.find((c) => c.startsWith("git remote add fork"));
+		expect(cmd).toContain(shescape.quote(authRemoteUrl(context.repository.forkCloneUrl, context)));
+	});
+
 	test("pushChanges quotes the refspec built from the branch name", () => {
-		git.pushChanges(contextForBranch(MALICIOUS_BRANCH), false);
+		git.pushChanges(makeContext({ branch: MALICIOUS_BRANCH }), false);
 		const cmd = run.mock.calls[0][0];
 		expect(cmd).toContain(shescape.quote(`HEAD:refs/heads/${MALICIOUS_BRANCH}`));
 	});
