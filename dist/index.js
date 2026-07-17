@@ -36414,6 +36414,7 @@ const Prettier = __nccwpck_require__(6146);
 const Pylint = __nccwpck_require__(243);
 const RuboCop = __nccwpck_require__(7521);
 const RustFmt = __nccwpck_require__(7368);
+const Staticcheck = __nccwpck_require__(783);
 const Stylelint = __nccwpck_require__(613);
 const SwiftFormatLockwood = __nccwpck_require__(9183);
 const SwiftFormatOfficial = __nccwpck_require__(216);
@@ -36432,6 +36433,7 @@ const linters = {
 	php_codesniffer: PHPCodeSniffer,
 	pylint: Pylint,
 	rubocop: RuboCop,
+	staticcheck: Staticcheck,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
 	xo: XO,
@@ -37154,6 +37156,90 @@ class RustFmt {
 }
 
 module.exports = RustFmt;
+
+
+/***/ }),
+
+/***/ 783:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { run } = __nccwpck_require__(8597);
+const commandExists = __nccwpck_require__(6339);
+const { initLintResult } = __nccwpck_require__(5066);
+const { capitalizeFirstLetter } = __nccwpck_require__(26);
+
+const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+/**
+ * https://staticcheck.dev
+ */
+class Staticcheck {
+	static get name() {
+		return "staticcheck";
+	}
+
+	/**
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
+	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
+	 */
+	static async verifySetup(dir, prefix = "") {
+		// Verify that staticcheck is installed
+		if (!(await commandExists("staticcheck"))) {
+			throw new Error(`${this.name} is not installed`);
+		}
+	}
+
+	/**
+	 * Runs the linting program and returns the command output
+	 * @param {string} dir - Directory to run the linter in
+	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
+	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
+	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
+	 */
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+		if (extensions.length !== 1 || extensions[0] !== "go") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
+
+		return run(`${prefix} staticcheck -f text ${args} "./..."`, {
+			dir,
+			ignoreErrors: true,
+		});
+	}
+
+	/**
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir - Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
+	 * @returns {LintResult} - Parsed lint result
+	 */
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+		lintResult.isSuccess = output.status === 0;
+
+		const matches = output.stdout.matchAll(PARSE_REGEX);
+		for (const match of matches) {
+			const [_, path, line, text] = match;
+			const lineNr = parseInt(line, 10);
+			lintResult.error.push({
+				path,
+				firstLine: lineNr,
+				lastLine: lineNr,
+				message: capitalizeFirstLetter(text),
+			});
+		}
+
+		return lintResult;
+	}
+}
+
+module.exports = Staticcheck;
 
 
 /***/ }),
