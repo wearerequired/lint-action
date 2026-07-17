@@ -35074,14 +35074,18 @@ function checkOutRemoteBranch(context) {
 
 	const remote = context.repository.hasFork ? "fork" : "origin";
 
-	// Fetch remote branch
+	// Fetch remote branch. The explicit refspec makes sure the remote-tracking branch is created,
+	// the Checkout Action configures a fetch refspec which only covers the ref it checked out
 	core.info(`Fetching remote branch "${context.branch}"`);
-	run(`git fetch --no-tags --depth=1 ${remote} ${context.branch}`);
+	run(
+		`git fetch --no-tags --depth=1 ${remote} ${context.branch}:refs/remotes/${remote}/${context.branch}`,
+	);
 
-	// Switch to remote branch
+	// Switch to remote branch. Unlike `git branch --force`, `git checkout -B` also works when the
+	// branch is already checked out. The fully qualified ref works independently of the fetch
+	// refspec configured by the Checkout Action
 	core.info(`Switching to the "${context.branch}" branch`);
-	run(`git branch --force ${context.branch} --track ${remote}/${context.branch}`);
-	run(`git checkout ${context.branch}`);
+	run(`git checkout --force -B ${context.branch} refs/remotes/${remote}/${context.branch}`);
 }
 
 /**
@@ -35117,11 +35121,16 @@ function hasChanges() {
 
 /**
  * Pushes all changes to the remote repository
+ * @param {GithubContext} context - Information about the GitHub repository
  * @param {boolean} skipVerification - Skip Git verification
  */
-function pushChanges(skipVerification) {
+function pushChanges(context, skipVerification) {
 	core.info("Pushing changes with Git");
-	run(`git push${skipVerification ? " --no-verify" : ""}`);
+	const remote = context.repository.hasFork ? "fork" : "origin";
+	// The explicit refspec makes the push work without a configured upstream
+	run(
+		`git push${skipVerification ? " --no-verify" : ""} ${remote} HEAD:refs/heads/${context.branch}`,
+	);
 }
 
 /**
@@ -40014,7 +40023,7 @@ async function runAction() {
 				// Commit and push auto-fix changes
 				if (git.hasChanges()) {
 					git.commitChanges(commitMessage.replace(/\${linter}/g, linter.name), skipVerification);
-					git.pushChanges(skipVerification);
+					git.pushChanges(context, skipVerification);
 				}
 			}
 
