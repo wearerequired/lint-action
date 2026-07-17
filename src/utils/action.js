@@ -28,7 +28,7 @@ function getEnv(name, required = false) {
 /**
  * Executes the provided shell command
  * @param {string} cmd - Shell command to execute
- * @param {{dir: string, ignoreErrors: boolean}} [options] - {@see RUN_OPTIONS_DEFAULTS}
+ * @param {{dir: string, ignoreErrors: boolean}} [options] - {@link RUN_OPTIONS_DEFAULTS}
  * @returns {{status: number, stdout: string, stderr: string}} - Output of the shell command
  */
 function run(cmd, options) {
