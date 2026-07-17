@@ -4,13 +4,13 @@
 	"private": true,
 	"devDependencies": {
 		"postcss": "^8.4.20",
-		"stylelint": "^14.16.1",
-		"stylelint-config-standard-scss": "^6.1.0"
+		"stylelint": "^16.11.0",
+		"stylelint-config-standard-scss": "^14.0.0"
 	},
 	"stylelint": {
 		"extends": "stylelint-config-standard-scss",
 		"rules": {
-			"no-extra-semicolons": [ true, {
+			"color-hex-length": [ "short", {
 				"severity": "warning"
 			} ]
 		}
