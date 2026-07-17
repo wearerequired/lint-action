@@ -6823,7 +6823,11 @@ class Black {
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
-		lintResult.error = parseErrorsFromDiff(output.stdout);
+		lintResult.error = parseErrorsFromDiff(output.stdout).map((error) => ({
+			...error,
+			// Black 23.10+ reports absolute paths in the diff headers, earlier versions relative ones
+			path: error.path.startsWith(dir) ? error.path.substring(dir.length + 1) : error.path,
+		}));
 		lintResult.isSuccess = output.status === 0;
 		return lintResult;
 	}
@@ -8336,7 +8340,9 @@ const { initLintResult } = __nccwpck_require__(9149);
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
-const PARSE_REGEX = /([\s\S]*?) at line (\d*):$([\s\S]*)/m;
+// rustfmt used to report diffs as "Diff in <file> at line <line>:", newer versions (1.9+) use
+// "Diff in <file>:<line>:"
+const PARSE_REGEX = /([\s\S]*?)(?: at line |:)(\d+):$([\s\S]*)/m;
 
 /**
  * https://github.com/rust-lang/rustfmt

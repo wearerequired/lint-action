@@ -18,11 +18,11 @@ function getLintParams(dir) {
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
-			// PHP_CodeSniffer exit codes:
-			// - 0: No errors found.
-			// - 1: Errors found, but none of them can be fixed by PHPCBF.
-			// - 2: Errors found, and some can be fixed by PHPCBF.
-			status: 2,
+			// PHP_CodeSniffer 4 exit codes are a bitmask:
+			// - Bit 0: Issues found which PHPCBF cannot fix.
+			// - Bit 1: Issues found which PHPCBF can fix.
+			// The test project contains a non-fixable warning and two fixable errors -> 3.
+			status: 3,
 			stdoutParts: [stdoutFile1, stdoutFile2],
 			stdout,
 		},

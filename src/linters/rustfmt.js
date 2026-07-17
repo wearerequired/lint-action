@@ -4,7 +4,9 @@ const { initLintResult } = require("../utils/lint-result");
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
-const PARSE_REGEX = /([\s\S]*?) at line (\d*):$([\s\S]*)/m;
+// rustfmt used to report diffs as "Diff in <file> at line <line>:", newer versions (1.9+) use
+// "Diff in <file>:<line>:"
+const PARSE_REGEX = /([\s\S]*?)(?: at line |:)(\d+):$([\s\S]*)/m;
 
 /**
  * https://github.com/rust-lang/rustfmt

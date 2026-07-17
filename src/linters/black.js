@@ -59,7 +59,11 @@ class Black {
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
-		lintResult.error = parseErrorsFromDiff(output.stdout);
+		lintResult.error = parseErrorsFromDiff(output.stdout).map((error) => ({
+			...error,
+			// Black 23.10+ reports absolute paths in the diff headers, earlier versions relative ones
+			path: error.path.startsWith(dir) ? error.path.substring(dir.length + 1) : error.path,
+		}));
 		lintResult.isSuccess = output.status === 0;
 		return lintResult;
 	}
