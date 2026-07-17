@@ -13,7 +13,7 @@ function getLintParams(dir) {
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
-			status: 0, // gofmt always uses exit code 0
+			status: 1, // gofmt exits with 1 when files need formatting (-d mode)
 			stdoutParts: [stdoutFile1, stdoutFile2],
 			stdout: `${stdoutFile1}\n${stdoutFile2}`,
 		},

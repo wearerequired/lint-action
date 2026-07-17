@@ -1,16 +1,18 @@
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
-const { parseErrorsFromDiff } = require("../utils/diff");
 const { initLintResult } = require("../utils/lint-result");
+const { capitalizeFirstLetter } = require("../utils/string");
+
+const PARSE_REGEX = /^(.+):([0-9]+):[0-9]+: (.+)$/gm;
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
 /**
- * https://golang.org/cmd/gofmt
+ * https://staticcheck.dev
  */
-class Gofmt {
+class Staticcheck {
 	static get name() {
-		return "gofmt";
+		return "staticcheck";
 	}
 
 	/**
@@ -19,8 +21,8 @@ class Gofmt {
 	 * @param {string} prefix - Prefix to the lint command
 	 */
 	static async verifySetup(dir, prefix = "") {
-		// Verify that gofmt is installed
-		if (!(await commandExists("gofmt"))) {
+		// Verify that staticcheck is installed
+		if (!(await commandExists("staticcheck"))) {
 			throw new Error(`${this.name} is not installed`);
 		}
 	}
@@ -39,12 +41,7 @@ class Gofmt {
 			throw new Error(`${this.name} error: File extensions are not configurable`);
 		}
 
-		// -d: Display diffs instead of rewriting files
-		// -e: Report all errors (not just the first 10 on different lines)
-		// -s: Simplify code
-		// -w: Write result to (source) file instead of stdout
-		const fixArg = fix ? "-w" : "-d -e";
-		return run(`${prefix} gofmt -s ${fixArg} ${args} "."`, {
+		return run(`${prefix} staticcheck -f text ${args} "./..."`, {
 			dir,
 			ignoreErrors: true,
 		});
@@ -59,29 +56,22 @@ class Gofmt {
 	 */
 	static parseOutput(dir, output) {
 		const lintResult = initLintResult();
+		lintResult.isSuccess = output.status === 0;
 
-		// The gofmt output lines starting with "diff" differ from the ones of tools like Git:
-		//
-		//   - gofmt: "diff -u file-old.txt file-new.txt"
-		//   - Git: "diff --git a/file-old.txt b/file-new.txt"
-		//
-		// The diff parser relies on the "a/" and "b/" strings to be able to tell where file names
-		// start. Without these strings, this would not be possible, because file names may include
-		// spaces, which are not escaped in unified diffs. As a workaround, these lines are filtered out
-		// from the gofmt diff so the diff parser can read the diff without errors
-		const filteredOutput = output.stdout
-			.split(/\r?\n/)
-			.filter((line) => !line.startsWith("diff "))
-			.join("\n");
-		lintResult.error = parseErrorsFromDiff(filteredOutput);
-
-		// The gofmt exit code for formatting issues depends on the version (older versions exited with
-		// 0, newer ones with 1 in `-d` mode). This function therefore determines the success of the
-		// linting process based on the number of parsed errors instead of the exit code
-		lintResult.isSuccess = lintResult.error.length === 0;
+		const matches = output.stdout.matchAll(PARSE_REGEX);
+		for (const match of matches) {
+			const [_, path, line, text] = match;
+			const lineNr = parseInt(line, 10);
+			lintResult.error.push({
+				path,
+				firstLine: lineNr,
+				lastLine: lineNr,
+				message: capitalizeFirstLetter(text),
+			});
+		}
 
 		return lintResult;
 	}
 }
 
-module.exports = Gofmt;
+module.exports = Staticcheck;

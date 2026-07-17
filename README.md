@@ -28,7 +28,8 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [stylelint](https://stylelint.io)
 - **Go:**
   - [gofmt](https://golang.org/cmd/gofmt)
-  - [golint](https://github.com/golang/lint)
+  - [golint](https://github.com/golang/lint) (deprecated, use `staticcheck` — golint has been [frozen and deprecated](https://github.com/golang/go/issues/38968) by its authors)
+  - [staticcheck](https://staticcheck.dev)
 - **JavaScript:**
   - [ESLint](https://eslint.org)
   - [Prettier](https://prettier.io)
@@ -386,7 +387,7 @@ With `auto_fix` set to `true`, by default the action will try and fix code issue
 
 ### Linter-specific options
 
-`[linter]` can be one of `autopep8`, `black`, `clang_format`, `dotnet_format`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `pylint`, `rubocop`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
+`[linter]` can be one of `autopep8`, `black`, `clang_format`, `dotnet_format`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `pylint`, `rubocop`, `staticcheck`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
@@ -444,6 +445,7 @@ Some options are not available for specific linters:
 | pylint                |     ❌      |  ❌ (py)   |
 | rubocop               |     ✅      |  ❌ (rb)   |
 | rustfmt               |     ✅      |  ❌ (rs)   |
+| staticcheck           |     ❌      |  ❌ (go)   |
 | stylelint             |     ✅      |     ✅     |
 | swift_format_official |     ✅      |     ✅     |
 | swift_format_lockwood |     ✅      | ❌ (swift) |
