@@ -35048,6 +35048,7 @@ function wrappy (fn, cb) {
 const core = __nccwpck_require__(7484);
 
 const { run } = __nccwpck_require__(8597);
+const { shescape } = __nccwpck_require__(5899);
 
 /** @typedef {import('./github/context').GithubContext} GithubContext */
 
@@ -35062,30 +35063,32 @@ function checkOutRemoteBranch(context) {
 		const cloneURl = new URL(context.repository.forkCloneUrl);
 		cloneURl.username = context.actor;
 		cloneURl.password = context.token;
-		run(`git remote add fork ${cloneURl.toString()}`);
+		run(`git remote add fork ${shescape.quote(cloneURl.toString())}`);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
 		core.info(`Adding auth information to Git remote URL`);
 		const cloneURl = new URL(context.repository.cloneUrl);
 		cloneURl.username = context.actor;
 		cloneURl.password = context.token;
-		run(`git remote set-url origin ${cloneURl.toString()}`);
+		run(`git remote set-url origin ${shescape.quote(cloneURl.toString())}`);
 	}
 
 	const remote = context.repository.hasFork ? "fork" : "origin";
+	const trackingRef = `refs/remotes/${remote}/${context.branch}`;
 
 	// Fetch remote branch. The explicit refspec makes sure the remote-tracking branch is created,
-	// the Checkout Action configures a fetch refspec which only covers the ref it checked out
+	// the Checkout Action configures a fetch refspec which only covers the ref it checked out.
+	// `context.branch` is attacker-controlled (fork PR head ref), so it must be quoted
 	core.info(`Fetching remote branch "${context.branch}"`);
 	run(
-		`git fetch --no-tags --depth=1 ${remote} ${context.branch}:refs/remotes/${remote}/${context.branch}`,
+		`git fetch --no-tags --depth=1 ${remote} ${shescape.quote(`${context.branch}:${trackingRef}`)}`,
 	);
 
 	// Switch to remote branch. Unlike `git branch --force`, `git checkout -B` also works when the
 	// branch is already checked out. The fully qualified ref works independently of the fetch
 	// refspec configured by the Checkout Action
 	core.info(`Switching to the "${context.branch}" branch`);
-	run(`git checkout --force -B ${context.branch} refs/remotes/${remote}/${context.branch}`);
+	run(`git checkout --force -B ${shescape.quote(context.branch)} ${shescape.quote(trackingRef)}`);
 }
 
 /**
@@ -35095,7 +35098,7 @@ function checkOutRemoteBranch(context) {
  */
 function commitChanges(message, skipVerification) {
 	core.info(`Committing changes`);
-	run(`git commit -am "${message}"${skipVerification ? " --no-verify" : ""}`);
+	run(`git commit -am ${shescape.quote(message)}${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**
@@ -35129,7 +35132,9 @@ function pushChanges(context, skipVerification) {
 	const remote = context.repository.hasFork ? "fork" : "origin";
 	// The explicit refspec makes the push work without a configured upstream
 	run(
-		`git push${skipVerification ? " --no-verify" : ""} ${remote} HEAD:refs/heads/${context.branch}`,
+		`git push${skipVerification ? " --no-verify" : ""} ${remote} ${shescape.quote(
+			`HEAD:refs/heads/${context.branch}`,
+		)}`,
 	);
 }
 
@@ -35140,8 +35145,8 @@ function pushChanges(context, skipVerification) {
  */
 function setUserInfo(name, email) {
 	core.info(`Setting Git user information`);
-	run(`git config --global user.name "${name}"`);
-	run(`git config --global user.email "${email}"`);
+	run(`git config --global user.name ${shescape.quote(name)}`);
+	run(`git config --global user.email ${shescape.quote(email)}`);
 }
 
 module.exports = {
@@ -35576,16 +35581,11 @@ module.exports = Black;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const glob = __nccwpck_require__(3574);
-const { Shescape } = __nccwpck_require__(3300);
 
 const { run } = __nccwpck_require__(8597);
 const commandExists = __nccwpck_require__(6339);
 const { initLintResult } = __nccwpck_require__(5066);
-
-// `run` executes commands through the default system shell (`execSync`): `cmd.exe` on Windows and
-// `/bin/sh` elsewhere ("bash" quoting is valid for any POSIX sh). Do not destructure the methods,
-// they rely on `this` being the instance.
-const shescape = new Shescape({ shell: process.platform === "win32" ? "cmd.exe" : "bash" });
+const { shescape } = __nccwpck_require__(5899);
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
@@ -38007,6 +38007,23 @@ function request(url, options) {
 }
 
 module.exports = request;
+
+
+/***/ }),
+
+/***/ 5899:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { Shescape } = __nccwpck_require__(3300);
+
+// Quoting for the shell used by `run`/`execSync`: `cmd.exe` on Windows and `/bin/sh` elsewhere
+// ("bash" quoting is valid for any POSIX sh). Used to escape values that end up in shell commands,
+// most importantly attacker-controlled ones like the branch name of a fork pull request.
+//
+// Do not destructure the instance methods, they rely on `this` being the instance.
+const shescape = new Shescape({ shell: process.platform === "win32" ? "cmd.exe" : "bash" });
+
+module.exports = { shescape };
 
 
 /***/ }),
