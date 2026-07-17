@@ -1,6 +1,7 @@
 const core = require("@actions/core");
 
 const { run } = require("./utils/action");
+const { shescape } = require("./utils/shescape");
 
 /** @typedef {import('./github/context').GithubContext} GithubContext */
 
@@ -15,30 +16,32 @@ function checkOutRemoteBranch(context) {
 		const cloneURl = new URL(context.repository.forkCloneUrl);
 		cloneURl.username = context.actor;
 		cloneURl.password = context.token;
-		run(`git remote add fork ${cloneURl.toString()}`);
+		run(`git remote add fork ${shescape.quote(cloneURl.toString())}`);
 	} else {
 		// No fork: Update remote URL to include auth information (so auto-fixes can be pushed)
 		core.info(`Adding auth information to Git remote URL`);
 		const cloneURl = new URL(context.repository.cloneUrl);
 		cloneURl.username = context.actor;
 		cloneURl.password = context.token;
-		run(`git remote set-url origin ${cloneURl.toString()}`);
+		run(`git remote set-url origin ${shescape.quote(cloneURl.toString())}`);
 	}
 
 	const remote = context.repository.hasFork ? "fork" : "origin";
+	const trackingRef = `refs/remotes/${remote}/${context.branch}`;
 
 	// Fetch remote branch. The explicit refspec makes sure the remote-tracking branch is created,
-	// the Checkout Action configures a fetch refspec which only covers the ref it checked out
+	// the Checkout Action configures a fetch refspec which only covers the ref it checked out.
+	// `context.branch` is attacker-controlled (fork PR head ref), so it must be quoted
 	core.info(`Fetching remote branch "${context.branch}"`);
 	run(
-		`git fetch --no-tags --depth=1 ${remote} ${context.branch}:refs/remotes/${remote}/${context.branch}`,
+		`git fetch --no-tags --depth=1 ${remote} ${shescape.quote(`${context.branch}:${trackingRef}`)}`,
 	);
 
 	// Switch to remote branch. Unlike `git branch --force`, `git checkout -B` also works when the
 	// branch is already checked out. The fully qualified ref works independently of the fetch
 	// refspec configured by the Checkout Action
 	core.info(`Switching to the "${context.branch}" branch`);
-	run(`git checkout --force -B ${context.branch} refs/remotes/${remote}/${context.branch}`);
+	run(`git checkout --force -B ${shescape.quote(context.branch)} ${shescape.quote(trackingRef)}`);
 }
 
 /**
@@ -48,7 +51,7 @@ function checkOutRemoteBranch(context) {
  */
 function commitChanges(message, skipVerification) {
 	core.info(`Committing changes`);
-	run(`git commit -am "${message}"${skipVerification ? " --no-verify" : ""}`);
+	run(`git commit -am ${shescape.quote(message)}${skipVerification ? " --no-verify" : ""}`);
 }
 
 /**
@@ -82,7 +85,9 @@ function pushChanges(context, skipVerification) {
 	const remote = context.repository.hasFork ? "fork" : "origin";
 	// The explicit refspec makes the push work without a configured upstream
 	run(
-		`git push${skipVerification ? " --no-verify" : ""} ${remote} HEAD:refs/heads/${context.branch}`,
+		`git push${skipVerification ? " --no-verify" : ""} ${remote} ${shescape.quote(
+			`HEAD:refs/heads/${context.branch}`,
+		)}`,
 	);
 }
 
@@ -93,8 +98,8 @@ function pushChanges(context, skipVerification) {
  */
 function setUserInfo(name, email) {
 	core.info(`Setting Git user information`);
-	run(`git config --global user.name "${name}"`);
-	run(`git config --global user.email "${email}"`);
+	run(`git config --global user.name ${shescape.quote(name)}`);
+	run(`git config --global user.email ${shescape.quote(email)}`);
 }
 
 module.exports = {
