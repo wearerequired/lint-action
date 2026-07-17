@@ -75,8 +75,9 @@ class Gofmt {
 			.join("\n");
 		lintResult.error = parseErrorsFromDiff(filteredOutput);
 
-		// gofmt exits with 0 even if there are formatting issues. Therefore, this function determines
-		// the success of the linting process based on the number of parsed errors
+		// The gofmt exit code for formatting issues depends on the version (older versions exited with
+		// 0, newer ones with 1 in `-d` mode). This function therefore determines the success of the
+		// linting process based on the number of parsed errors instead of the exit code
 		lintResult.isSuccess = lintResult.error.length === 0;
 
 		return lintResult;
