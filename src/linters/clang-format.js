@@ -5,7 +5,10 @@ const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
 
-const { quoteAll } = new Shescape({ shell: false });
+// `run` executes commands through the default system shell (`execSync`): `cmd.exe` on Windows and
+// `/bin/sh` elsewhere ("bash" quoting is valid for any POSIX sh). Do not destructure the methods,
+// they rely on `this` being the instance.
+const shescape = new Shescape({ shell: process.platform === "win32" ? "cmd.exe" : "bash" });
 
 /** @typedef {import('../utils/lint-result').LintResult} LintResult */
 
@@ -41,7 +44,7 @@ class ClangFormat {
 		const pattern =
 			extensions.length === 1 ? `**/*.${extensions[0]}` : `**/*.{${extensions.join(",")}}`;
 		const files = glob.sync(pattern, { cwd: dir, nodir: true });
-		const escapedFiles = quoteAll(files).join(" ");
+		const escapedFiles = shescape.quoteAll(files).join(" ");
 		const fixArg = fix ? "-i" : "--dry-run";
 		return run(`${prefix} clang-format ${fixArg} -Werror ${args} ${escapedFiles}`, {
 			dir,

@@ -19,7 +19,7 @@
 		"command-exists": "^1.2.9",
 		"glob": "^8.1.0",
 		"parse-diff": "^0.11.0",
-		"shescape": "^2.1.0"
+		"shescape": "^2.1.13"
 	},
 	"peerDependencies": {},
 	"devDependencies": {
@@ -52,6 +52,14 @@
 		},
 		"rules": {
 			"no-await-in-loop": "off",
+			"import/no-unresolved": [
+				"error",
+				{
+					"ignore": [
+						"^shescape$"
+					]
+				}
+			],
 			"no-unused-vars": [
 				"error",
 				{
