@@ -67,13 +67,14 @@ class Stylelint {
 		const lintResult = initLintResult();
 		lintResult.isSuccess = output.status === 0;
 
+		// stylelint v16 and later prints the report to stderr, earlier versions use stdout
+		const outputStr = output.stdout || output.stderr;
+
 		let outputJson;
 		try {
-			outputJson = JSON.parse(output.stdout);
+			outputJson = JSON.parse(outputStr);
 		} catch (err) {
-			throw Error(
-				`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`,
-			);
+			throw Error(`Error parsing ${this.name} JSON output: ${err.message}. Output: "${outputStr}"`);
 		}
 
 		for (const violation of outputJson) {
