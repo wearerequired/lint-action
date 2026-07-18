@@ -1,8 +1,8 @@
-const { execSync } = require("child_process");
+const { execSync, spawnSync } = require("child_process");
 
 const core = require("@actions/core");
 
-const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
+const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "", captureStderr: false };
 
 /**
  * Returns the value for an environment variable. If the variable is required but doesn't have a
@@ -28,7 +28,7 @@ function getEnv(name, required = false) {
 /**
  * Executes the provided shell command
  * @param {string} cmd - Shell command to execute
- * @param {{dir: string, ignoreErrors: boolean}} [options] - {@link RUN_OPTIONS_DEFAULTS}
+ * @param {object} [options] - Command options, see {@link RUN_OPTIONS_DEFAULTS}
  * @returns {{status: number, stdout: string, stderr: string}} - Output of the shell command
  */
 function run(cmd, options) {
@@ -38,6 +38,33 @@ function run(cmd, options) {
 	};
 
 	core.debug(cmd);
+
+	if (optionsWithDefaults.captureStderr) {
+		// `execSync` only exposes stderr when the command exits with a non-zero code. Some linters
+		// (e.g. swift-format) print their findings to stderr yet exit with 0, so `spawnSync` is used to
+		// capture stderr regardless of the exit code
+		const result = spawnSync(cmd, {
+			shell: true,
+			encoding: "utf8",
+			cwd: optionsWithDefaults.dir,
+			maxBuffer: 20 * 1024 * 1024,
+		});
+		if (result.error) {
+			throw result.error;
+		}
+		const output = {
+			status: result.status,
+			stdout: (result.stdout || "").trim(),
+			stderr: (result.stderr || "").trim(),
+		};
+		if (output.status !== 0 && !optionsWithDefaults.ignoreErrors) {
+			throw new Error(output.stderr || `Command failed with exit code ${output.status}`);
+		}
+		core.debug(`Exit code: ${output.status}`);
+		core.debug(`Stdout: ${output.stdout}`);
+		core.debug(`Stderr: ${output.stderr}`);
+		return output;
+	}
 
 	try {
 		const stdout = execSync(cmd, {

@@ -1,3 +1,5 @@
+const { sep } = require("path");
+
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { initLintResult } = require("../utils/lint-result");
@@ -41,9 +43,11 @@ class SwiftFormatOfficial {
 		}
 
 		const mode = fix ? "format -i" : "lint";
+		// swift-format prints its findings to stderr and exits with 0, so stderr must be captured
 		return run(`${prefix} swift-format ${mode} ${args} --recursive "."`, {
 			dir,
 			ignoreErrors: true,
+			captureStderr: true,
 		});
 	}
 
@@ -60,7 +64,14 @@ class SwiftFormatOfficial {
 		const matches = output.stderr.matchAll(PARSE_REGEX);
 		for (const match of matches) {
 			const [_line, pathFull, line, _column, _level, message] = match;
-			const path = pathFull.substring(dir.length + 1);
+			// swift-format reports paths relative to the working directory, older versions used
+			// absolute paths — handle both
+			let path = pathFull;
+			if (path.startsWith(`${dir}${sep}`)) {
+				path = path.substring(dir.length + 1);
+			} else if (path.startsWith(`.${sep}`)) {
+				path = path.substring(2);
+			}
 			const lineNr = parseInt(line, 10);
 			// swift-format only seems to use the "warning" level, which this action will therefore
 			// categorize as errors

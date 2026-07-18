@@ -26,7 +26,7 @@ const standardrbParams = require("./params/standardrb");
 const staticcheckParams = require("./params/staticcheck");
 const stylelintParams = require("./params/stylelint");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
-// const swiftFormatOfficial = require("./params/swift-format-official");
+const swiftFormatOfficial = require("./params/swift-format-official");
 const swiftlintParams = require("./params/swiftlint");
 const tscParams = require("./params/tsc");
 const xoParams = require("./params/xo");
@@ -57,13 +57,8 @@ const linterParams = [
 	tscParams,
 	xoParams,
 ];
-if (process.platform === "linux") {
-	// Temporarily disabled because swift-format 0.50300.0 no longer returns a proper exit code, yet
-	// returns the errors in STDERR.
-	// linterParams.push(swiftFormatOfficial);
-}
 if (process.platform === "darwin") {
-	linterParams.push(swiftFormatLockwood, swiftlintParams);
+	linterParams.push(swiftFormatLockwood, swiftFormatOfficial, swiftlintParams);
 }
 
 const tmpDir = createTmpDir();
