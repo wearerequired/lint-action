@@ -54,14 +54,13 @@ const linterParams = [
 	standardrbParams,
 	staticcheckParams,
 	stylelintParams,
+	swiftFormatOfficial,
 	tscParams,
 	xoParams,
 ];
-if (process.platform === "linux") {
-	linterParams.push(swiftFormatOfficial);
-}
+// swift-format-lockwood and SwiftLint are installed via Mint on macOS only
 if (process.platform === "darwin") {
-	linterParams.push(swiftFormatLockwood, swiftFormatOfficial, swiftlintParams);
+	linterParams.push(swiftFormatLockwood, swiftlintParams);
 }
 
 const tmpDir = createTmpDir();
