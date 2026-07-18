@@ -12,7 +12,7 @@ const extensions = ["py"];
 // Linting without auto-fixing
 function getLintParams(dir) {
 	const stdoutFile1 = `.${sep}file1.py:5:9: E211 whitespace before '('${EOL}.${sep}file1.py:26:1: E305 expected 2 blank lines after class or function definition, found 1`;
-	const stdoutFile2 = `.${sep}file2.py:2:3: E111 indentation is not a multiple of four`;
+	const stdoutFile2 = `.${sep}file2.py:2:3: E111 indentation is not a multiple of 4`;
 	return {
 		// Expected output of the linting function
 		cmdOutput: {
@@ -41,7 +41,7 @@ function getLintParams(dir) {
 					path: "file2.py",
 					firstLine: 2,
 					lastLine: 2,
-					message: "Indentation is not a multiple of four (E111)",
+					message: "Indentation is not a multiple of 4 (E111)",
 				},
 			],
 		},
