@@ -54,9 +54,12 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 	const checkRunsUrl = `${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`;
 
 	// The Checks API accepts at most 50 annotations per request. Split the annotations into batches
-	// of 50: the first batch is sent when the check run is created, the remaining batches are added
-	// by updating the same run (annotations are appended on update). The empty batch makes sure the
-	// check run is always created, even when there are no annotations
+	// of 50: the check run is created with the first batch and left "in_progress", the remaining
+	// batches are appended by updating the same run, and only the final request sets the conclusion
+	// (which completes the run). This way consumers never observe a completed run with a truncated
+	// set of annotations, and a failed follow-up request leaves the run in_progress rather than
+	// misleadingly completed. The empty batch makes sure the run is always created, even when there
+	// are no annotations
 	const maxAnnotationsPerRequest = 50;
 	const batches = [];
 	for (let i = 0; i < annotations.length; i += maxAnnotationsPerRequest) {
@@ -66,10 +69,15 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		batches.push([]);
 	}
 
-	const buildOutput = (batchAnnotations) => ({
-		title: capitalizeFirstLetter(summary),
-		summary: `${linterName} found ${summary}`,
-		annotations: batchAnnotations,
+	const buildBody = (batch, isLast) => ({
+		name: linterName,
+		output: {
+			title: capitalizeFirstLetter(summary),
+			summary: `${linterName} found ${summary}`,
+			annotations: batch,
+		},
+		// Setting the conclusion completes the run, so only the last request carries it
+		...(isLast ? { conclusion } : { status: "in_progress" }),
 	});
 
 	try {
@@ -77,30 +85,27 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
 		);
 
-		// Create the check run with the first batch of annotations
-		const { data: checkRun } = await request(checkRunsUrl, {
-			method: "POST",
-			headers,
-			body: {
-				name: linterName,
-				head_sha: sha,
-				conclusion,
-				output: buildOutput(batches[0]),
-			},
-		});
-
-		// Add the remaining annotations by updating the same check run
-		for (const batch of batches.slice(1)) {
-			core.info(`Adding ${batch.length} more annotations to the ${linterName} check…`);
-			await request(`${checkRunsUrl}/${checkRun.id}`, {
-				method: "PATCH",
-				headers,
-				body: {
-					name: linterName,
-					conclusion,
-					output: buildOutput(batch),
-				},
-			});
+		let checkRunId;
+		for (let i = 0; i < batches.length; i += 1) {
+			const isLast = i === batches.length - 1;
+			if (i === 0) {
+				const { data: checkRun } = await request(checkRunsUrl, {
+					method: "POST",
+					headers,
+					body: { head_sha: sha, ...buildBody(batches[i], isLast) },
+				});
+				checkRunId = checkRun && checkRun.id;
+				if (checkRunId == null) {
+					throw new Error(`GitHub API did not return an id for the ${linterName} check run`);
+				}
+			} else {
+				core.info(`Adding ${batches[i].length} more annotations to the ${linterName} check…`);
+				await request(`${checkRunsUrl}/${checkRunId}`, {
+					method: "PATCH",
+					headers,
+					body: buildBody(batches[i], isLast),
+				});
+			}
 		}
 
 		core.info(`${linterName} check created successfully`);

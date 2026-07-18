@@ -35220,9 +35220,12 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 	const checkRunsUrl = `${process.env.GITHUB_API_URL}/repos/${context.repository.repoName}/check-runs`;
 
 	// The Checks API accepts at most 50 annotations per request. Split the annotations into batches
-	// of 50: the first batch is sent when the check run is created, the remaining batches are added
-	// by updating the same run (annotations are appended on update). The empty batch makes sure the
-	// check run is always created, even when there are no annotations
+	// of 50: the check run is created with the first batch and left "in_progress", the remaining
+	// batches are appended by updating the same run, and only the final request sets the conclusion
+	// (which completes the run). This way consumers never observe a completed run with a truncated
+	// set of annotations, and a failed follow-up request leaves the run in_progress rather than
+	// misleadingly completed. The empty batch makes sure the run is always created, even when there
+	// are no annotations
 	const maxAnnotationsPerRequest = 50;
 	const batches = [];
 	for (let i = 0; i < annotations.length; i += maxAnnotationsPerRequest) {
@@ -35232,10 +35235,15 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 		batches.push([]);
 	}
 
-	const buildOutput = (batchAnnotations) => ({
-		title: capitalizeFirstLetter(summary),
-		summary: `${linterName} found ${summary}`,
-		annotations: batchAnnotations,
+	const buildBody = (batch, isLast) => ({
+		name: linterName,
+		output: {
+			title: capitalizeFirstLetter(summary),
+			summary: `${linterName} found ${summary}`,
+			annotations: batch,
+		},
+		// Setting the conclusion completes the run, so only the last request carries it
+		...(isLast ? { conclusion } : { status: "in_progress" }),
 	});
 
 	try {
@@ -35243,30 +35251,27 @@ async function createCheck(linterName, sha, context, lintResult, neutralCheckOnW
 			`Creating GitHub check with ${conclusion} conclusion and ${annotations.length} annotations for ${linterName}…`,
 		);
 
-		// Create the check run with the first batch of annotations
-		const { data: checkRun } = await request(checkRunsUrl, {
-			method: "POST",
-			headers,
-			body: {
-				name: linterName,
-				head_sha: sha,
-				conclusion,
-				output: buildOutput(batches[0]),
-			},
-		});
-
-		// Add the remaining annotations by updating the same check run
-		for (const batch of batches.slice(1)) {
-			core.info(`Adding ${batch.length} more annotations to the ${linterName} check…`);
-			await request(`${checkRunsUrl}/${checkRun.id}`, {
-				method: "PATCH",
-				headers,
-				body: {
-					name: linterName,
-					conclusion,
-					output: buildOutput(batch),
-				},
-			});
+		let checkRunId;
+		for (let i = 0; i < batches.length; i += 1) {
+			const isLast = i === batches.length - 1;
+			if (i === 0) {
+				const { data: checkRun } = await request(checkRunsUrl, {
+					method: "POST",
+					headers,
+					body: { head_sha: sha, ...buildBody(batches[i], isLast) },
+				});
+				checkRunId = checkRun && checkRun.id;
+				if (checkRunId == null) {
+					throw new Error(`GitHub API did not return an id for the ${linterName} check run`);
+				}
+			} else {
+				core.info(`Adding ${batches[i].length} more annotations to the ${linterName} check…`);
+				await request(`${checkRunsUrl}/${checkRunId}`, {
+					method: "PATCH",
+					headers,
+					body: buildBody(batches[i], isLast),
+				});
+			}
 		}
 
 		core.info(`${linterName} check created successfully`);
@@ -38085,7 +38090,24 @@ module.exports = { useYarn };
 
 const https = __nccwpck_require__(5692);
 
+const core = __nccwpck_require__(7484);
+
 const MAX_RETRIES = 3;
+// Upper bound for a single retry wait so a large "Retry-After" cannot stall the job for a long time
+const MAX_RETRY_DELAY = 60 * 1000;
+
+/**
+ * Determines whether a response indicates rate limiting that should be retried. GitHub signals its
+ * primary rate limit with 429 and its secondary rate limit with 403 plus a "Retry-After" header
+ * @param {import('http').IncomingMessage} res - Response
+ * @returns {boolean} - Whether the request should be retried
+ */
+function isRateLimited(res) {
+	if (res.statusCode === 429) {
+		return true;
+	}
+	return res.statusCode === 403 && res.headers["retry-after"] != null;
+}
 
 /**
  * Helper function for making HTTP requests
@@ -38103,13 +38125,19 @@ function request(url, options, retryCount = 0) {
 					data += chunk;
 				});
 				res.on("end", () => {
-					if (res.statusCode === 429 && retryCount < MAX_RETRIES) {
-						// Too many requests: respect the "Retry-After" header if present, otherwise back off
-						// linearly
+					if (isRateLimited(res) && retryCount < MAX_RETRIES) {
+						// Respect the "Retry-After" header (in seconds) if present, otherwise back off
+						// linearly. Cap the wait so a misbehaving header cannot stall the job
 						const retryAfterHeader = parseInt(res.headers["retry-after"], 10);
-						const retryAfter = Number.isNaN(retryAfterHeader)
-							? 5000 * (retryCount + 1)
-							: retryAfterHeader * 1000;
+						const retryAfter = Math.min(
+							Number.isNaN(retryAfterHeader) ? 5000 * (retryCount + 1) : retryAfterHeader * 1000,
+							MAX_RETRY_DELAY,
+						);
+						core.warning(
+							`Request to ${url} was rate limited (status ${res.statusCode}). Retrying in ${
+								retryAfter / 1000
+							}s (attempt ${retryCount + 1}/${MAX_RETRIES})…`,
+						);
 						setTimeout(() => {
 							request(url, options, retryCount + 1)
 								.then(resolve)
@@ -38121,7 +38149,13 @@ function request(url, options, retryCount = 0) {
 						err.data = data;
 						reject(err);
 					} else {
-						resolve({ res, data: JSON.parse(data) });
+						// A throw here would escape the Promise (this callback runs asynchronously), so parse
+						// defensively and reject on invalid or empty JSON bodies
+						try {
+							resolve({ res, data: data === "" ? {} : JSON.parse(data) });
+						} catch (err) {
+							reject(new Error(`Could not parse response from ${url} as JSON: ${err.message}`));
+						}
 					}
 				});
 			})

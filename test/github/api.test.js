@@ -74,19 +74,47 @@ describe("createCheck()", () => {
 		// 120 annotations -> 1 POST (50) + 2 PATCH (50 + 20)
 		expect(request).toHaveBeenCalledTimes(3);
 
-		const methods = request.mock.calls.map((call) => call[1].method);
-		expect(methods).toEqual(["POST", "PATCH", "PATCH"]);
+		const bodies = request.mock.calls.map((call) => call[1].body);
+		expect(request.mock.calls.map((call) => call[1].method)).toEqual(["POST", "PATCH", "PATCH"]);
 
 		// No request exceeds the 50-annotation limit and all annotations are sent
-		const annotationCounts = request.mock.calls.map(
-			(call) => call[1].body.output.annotations.length,
-		);
+		const annotationCounts = bodies.map((body) => body.output.annotations.length);
 		expect(annotationCounts).toEqual([50, 50, 20]);
 		expect(annotationCounts.reduce((sum, count) => sum + count, 0)).toEqual(120);
+
+		// The run is only completed by the last request; the earlier ones keep it in progress
+		expect(bodies[0].status).toEqual("in_progress");
+		expect(bodies[0].conclusion).toBeUndefined();
+		expect(bodies[1].status).toEqual("in_progress");
+		expect(bodies[2].conclusion).toEqual("failure");
+		expect(bodies[2].status).toBeUndefined();
 
 		// Updates target the check run created by the first request
 		const [createUrl] = request.mock.calls[0];
 		const [updateUrl] = request.mock.calls[1];
 		expect(updateUrl).toEqual(`${createUrl}/123456789`);
+	});
+
+	test("the single request for <= 50 annotations sets the conclusion", async () => {
+		await createCheck("check-name", "sha", context, lintResultWithErrors(10), false, "summary");
+		expect(request).toHaveBeenCalledTimes(1);
+		expect(request.mock.calls[0][1].body.conclusion).toEqual("failure");
+	});
+
+	test("rejects when a follow-up annotation batch fails", async () => {
+		request
+			.mockResolvedValueOnce({ data: { id: 123456789 } }) // POST succeeds
+			.mockRejectedValueOnce(new Error("Received status code 500")); // first PATCH fails
+
+		await expect(
+			createCheck("check-name", "sha", context, lintResultWithErrors(120), false, "summary"),
+		).rejects.toThrow("Error trying to create GitHub check for check-name");
+	});
+
+	test("rejects when the create response has no check run id", async () => {
+		request.mockResolvedValue({ data: {} });
+		await expect(
+			createCheck("check-name", "sha", context, lintResultWithErrors(60), false, "summary"),
+		).rejects.toThrow("did not return an id");
 	});
 });
