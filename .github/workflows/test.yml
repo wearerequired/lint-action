@@ -142,28 +142,18 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
-      # Swift (only on Linux)
+      # Swift (only on Linux). The toolchain bundles swift-format (matching the version installed via
+      # Homebrew on macOS), so no separate build is needed
 
-      - name: Set up Swift cache (Linux)
-        id: cache-swift
+      - name: Set up Swift (Linux)
         if: startsWith(matrix.os, 'ubuntu')
-        uses: actions/cache@v6
+        uses: SwiftyLab/setup-swift@v1
         with:
-          path: ./swift-format/.build
-          key: ${{ runner.os }}-swift-509.0.0
+          swift-version: "6.3.0"
 
-      - name: Install Swift dependencies (Linux, uncached)
-        if: steps.cache-swift.outputs.cache-hit != 'true' && startsWith(matrix.os, 'ubuntu')
-        run: |
-          git clone --branch 509.0.0 --depth 1 https://github.com/apple/swift-format
-          cd swift-format
-          swift build -c release
-          echo "${PWD}/.build/release" >> $GITHUB_PATH
-
-      - name: Install Swift dependencies (Linux, cached)
-        if: steps.cache-swift.outputs.cache-hit == 'true' && startsWith(matrix.os, 'ubuntu')
-        run: |
-          echo "${PWD}/swift-format/.build/release" >> $GITHUB_PATH
+      - name: Verify swift-format is available (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: swift-format --version
 
       # Swift (only on macOS)
 
