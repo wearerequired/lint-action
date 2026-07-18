@@ -1,0 +1,6 @@
+# Disable the line ending check so the test passes regardless of the line endings the files are
+# checked out with (they differ between platforms). The RuboCop fixture disables the equivalent
+# `Layout/EndOfLine` cop via `.rubocop.yml`.
+ignore:
+  - "**/*":
+    - Layout/EndOfLine
