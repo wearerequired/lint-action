@@ -1,0 +1,3 @@
+# swift-format columns/offsets depend on the file content; keep LF so the golden matches on
+# Windows too (avoids autocrlf converting the fixtures to CRLF on checkout)
+*.swift text eol=lf

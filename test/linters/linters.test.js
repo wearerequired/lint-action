@@ -57,7 +57,7 @@ const linterParams = [
 	tscParams,
 	xoParams,
 ];
-if (process.platform === "linux") {
+if (process.platform === "linux" || process.platform === "win32") {
 	linterParams.push(swiftFormatOfficial);
 }
 if (process.platform === "darwin") {

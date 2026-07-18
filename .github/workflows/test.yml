@@ -155,6 +155,18 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: swift-format --version
 
+      # Swift (only on Windows). Same approach as Linux — the toolchain bundles swift-format
+
+      - name: Set up Swift (Windows)
+        if: startsWith(matrix.os, 'windows')
+        uses: SwiftyLab/setup-swift@v1
+        with:
+          swift-version: "6.3.0"
+
+      - name: Verify swift-format is available (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: swift-format --version
+
       # Swift (only on macOS)
 
       - name: Set up Mint cache (macOS)
