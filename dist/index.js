@@ -37706,6 +37706,8 @@ module.exports = SwiftFormatLockwood;
 /***/ 216:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const { sep } = __nccwpck_require__(6928);
+
 const { run } = __nccwpck_require__(8597);
 const commandExists = __nccwpck_require__(6339);
 const { initLintResult } = __nccwpck_require__(5066);
@@ -37749,9 +37751,11 @@ class SwiftFormatOfficial {
 		}
 
 		const mode = fix ? "format -i" : "lint";
+		// swift-format prints its findings to stderr and exits with 0, so stderr must be captured
 		return run(`${prefix} swift-format ${mode} ${args} --recursive "."`, {
 			dir,
 			ignoreErrors: true,
+			captureStderr: true,
 		});
 	}
 
@@ -37768,7 +37772,14 @@ class SwiftFormatOfficial {
 		const matches = output.stderr.matchAll(PARSE_REGEX);
 		for (const match of matches) {
 			const [_line, pathFull, line, _column, _level, message] = match;
-			const path = pathFull.substring(dir.length + 1);
+			// swift-format reports paths relative to the working directory, older versions used
+			// absolute paths — handle both
+			let path = pathFull;
+			if (path.startsWith(`${dir}${sep}`)) {
+				path = path.substring(dir.length + 1);
+			} else if (path.startsWith(`.${sep}`)) {
+				path = path.substring(2);
+			}
 			const lineNr = parseInt(line, 10);
 			// swift-format only seems to use the "warning" level, which this action will therefore
 			// categorize as errors
@@ -38050,11 +38061,11 @@ module.exports = XO;
 /***/ 8597:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const { execSync } = __nccwpck_require__(5317);
+const { execSync, spawnSync } = __nccwpck_require__(5317);
 
 const core = __nccwpck_require__(7484);
 
-const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
+const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "", captureStderr: false };
 
 /**
  * Returns the value for an environment variable. If the variable is required but doesn't have a
@@ -38080,7 +38091,7 @@ function getEnv(name, required = false) {
 /**
  * Executes the provided shell command
  * @param {string} cmd - Shell command to execute
- * @param {{dir: string, ignoreErrors: boolean}} [options] - {@link RUN_OPTIONS_DEFAULTS}
+ * @param {object} [options] - Command options, see {@link RUN_OPTIONS_DEFAULTS}
  * @returns {{status: number, stdout: string, stderr: string}} - Output of the shell command
  */
 function run(cmd, options) {
@@ -38090,6 +38101,33 @@ function run(cmd, options) {
 	};
 
 	core.debug(cmd);
+
+	if (optionsWithDefaults.captureStderr) {
+		// `execSync` only exposes stderr when the command exits with a non-zero code. Some linters
+		// (e.g. swift-format) print their findings to stderr yet exit with 0, so `spawnSync` is used to
+		// capture stderr regardless of the exit code
+		const result = spawnSync(cmd, {
+			shell: true,
+			encoding: "utf8",
+			cwd: optionsWithDefaults.dir,
+			maxBuffer: 20 * 1024 * 1024,
+		});
+		if (result.error) {
+			throw result.error;
+		}
+		const output = {
+			status: result.status,
+			stdout: (result.stdout || "").trim(),
+			stderr: (result.stderr || "").trim(),
+		};
+		if (output.status !== 0 && !optionsWithDefaults.ignoreErrors) {
+			throw new Error(output.stderr || `Command failed with exit code ${output.status}`);
+		}
+		core.debug(`Exit code: ${output.status}`);
+		core.debug(`Stdout: ${output.stdout}`);
+		core.debug(`Stderr: ${output.stderr}`);
+		return output;
+	}
 
 	try {
 		const stdout = execSync(cmd, {
