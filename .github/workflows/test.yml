@@ -97,7 +97,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: 3.8
+          python-version: "3.14"
           cache: "pip"
           cache-dependency-path: |
             test/linters/projects/**/requirements.txt
@@ -106,7 +106,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           cd ./test/linters/projects/
-          pip install -r ./autopep8/requirements.txt -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./mypy/requirements.txt -r ./oitnb/requirements.txt -r ./pylint/requirements.txt
+          pip install -r ./autopep8/requirements.txt -r ./black/requirements.txt -r ./flake8/requirements.txt -r ./isort/requirements.txt -r ./mypy/requirements.txt -r ./oitnb/requirements.txt -r ./pylint/requirements.txt
 
       # Ruby
 
