@@ -48,6 +48,7 @@ _**Note:** The behavior of actions like this one is currently limited in the con
   - [Mypy](https://mypy.readthedocs.io/)
   - [oitnb](https://pypi.org/project/oitnb/)
   - [Pylint](https://pylint.pycqa.org)
+  - [Ruff](https://docs.astral.sh/ruff)
 - **Ruby:**
   - [ERB Lint](https://github.com/Shopify/erb-lint) (requires erb_lint v0.7.0 or later)
   - [RuboCop](https://rubocop.readthedocs.io)
@@ -389,7 +390,7 @@ With `auto_fix` set to `true`, by default the action will try and fix code issue
 
 ### Linter-specific options
 
-`[linter]` can be one of `autopep8`, `black`, `clang_format`, `dotnet_format`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `isort`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `pylint`, `rubocop`, `standardrb`, `staticcheck`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
+`[linter]` can be one of `autopep8`, `black`, `clang_format`, `dotnet_format`, `erblint`, `eslint`, `flake8`, `gofmt`, `golint`, `isort`, `mypy`, `oitnb`, `php_codesniffer`, `prettier`, `pylint`, `rubocop`, `ruff`, `standardrb`, `staticcheck`, `stylelint`, `swift_format_official`, `swift_format_lockwood`, `swiftlint` and `xo`:
 
 - **`[linter]`:** Enables the linter in your repository. Default: `false`
 - **`[linter]_args`**: Additional arguments to pass to the linter. Example: `eslint_args: "--max-warnings 0"` if ESLint checks should fail even if there are no errors and only warnings. Default: `""`
@@ -447,6 +448,7 @@ Some options are not available for specific linters:
 | prettier              |     ✅      |     ✅     |
 | pylint                |     ❌      |  ❌ (py)   |
 | rubocop               |     ✅      |  ❌ (rb)   |
+| ruff                  |     ✅      |  ❌ (py)   |
 | rustfmt               |     ✅      |  ❌ (rs)   |
 | standardrb            |     ✅      |  ❌ (rb)   |
 | staticcheck           |     ❌      |  ❌ (go)   |

@@ -21,6 +21,7 @@ const prettierParams = require("./params/prettier");
 const prettierInvalidParams = require("./params/prettier-invalid");
 const pylintParams = require("./params/pylint");
 const ruboCopParams = require("./params/rubocop");
+const ruffParams = require("./params/ruff");
 const rustfmtParams = require("./params/rustfmt");
 const standardrbParams = require("./params/standardrb");
 const staticcheckParams = require("./params/staticcheck");
@@ -50,6 +51,7 @@ const linterParams = [
 	prettierInvalidParams,
 	pylintParams,
 	ruboCopParams,
+	ruffParams,
 	rustfmtParams,
 	standardrbParams,
 	staticcheckParams,
