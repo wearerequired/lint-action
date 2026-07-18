@@ -38280,9 +38280,34 @@ function getSummary(lintResult) {
 	return `no issues`;
 }
 
+/**
+ * Rewrites the paths of a lint result so GitHub can link the annotations to the files of a pull
+ * request: the paths are made relative to the repository root (by prepending the directory the
+ * linter ran in) and are converted to forward slashes. GitHub's Checks API only matches annotations
+ * to the diff when the paths are repo-root-relative and use forward slashes (see #94 and #608)
+ * @param {LintResult} lintResult - Lint result whose paths should be rewritten (mutated in place)
+ * @param {string} dirRel - Directory the linter ran in, relative to the repository root
+ * @returns {LintResult} - The same lint result, with rewritten paths
+ */
+function normalizeLintResultPaths(lintResult, dirRel) {
+	// Strip a leading "./" and any trailing slash, and use forward slashes
+	const dir =
+		dirRel && dirRel !== "."
+			? dirRel.replace(/\\/g, "/").replace(/^\.\//, "").replace(/\/+$/, "")
+			: "";
+	for (const level of ["error", "warning"]) {
+		for (const entry of lintResult[level]) {
+			const path = entry.path.replace(/\\/g, "/");
+			entry.path = dir ? `${dir}/${path}` : path;
+		}
+	}
+	return lintResult;
+}
+
 module.exports = {
 	getSummary,
 	initLintResult,
+	normalizeLintResultPaths,
 };
 
 
@@ -40372,7 +40397,7 @@ const git = __nccwpck_require__(5661);
 const { createCheck } = __nccwpck_require__(2257);
 const { getContext } = __nccwpck_require__(4022);
 const linters = __nccwpck_require__(7065);
-const { getSummary } = __nccwpck_require__(5066);
+const { getSummary, normalizeLintResultPaths } = __nccwpck_require__(5066);
 
 /**
  * Parses the action configuration and runs all enabled linters on matching files
@@ -40458,8 +40483,11 @@ async function runAction() {
 			);
 			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix);
 
-			// Parse output of linting command
-			const lintResult = linter.parseOutput(context.workspace, lintOutput);
+			// Parse output of linting command. The linter ran in `lintDirAbs`, so its output paths are
+			// relative to that directory; make them relative to the repository root (with forward
+			// slashes) so GitHub can link the annotations to the pull request's files
+			const lintResult = linter.parseOutput(lintDirAbs, lintOutput);
+			normalizeLintResultPaths(lintResult, lintDirRel);
 			const summary = getSummary(lintResult);
 			core.info(
 				`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`,

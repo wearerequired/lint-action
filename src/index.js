@@ -7,7 +7,7 @@ const git = require("./git");
 const { createCheck } = require("./github/api");
 const { getContext } = require("./github/context");
 const linters = require("./linters");
-const { getSummary } = require("./utils/lint-result");
+const { getSummary, normalizeLintResultPaths } = require("./utils/lint-result");
 
 /**
  * Parses the action configuration and runs all enabled linters on matching files
@@ -93,8 +93,11 @@ async function runAction() {
 			);
 			const lintOutput = linter.lint(lintDirAbs, fileExtList, args, linterAutoFix, prefix);
 
-			// Parse output of linting command
-			const lintResult = linter.parseOutput(context.workspace, lintOutput);
+			// Parse output of linting command. The linter ran in `lintDirAbs`, so its output paths are
+			// relative to that directory; make them relative to the repository root (with forward
+			// slashes) so GitHub can link the annotations to the pull request's files
+			const lintResult = linter.parseOutput(lintDirAbs, lintOutput);
+			normalizeLintResultPaths(lintResult, lintDirRel);
 			const summary = getSummary(lintResult);
 			core.info(
 				`${linter.name} found ${summary} (${lintResult.isSuccess ? "success" : "failure"})`,
