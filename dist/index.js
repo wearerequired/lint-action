@@ -36447,6 +36447,7 @@ const Prettier = __nccwpck_require__(6146);
 const Pylint = __nccwpck_require__(243);
 const RuboCop = __nccwpck_require__(7521);
 const RustFmt = __nccwpck_require__(7368);
+const StandardRB = __nccwpck_require__(7216);
 const Staticcheck = __nccwpck_require__(783);
 const Stylelint = __nccwpck_require__(613);
 const SwiftFormatLockwood = __nccwpck_require__(9183);
@@ -36466,6 +36467,7 @@ const linters = {
 	php_codesniffer: PHPCodeSniffer,
 	pylint: Pylint,
 	rubocop: RuboCop,
+	standardrb: StandardRB,
 	staticcheck: Staticcheck,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
@@ -37306,6 +37308,119 @@ class RustFmt {
 }
 
 module.exports = RustFmt;
+
+
+/***/ }),
+
+/***/ 7216:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { run } = __nccwpck_require__(8597);
+const commandExists = __nccwpck_require__(6339);
+const { initLintResult } = __nccwpck_require__(5066);
+const { removeTrailingPeriod } = __nccwpck_require__(26);
+
+/** @typedef {import('../utils/lint-result').LintResult} LintResult */
+
+// Mapping of RuboCop severities (Standard Ruby runs on RuboCop) to severities used for GitHub
+// commit annotations
+const severityMap = {
+	info: "warning",
+	convention: "warning",
+	refactor: "warning",
+	warning: "warning",
+	error: "error",
+	fatal: "error",
+};
+
+/**
+ * https://github.com/standardrb/standard
+ */
+class StandardRB {
+	static get name() {
+		return "standardrb";
+	}
+
+	/**
+	 * Verifies that all required programs are installed. Throws an error if programs are missing
+	 * @param {string} dir - Directory to run the linting program in
+	 * @param {string} prefix - Prefix to the lint command
+	 */
+	static async verifySetup(dir, prefix = "") {
+		// Verify that Ruby is installed (required to execute standardrb)
+		if (!(await commandExists("ruby"))) {
+			throw new Error("Ruby is not installed");
+		}
+		// Verify that standardrb is installed
+		try {
+			run(`${prefix} standardrb -v`, { dir });
+		} catch (err) {
+			throw new Error(`${this.name} is not installed`);
+		}
+	}
+
+	/**
+	 * Runs the linting program and returns the command output
+	 * @param {string} dir - Directory to run the linter in
+	 * @param {string[]} extensions - File extensions which should be linted
+	 * @param {string} args - Additional arguments to pass to the linter
+	 * @param {boolean} fix - Whether the linter should attempt to fix code style issues automatically
+	 * @param {string} prefix - Prefix to the lint command
+	 * @returns {{status: number, stdout: string, stderr: string}} - Output of the lint command
+	 */
+	static lint(dir, extensions, args = "", fix = false, prefix = "") {
+		if (extensions.length !== 1 || extensions[0] !== "rb") {
+			throw new Error(`${this.name} error: File extensions are not configurable`);
+		}
+
+		const fixArg = fix ? "--fix" : "";
+		return run(`${prefix} standardrb --format json ${fixArg} ${args}`, {
+			dir,
+			ignoreErrors: true,
+		});
+	}
+
+	/**
+	 * Parses the output of the lint command. Determines the success of the lint process and the
+	 * severity of the identified code style violations
+	 * @param {string} dir - Directory in which the linter has been run
+	 * @param {{status: number, stdout: string, stderr: string}} output - Output of the lint command
+	 * @returns {LintResult} - Parsed lint result
+	 */
+	static parseOutput(dir, output) {
+		const lintResult = initLintResult();
+		lintResult.isSuccess = output.status === 0;
+
+		let outputJson;
+		try {
+			outputJson = JSON.parse(output.stdout);
+		} catch (err) {
+			throw Error(
+				`Error parsing ${this.name} JSON output: ${err.message}. Output: "${output.stdout}"`,
+			);
+		}
+
+		for (const file of outputJson.files) {
+			const { path, offenses } = file;
+			for (const offense of offenses) {
+				const { severity, message, cop_name: rule, corrected, location } = offense;
+				if (!corrected) {
+					const mappedSeverity = severityMap[severity] || "error";
+					lintResult[mappedSeverity].push({
+						path,
+						firstLine: location.start_line,
+						lastLine: location.last_line,
+						message: `${removeTrailingPeriod(message)} (${rule})`,
+					});
+				}
+			}
+		}
+
+		return lintResult;
+	}
+}
+
+module.exports = StandardRB;
 
 
 /***/ }),

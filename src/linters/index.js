@@ -16,6 +16,7 @@ const Prettier = require("./prettier");
 const Pylint = require("./pylint");
 const RuboCop = require("./rubocop");
 const RustFmt = require("./rustfmt");
+const StandardRB = require("./standardrb");
 const Staticcheck = require("./staticcheck");
 const Stylelint = require("./stylelint");
 const SwiftFormatLockwood = require("./swift-format-lockwood");
@@ -35,6 +36,7 @@ const linters = {
 	php_codesniffer: PHPCodeSniffer,
 	pylint: Pylint,
 	rubocop: RuboCop,
+	standardrb: StandardRB,
 	staticcheck: Staticcheck,
 	stylelint: Stylelint,
 	swiftlint: SwiftLint,
