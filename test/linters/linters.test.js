@@ -26,6 +26,7 @@ const rustfmtParams = require("./params/rustfmt");
 const standardrbParams = require("./params/standardrb");
 const staticcheckParams = require("./params/staticcheck");
 const stylelintParams = require("./params/stylelint");
+const stylelintValidParams = require("./params/stylelint-valid");
 const swiftFormatLockwood = require("./params/swift-format-lockwood");
 const swiftFormatOfficial = require("./params/swift-format-official");
 const swiftlintParams = require("./params/swiftlint");
@@ -56,6 +57,7 @@ const linterParams = [
 	standardrbParams,
 	staticcheckParams,
 	stylelintParams,
+	stylelintValidParams,
 	swiftFormatOfficial,
 	tscParams,
 	xoParams,
