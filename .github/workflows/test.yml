@@ -78,6 +78,8 @@ jobs:
           yarn install
           cd ../stylelint/
           yarn install
+          cd ../stylelint-valid/
+          yarn install
           cd ../tsc/
           yarn install
           cd ../xo/

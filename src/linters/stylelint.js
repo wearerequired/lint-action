@@ -52,6 +52,9 @@ class Stylelint {
 			{
 				dir,
 				ignoreErrors: true,
+				// stylelint 16 prints its report to stderr and exits with 0 when there are no issues,
+				// so stderr has to be captured even on a successful exit
+				captureStderr: true,
 			},
 		);
 	}
