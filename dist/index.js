@@ -35219,6 +35219,13 @@ function getHeadSha() {
  * @returns {boolean} - Boolean indicating whether changes exist
  */
 function hasChanges() {
+	// Refresh the index first so stat-only differences are not mistaken for real changes. A
+	// dependency install step or a formatter can rewrite a tracked file with identical content,
+	// leaving it stat-dirty. Without the refresh, `git diff-index` reports such a file as modified
+	// while the subsequent `git commit -am` finds nothing to commit and exits non-zero, which
+	// crashes the action (#140). `git update-index --refresh` exits non-zero when it updates stat
+	// info, so its errors are ignored.
+	run("git update-index -q --refresh", { ignoreErrors: true });
 	const output = run("git diff-index --name-status --exit-code HEAD --", { ignoreErrors: true });
 	const hasChangedFiles = output.status === 1;
 	core.info(`${hasChangedFiles ? "Changes" : "No changes"} found with Git`);
