@@ -3195,12 +3195,12 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shescape@^2.1.13:
-  version "2.1.13"
-  resolved "https://registry.yarnpkg.com/shescape/-/shescape-2.1.13.tgz#9c8ad5941f2cbaefcb2e231ced81aa0cb4503ecc"
-  integrity sha512-FJ9C9U/JrGqY8nJi1bKYJ+x7Rwcf5j/UbHaru6q4P88wc9lJzsbMMVGalMz7sJuy1TGKXAy9h3gcTifYKvNaWA==
+shescape@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/shescape/-/shescape-3.0.1.tgz#b222f5acd0d3492e81871b5328cb1cc8e33d3ddf"
+  integrity sha512-r1Ubge/2wYkzW1PBPu50muiyj2YqTxqdOr7EEGpOD1/IvZUGiD01AwYWzx2FVDGIzNhiYRhpQCS7LIMODkYvLw==
   dependencies:
-    which "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+    which "^7.0.0"
 
 side-channel@^1.0.4:
   version "1.0.4"
@@ -3569,7 +3569,7 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-"which@^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0":
+which@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/which/-/which-7.0.0.tgz#cdfdd7bfc31c5af050b97bc7c02b1844731fb8b2"
   integrity sha512-RancgH2dmbLdHl6LRhEqvklWMgl/Hdnun0Y90KhBOLkMefg8Qa7/Zel8Sm+8HEcP6DEjzsWzpkuBQEZok58isA==
