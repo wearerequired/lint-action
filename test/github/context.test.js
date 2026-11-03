@@ -1,11 +1,5 @@
 const { join } = require("path");
 
-const {
-	parseActionEnv,
-	parseBranch,
-	parseEnvFile,
-	parseRepository,
-} = require("../../src/github/context");
 const prOpenEvent = require("./events/pull-request-open.json");
 const prSyncEvent = require("./events/pull-request-sync.json");
 const pushEvent = require("./events/push.json");
@@ -19,6 +13,12 @@ const {
 	TOKEN,
 	USERNAME,
 } = require("./test-constants");
+const {
+	parseActionEnv,
+	parseBranch,
+	parseEnvFile,
+	parseRepository,
+} = require("../../src/github/context");
 
 const invalidEventPath = "/path/to/invalid/event.json";
 const prOpenEventPath = join(__dirname, "events", "pull-request-open.json");
