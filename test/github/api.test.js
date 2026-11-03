@@ -1,5 +1,3 @@
-const { createCheck } = require("../../src/github/api");
-const request = require("../../src/utils/request");
 const {
 	EVENT_NAME,
 	EVENT_PATH,
@@ -9,6 +7,8 @@ const {
 	TOKEN,
 	USERNAME,
 } = require("./test-constants");
+const { createCheck } = require("../../src/github/api");
+const request = require("../../src/utils/request");
 
 jest.mock("../../src/utils/request");
 

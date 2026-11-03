@@ -7,7 +7,7 @@
 	"private": true,
 	"main": "./dist/index.js",
 	"scripts": {
-		"test": "jest",
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
 		"lint": "eslint --max-warnings 0 \"**/*.js\"",
 		"lint:fix": "yarn lint --fix",
 		"format": "prettier --list-different \"**/*.{css,html,js,json,jsx,less,md,scss,ts,tsx,vue,yaml,yml}\"",
@@ -17,22 +17,22 @@
 	"dependencies": {
 		"@actions/core": "^2.0.3",
 		"command-exists": "^1.2.9",
-		"glob": "^8.1.0",
+		"glob": "^13.0.6",
 		"parse-diff": "^0.12.0",
-		"shescape": "^2.1.13"
+		"shescape": "^3.0.2"
 	},
 	"peerDependencies": {},
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^6.0.0",
 		"@samuelmeuli/prettier-config": "^2.0.1",
-		"@vercel/ncc": "^0.44.1",
+		"@vercel/ncc": "^0.45.0",
 		"eslint": "8.32.0",
 		"eslint-config-airbnb-base": "15.0.0",
 		"eslint-config-prettier": "^8.6.0",
-		"eslint-plugin-import": "^2.26.0",
-		"eslint-plugin-jsdoc": "^63.2.0",
-		"fs-extra": "^11.3.6",
-		"jest": "^30.4.2",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsdoc": "^65.4.2",
+		"fs-extra": "^11.4.1",
+		"jest": "^30.5.2",
 		"prettier": "^2.8.3"
 	},
 	"eslintConfig": {
