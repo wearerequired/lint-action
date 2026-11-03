@@ -1,0 +1,30 @@
+name: Dependabot auto-merge
+
+on: pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  auto-merge:
+    name: Enable auto-merge
+    runs-on: ubuntu-latest
+    # Checking the actor rather than the PR author skips runs triggered by a
+    # maintainer pushing to a Dependabot branch, which lack Dependabot secrets.
+    if: github.actor == 'dependabot[bot]' && github.repository == 'wearerequired/lint-action'
+
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+
+      # Production dependencies end up in dist/ and ship to every user of the
+      # action, so they stay a manual merge.
+      - name: Enable auto-merge
+        if: steps.metadata.outputs.dependency-group == 'development' || (steps.metadata.outputs.package-ecosystem == 'github_actions' && steps.metadata.outputs.update-type != 'version-update:semver-major')
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          # A merge done with GITHUB_TOKEN does not trigger the push workflow
+          # that rebuilds dist/, so a personal token is required here.
+          GH_TOKEN: ${{ secrets.DEPENDABOT_AUTO_MERGE_TOKEN }}

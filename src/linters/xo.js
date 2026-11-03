@@ -1,7 +1,7 @@
+const ESLint = require("./eslint");
 const { run } = require("../utils/action");
 const commandExists = require("../utils/command-exists");
 const { getNpmBinCommand } = require("../utils/npm/get-npm-bin-command");
-const ESLint = require("./eslint");
 
 /**
  * https://github.com/xojs/xo
