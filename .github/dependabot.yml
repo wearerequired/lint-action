@@ -4,13 +4,76 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
       time: "10:00"
       timezone: "Europe/Zurich"
-    open-pull-requests-limit: 10
+    # Compromised npm releases are usually yanked within hours, waiting keeps them out.
+    cooldown:
+      default-days: 7
+    groups:
+      production:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
       time: "10:00"
       timezone: "Europe/Zurich"
-    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns:
+          - "*"
+
+  # Fixture projects pin linter versions on purpose because the tests compare
+  # against their exact output. Ignore rules also suppress security updates.
+  - package-ecosystem: "npm"
+    directories:
+      - "/test/linters/projects/*"
+    schedule:
+      interval: "monthly"
+    ignore:
+      - dependency-name: "*"
+
+  - package-ecosystem: "pip"
+    directories:
+      - "/test/linters/projects/*"
+    schedule:
+      interval: "monthly"
+    ignore:
+      - dependency-name: "*"
+
+  - package-ecosystem: "bundler"
+    directories:
+      - "/test/linters/projects/*"
+    schedule:
+      interval: "monthly"
+    ignore:
+      - dependency-name: "*"
+
+  - package-ecosystem: "cargo"
+    directories:
+      - "/test/linters/projects/*"
+    schedule:
+      interval: "monthly"
+    ignore:
+      - dependency-name: "*"
+
+  - package-ecosystem: "gomod"
+    directories:
+      - "/test/linters/projects/*"
+    schedule:
+      interval: "monthly"
+    ignore:
+      - dependency-name: "*"
