@@ -9,7 +9,9 @@ jobs:
   auto-merge:
     name: Enable auto-merge
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'wearerequired/lint-action'
+    # Checking the actor rather than the PR author skips runs triggered by a
+    # maintainer pushing to a Dependabot branch, which lack Dependabot secrets.
+    if: github.actor == 'dependabot[bot]' && github.repository == 'wearerequired/lint-action'
 
     steps:
       - name: Fetch Dependabot metadata
